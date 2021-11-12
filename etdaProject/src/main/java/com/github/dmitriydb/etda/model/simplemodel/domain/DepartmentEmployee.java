@@ -1,0 +1,69 @@
+package com.github.dmitriydb.etda.model.simplemodel.domain;
+
+import javax.persistence.*;
+import java.sql.Date;
+import java.util.Objects;
+
+@Entity
+@Table(name="dept_emp")
+public class DepartmentEmployee {
+
+    @Id
+    @Embedded
+    private DepartmentEmployeeSuite departmentEmployeeSuite;
+
+    @Column(name="from_date", nullable = false)
+    private Date fromDate;
+
+    @Column(name="to_date", nullable = false)
+    private Date toDate;
+
+    public DepartmentEmployee() {
+    }
+
+    public DepartmentEmployeeSuite getDepartmentEmployeeSuite() {
+        return departmentEmployeeSuite;
+    }
+
+    public void setDepartmentEmployeeSuite(DepartmentEmployeeSuite departmentEmployeeSuite) {
+        this.departmentEmployeeSuite = departmentEmployeeSuite;
+    }
+
+    public Date getFromDate() {
+        return fromDate;
+    }
+
+    public void setFromDate(Date fromDate) {
+        this.fromDate = fromDate;
+    }
+
+    public Date getToDate() {
+        return toDate;
+    }
+
+    public void setToDate(Date toDate) {
+        this.toDate = toDate;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        DepartmentEmployee that = (DepartmentEmployee) o;
+        return departmentEmployeeSuite.equals(that.departmentEmployeeSuite) && fromDate.equals(that.fromDate) && toDate.equals(that.toDate);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(departmentEmployeeSuite, fromDate, toDate);
+    }
+
+    @Override
+    public String toString() {
+        return "DepartmentEmployee{" +
+                "departmentEmployeeSuite=" + departmentEmployeeSuite +
+                ", fromDate=" + fromDate +
+                ", toDate=" + toDate +
+                '}';
+    }
+}
