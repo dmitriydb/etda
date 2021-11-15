@@ -5,15 +5,13 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.persistence.Query;
-import java.io.Serializable;
-import java.sql.ResultSet;
 import java.util.List;
 
-public class TitleDAO extends SimpleDAO{
+public class SimpleTitleDAO extends SimpleDAO{
 
-    private static final Logger logger = LoggerFactory.getLogger(TitleDAO.class);
+    private static final Logger logger = LoggerFactory.getLogger(SimpleTitleDAO.class);
 
-    public TitleDAO(){
+    public SimpleTitleDAO(){
         super(Title.class);
     }
 

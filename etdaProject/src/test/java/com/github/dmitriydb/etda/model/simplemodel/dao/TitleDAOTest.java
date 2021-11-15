@@ -5,13 +5,11 @@ import org.junit.jupiter.api.Test;
 
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.*;
-
 class TitleDAOTest {
 
     @Test
     public void testingTitleListReading(){
-        TitleDAO dao = new TitleDAO();
+        SimpleTitleDAO dao = new SimpleTitleDAO();
         List<Title> titles = dao.findAllByEmployeeNumber(10005L);
         System.out.println(titles);
     }

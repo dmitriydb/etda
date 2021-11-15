@@ -1,4 +1,4 @@
-package com.github.dmitriydb.etda.model.simplemodel.dao;
+package com.github.dmitriydb.etda.model.dao;
 
 import com.github.dmitriydb.etda.dbutils.DbManager;
 import org.hibernate.Session;

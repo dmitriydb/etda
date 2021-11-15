@@ -1,12 +1,12 @@
 package com.github.dmitriydb.etda.model.simplemodel.dao;
 
-import com.github.dmitriydb.etda.model.simplemodel.domain.Employee;
+import com.github.dmitriydb.etda.model.dao.AbstractDAO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.Serializable;
 
-public class SimpleDAO extends AbstractDAO{
+public class SimpleDAO extends AbstractDAO {
     private Class clazz;
     private static final Logger logger = LoggerFactory.getLogger(SimpleDAO.class);
 
