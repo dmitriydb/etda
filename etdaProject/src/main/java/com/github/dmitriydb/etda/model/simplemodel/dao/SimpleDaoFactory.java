@@ -1,18 +1,23 @@
 package com.github.dmitriydb.etda.model.simplemodel.dao;
 
 import com.github.dmitriydb.etda.model.EtdaDaoFactory;
-import com.github.dmitriydb.etda.model.dao.AbstractDAO;
+import com.github.dmitriydb.etda.model.dao.SimpleDAO;
 
 public class SimpleDaoFactory extends EtdaDaoFactory {
 
 
     @Override
-    public AbstractDAO getAbstractDAO() {
-        return new AbstractDAO();
+    public SimpleDAO getSimpleDAO(Class clazz) {
+        return new SimpleDAO(clazz);
     }
 
     @Override
     public SimpleTitleDAO getTitleDAO() {
-        return null;
+        return new SimpleTitleDAO();
+    }
+
+    @Override
+    public SimpleEmployeeDAO getEmployeeDAO() {
+        return new SimpleEmployeeDAO();
     }
 }

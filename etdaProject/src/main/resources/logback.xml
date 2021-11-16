@@ -28,7 +28,7 @@
     </appender>
 
     <!-- Loggers -->
-    <logger name="com.github.dmitriydb.etda.consoleapp" level="debug">
+    <logger name="com.github.dmitriydb.etda" level="debug">
         <appender-ref ref="CONSOLE APP" />
     </logger>
 

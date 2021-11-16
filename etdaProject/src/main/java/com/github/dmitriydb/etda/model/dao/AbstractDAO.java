@@ -18,6 +18,4 @@ public class AbstractDAO {
         session.close();
     }
 
-
-
 }

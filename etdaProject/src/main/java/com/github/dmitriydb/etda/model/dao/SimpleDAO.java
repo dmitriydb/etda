@@ -1,10 +1,12 @@
-package com.github.dmitriydb.etda.model.simplemodel.dao;
+package com.github.dmitriydb.etda.model.dao;
 
-import com.github.dmitriydb.etda.model.dao.AbstractDAO;
+import org.hibernate.query.Query;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 
 public class SimpleDAO extends AbstractDAO {
     private Class clazz;
@@ -81,5 +83,23 @@ public class SimpleDAO extends AbstractDAO {
         finally {
             endOperation();
         }
+    }
+
+    public List<Object> readList(int howMuch, int offset){
+        startOperation();
+        try{
+            Query query = session.createQuery("FROM " + clazz.getSimpleName());
+            query.setMaxResults(howMuch);
+            query.setFirstResult(offset);
+            return query.getResultList();
+        }
+        catch (Exception ex){
+            logger.error("Error occurred while reading list: {}", ex.getMessage());
+            return null;
+        }
+        finally {
+            endOperation();
+        }
+
     }
 }

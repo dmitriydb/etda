@@ -7,9 +7,9 @@ import org.hibernate.cfg.Configuration;
 
 public class DbManager {
 
-    private final static SessionFactory sessionFactory;
+    private static SessionFactory sessionFactory;
 
-    static {
+    public static void init() {
         Configuration cfg = new Configuration();
         cfg.addAnnotatedClass(Employee.class);
         cfg.addAnnotatedClass(Salary.class);

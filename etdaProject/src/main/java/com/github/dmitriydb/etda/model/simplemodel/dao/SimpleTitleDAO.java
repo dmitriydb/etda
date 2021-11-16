@@ -1,5 +1,6 @@
 package com.github.dmitriydb.etda.model.simplemodel.dao;
 
+import com.github.dmitriydb.etda.model.dao.SimpleDAO;
 import com.github.dmitriydb.etda.model.simplemodel.domain.Title;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -7,7 +8,7 @@ import org.slf4j.LoggerFactory;
 import javax.persistence.Query;
 import java.util.List;
 
-public class SimpleTitleDAO extends SimpleDAO{
+public class SimpleTitleDAO extends SimpleDAO {
 
     private static final Logger logger = LoggerFactory.getLogger(SimpleTitleDAO.class);
 
