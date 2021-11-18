@@ -18,6 +18,7 @@ public class DbManager {
         cfg.addAnnotatedClass(DepartmentManager.class);
         cfg.addAnnotatedClass(DepartmentEmployee.class);
         cfg.addAnnotatedClass(CurrentDepartmentEmployee.class);
+        cfg.addAnnotatedClass(DepartmentEmployeeLatestDate.class);
         sessionFactory = cfg.buildSessionFactory();
     }
 

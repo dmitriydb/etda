@@ -12,9 +12,9 @@ public abstract class EtdaController {
         view.updateSelf();
     }
 
-    public abstract void getEmployeesList(ConsoleViewRequest request);
+    public abstract void getScrollableList(Class clazz, ConsoleViewRequest request);
 
-    public abstract void getDepartmentList(ConsoleViewRequest request);
+    public abstract void getEntireList(Class clazz, ConsoleViewRequest request);
 
     public abstract void processUserAction(ConsoleViewRequest request);
 
@@ -25,4 +25,6 @@ public abstract class EtdaController {
     public EtdaView getView() {
         return view;
     }
+
+
 }

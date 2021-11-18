@@ -1,7 +1,6 @@
 package com.github.dmitriydb.etda.model;
 
 import com.github.dmitriydb.etda.model.dao.SimpleDAO;
-import com.github.dmitriydb.etda.model.simplemodel.dao.SimpleEmployeeDAO;
 import com.github.dmitriydb.etda.model.simplemodel.dao.SimpleTitleDAO;
 
 public abstract class EtdaDaoFactory {
@@ -12,5 +11,4 @@ public abstract class EtdaDaoFactory {
 
     public abstract SimpleTitleDAO getTitleDAO();
 
-    public abstract SimpleEmployeeDAO getEmployeeDAO();
 }

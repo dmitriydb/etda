@@ -8,7 +8,6 @@ import java.util.Locale;
 import java.util.Scanner;
 
 public abstract class ConsoleView extends EtdaView {
-    protected Scanner in = new Scanner(System.in);
 
     /**
      * Этот метод возвращает строку, корректную для вывода в соответствующем терминале (telnet, cmd...)

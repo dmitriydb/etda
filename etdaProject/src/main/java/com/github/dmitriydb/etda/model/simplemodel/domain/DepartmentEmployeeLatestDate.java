@@ -9,7 +9,7 @@ import java.util.Objects;
 
 @Entity
 @Table(name = "dept_emp_latest_date")
-public class DepartmetEmployeeLatestDate {
+public class DepartmentEmployeeLatestDate {
     @Id
     @Column(name="emp_no", nullable = false)
     private Long employeeNumber;
@@ -20,7 +20,7 @@ public class DepartmetEmployeeLatestDate {
     @Column(name="to_date", nullable = true)
     private Date toDate;
 
-    public DepartmetEmployeeLatestDate() {
+    public DepartmentEmployeeLatestDate() {
     }
 
     public Long getEmployeeNumber() {
@@ -51,7 +51,7 @@ public class DepartmetEmployeeLatestDate {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        DepartmetEmployeeLatestDate that = (DepartmetEmployeeLatestDate) o;
+        DepartmentEmployeeLatestDate that = (DepartmentEmployeeLatestDate) o;
         return employeeNumber.equals(that.employeeNumber);
     }
 

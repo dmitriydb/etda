@@ -16,8 +16,4 @@ public class SimpleDaoFactory extends EtdaDaoFactory {
         return new SimpleTitleDAO();
     }
 
-    @Override
-    public SimpleEmployeeDAO getEmployeeDAO() {
-        return new SimpleEmployeeDAO();
-    }
 }

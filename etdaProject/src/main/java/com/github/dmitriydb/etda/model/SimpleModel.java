@@ -1,22 +1,34 @@
 package com.github.dmitriydb.etda.model;
 
 import com.github.dmitriydb.etda.model.simplemodel.dao.SimpleDaoFactory;
-import com.github.dmitriydb.etda.model.simplemodel.domain.Department;
-import com.github.dmitriydb.etda.model.simplemodel.domain.Employee;
+
+import java.util.List;
 
 public class SimpleModel extends EtdaModel{
-    @Override
-    public EtdaDaoFactory getDaoFactory() {
-        return new SimpleDaoFactory();
+
+    private EtdaDaoFactory daoFactory = new SimpleDaoFactory();
+
+    SimpleModel(){
+
     }
 
     @Override
-    public Class getEmployeeClass() {
-        return Employee.class;
+    public List<Object> findList(Class clazz, int maxResults, int offset) {
+        return daoFactory.getSimpleDAO(clazz).readList(maxResults, offset);
     }
 
     @Override
-    public Class getDepartmentClass() {
-        return Department.class;
+    public List<Object> findEntities(Class clazz, int maxResults, int offset) {
+        return daoFactory.getSimpleDAO(clazz).readList(maxResults, offset);
+    }
+
+    @Override
+    public List<Object> findEntitiesFiltered(Class clazz, String filter, int maxResults, int offset) {
+        return daoFactory.getSimpleDAO(clazz).readFilteredList(filter, maxResults, offset);
+    }
+
+    @Override
+    public List<Object> findEntities(Class clazz) {
+        return daoFactory.getSimpleDAO(clazz).findAll();
     }
 }
