@@ -4,6 +4,14 @@ import javax.persistence.*;
 import java.sql.Date;
 import java.util.Objects;
 
+/**
+ * Класс инкапсулирует принятие сотрудника на работу в отдел
+ * Первичный ключ: объект класса departmentEmployeeSuite
+ * Бизнес ключ: все публичные поля
+ *
+ * @version 0.1
+ * @since 0.1
+ */
 @Entity
 @Table(name="dept_emp")
 public class DepartmentEmployee {

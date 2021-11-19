@@ -5,6 +5,14 @@ import java.sql.Date;
 import java.util.Objects;
 
 
+/**
+ * Сотрудник фирмы
+ * Первичным ключом является номер сотрудника
+ * В бизнес ключ входят дата рождения, имя, фамилия и пол
+ *
+ * @version 0.1
+ * @since 0.1
+ */
 @Entity
 @Table(name="employees")
 public class Employee {

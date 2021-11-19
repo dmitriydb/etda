@@ -16,13 +16,22 @@ import java.sql.Date;
 import java.util.ArrayList;
 import java.util.Scanner;
 
+/**
+ * Простое консольное представление для терминала Windows
+ *
+ * @version 0.1
+ * @since 0.1
+ */
 public class SimpleConsoleView extends ConsoleView {
 
     private Scanner in = new Scanner(System.in);
 
-    ArrayList<Object> cachedLines = new ArrayList<>();
+    //сохраненные объекты из прошлого обновления от контроллера
+    private ArrayList<Object> cachedLines = new ArrayList<>();
 
+    //текущая строка фильтра
     private String filter = "";
+
     private static Logger logger = LoggerFactory.getLogger(SimpleConsoleView.class);
 
     public SimpleConsoleView() {
@@ -49,12 +58,24 @@ public class SimpleConsoleView extends ConsoleView {
         }
     }
 
+    /**
+     * считывает символ с терминала и делегирует выполнение команды, привязанной к этому символу,
+     * методу processCommand
+     *
+     * Используется в ответ на ввод пользователя на экране со списком данных
+     */
     private void processSingleCharacter() {
         String s = in.nextLine();
         if (!s.trim().equals(""))
             processCommand(s);
     }
 
+    /**
+     * Обрабатывает первый символ строки и выполняет команду, привязанную к этому символу
+     *
+     * Используется в ответ на ввод пользователя на экране со списком данных
+     * @param s
+     */
     private void processCommand(String s) {
         logger.debug("Current option = {}", this.currentOption);
         char c = s.charAt(0);
@@ -82,10 +103,12 @@ public class SimpleConsoleView extends ConsoleView {
                 controller.processUserAction(request);
 
             }
-
         }
     }
 
+    /**
+     * Перечисляет все доступные опции меню
+     */
     private void listOptions() {
         for (ConsoleViewOptions option : ConsoleViewOptions.values()) {
             String optionName = line(option.getOptionLabel());
@@ -100,6 +123,11 @@ public class SimpleConsoleView extends ConsoleView {
         return WindowsCmdUtil.convertToTerminalString(line);
     }
 
+    /**
+     * Запрашивает у пользователя данные и создает объект класса Employee
+     * для дальнейшей передачи в контроллер для создания в БД
+     * @return объект типа Employee
+     */
     private Employee inputEmployee() {
         Employee e = new Employee();
         System.out.println(l("EnterName"));
@@ -121,10 +149,19 @@ public class SimpleConsoleView extends ConsoleView {
         return e;
     }
 
+    /**
+     * Получает строку из текстовых ресурсов по лейблу
+     * @param label
+     * @return
+     */
     private String l(String label) {
         return line(resourceBundle.getString(label));
     }
 
+    /**
+     * Получает и возвращает введенный пользователем ID записи
+     * @return корректное число типа Long
+     */
     private Long getID() {
         System.out.println(l("EnterLineNumber"));
         String line = in.nextLine();
@@ -132,6 +169,9 @@ public class SimpleConsoleView extends ConsoleView {
         return id;
     }
 
+    /**
+     * Обрабатывает выбор пользователем пункта основного меню
+     */
     @Override
     protected void processInput() {
         filter = "";

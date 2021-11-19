@@ -9,6 +9,9 @@ import java.util.Objects;
 /**
  * Этот класс инкапсулирует назначение зарплаты сотруднику, начиная с определенной даты
  * Используется в таблице salaries
+ *
+ * @version 0.1
+ * @since 0.1
  */
 @Embeddable
 public class SalaryOrder implements Serializable {

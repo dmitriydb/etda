@@ -7,6 +7,12 @@ import org.slf4j.LoggerFactory;
 import java.io.Serializable;
 import java.util.List;
 
+/**
+ * Простая модель данных, использующая в своей работе
+ *
+ * @version 0.1
+ * @since 0.1
+ */
 public class SimpleModel extends EtdaModel{
 
     private EtdaDaoFactory daoFactory = new SimpleDaoFactory();

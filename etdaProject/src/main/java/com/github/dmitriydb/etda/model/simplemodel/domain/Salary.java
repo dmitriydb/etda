@@ -4,6 +4,14 @@ import javax.persistence.*;
 import java.sql.Date;
 import java.util.Objects;
 
+/**
+ * Запись о назначении зарплаты сотруднику
+ * Первичным ключом является объект класса SalaryOrder,
+ * В бизнес-ключ входят все публичные поля
+ *
+ * @version 0.1
+ * @since 0.1
+ */
 @Entity
 @Table(name="salaries")
 public class Salary {

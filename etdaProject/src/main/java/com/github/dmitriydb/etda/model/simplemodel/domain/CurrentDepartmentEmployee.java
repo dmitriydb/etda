@@ -4,6 +4,13 @@ import javax.persistence.*;
 import java.sql.Date;
 import java.util.Objects;
 
+/**
+ * Класс инкапсулирует информацию о текущем отделе сотрудника
+ * Первичным ключом является объект класса departmentEmployeeSuite
+ *
+ * @version 0.1
+ * @since 0.1
+ */
 @Entity
 @Table(name="current_dept_emp")
 public class CurrentDepartmentEmployee {

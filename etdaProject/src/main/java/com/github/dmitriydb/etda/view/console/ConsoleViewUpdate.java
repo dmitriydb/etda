@@ -3,15 +3,18 @@ package com.github.dmitriydb.etda.view.console;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Класс, представляющий собой сообщение, посылаемое из контроллера в представление с целью обновления
+ *
+ * В данный момент на любую операцию в ответ отправляется список объектов класса Object,
+ * в дальнейшем нужно будет перевести общение между компонентами на конкретный протокол
+ *
+ * @version 0.1
+ * @since 0.1
+ */
 public class ConsoleViewUpdate {
 
     private List<Object> messages = new ArrayList<>();
-
-    private int total;
-
-    private int leftPosition;
-
-    private int rightPosition;
 
     public void addMessage(Object message){
         this.messages.add(message);
@@ -21,36 +24,10 @@ public class ConsoleViewUpdate {
         return messages;
     }
 
-    public int getTotal() {
-        return total;
-    }
-
-    public void setTotal(int total) {
-        this.total = total;
-    }
-
-    public int getLeftPosition() {
-        return leftPosition;
-    }
-
-    public void setLeftPosition(int leftPosition) {
-        this.leftPosition = leftPosition;
-    }
-
-    public int getRightPosition() {
-        return rightPosition;
-    }
-
-    public void setRightPosition(int rightPosition) {
-        this.rightPosition = rightPosition;
-    }
-
     @Override
     public String toString() {
         return "ConsoleViewUpdate{" +
-                "total=" + total +
-                ", leftPosition=" + leftPosition +
-                ", rightPosition=" + rightPosition +
+                "messages=" + messages +
                 '}';
     }
 }

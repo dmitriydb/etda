@@ -7,8 +7,11 @@ import java.util.Objects;
 
 @Embeddable
 /**
- * Этот класс инкапсулирует связку между номером отдела и номером сотрудника данного отдела
+ * Этот класс инкапсулирует сотрудника отдела
  * Используется в таблице dept_manager и dept_emp
+ *
+ * @version 0.1
+ * @since 0.1
  */
 public class DepartmentEmployeeSuite implements Serializable {
 

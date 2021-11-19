@@ -7,13 +7,39 @@ import com.github.dmitriydb.etda.view.console.ViewState;
 import java.util.Locale;
 import java.util.ResourceBundle;
 
+/**
+ * Абстрактный класс представления для приложения
+ *
+ * @version 0.1
+ * @since 0.1
+ */
 public abstract class EtdaView {
 
+    /**
+     * Региональные настройки пользователя в текущем представлении
+     */
     protected Locale locale = Locale.getDefault();
+
+    /**
+     * Комплект ресурсов, загруженный в представление
+     */
     protected ResourceBundle resourceBundle;
+
+    /**
+     * Текущее состояние представления
+     */
     protected ViewState currentState = ViewState.CREATED;
     protected EtdaController controller;
+
+    /**
+     * Максимальное количество результатов выборки на 1 странице
+     */
     protected int maxResults = 20;
+
+    /**
+     * Текущее действие пользователя
+     * Используется для индикации контекста, например во время активного действия SHOW_LIST предполагается возможность прокручивать список, выбирать элементы и т.д
+     */
     protected ConsoleViewOptions currentOption;
 
     /**
@@ -22,6 +48,9 @@ public abstract class EtdaView {
      */
     private int offset = 0;
 
+    /**
+     * метод вызывается, чтобы обновить состояние представления
+     */
     public abstract void updateSelf();
 
     public void setController(EtdaController controller){

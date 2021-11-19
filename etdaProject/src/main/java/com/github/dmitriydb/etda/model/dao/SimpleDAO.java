@@ -9,6 +9,13 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Простой DAO-класс, единообразно работающий с сущностями всех типов
+ * Инициализируется объектом типа Class в конструкторе и в дальнейшем работает только с этим классом
+ *
+ * @version 0.1
+ * @since 0.1
+ */
 public class SimpleDAO extends AbstractDAO {
     private Class clazz;
     private static final Logger logger = LoggerFactory.getLogger(SimpleDAO.class);
@@ -86,6 +93,14 @@ public class SimpleDAO extends AbstractDAO {
         }
     }
 
+    /**
+     * Возвращает частичный список сущностей из полной выборки по сущности
+     * @param howMuch максимальный размер выборки
+     * @param offset смещение выборки относительно 1 позиции
+     * @return
+     *
+     * @since 0.1
+     */
     public List<Object> readList(int howMuch, int offset){
         startOperation();
         try{
@@ -105,6 +120,16 @@ public class SimpleDAO extends AbstractDAO {
         }
 
     }
+
+    /**
+     * Возвращает отфильтрованный список сущностей из полной выборки по сущности
+     * @param maxResults максимальный размер выборки
+     * @param offset смещение выборки относительно 1 позиции
+     * @param filter строка, по которой производится фильтрация выборки
+     * @return
+     *
+     * @since 0.1
+     */
 
     public List<Object> readFilteredList(String filter, int maxResults, int offset) {
         startOperation();
@@ -138,6 +163,11 @@ public class SimpleDAO extends AbstractDAO {
         }
     }
 
+    /**
+     * Возвращает список всех сущностей класса, которым было инициализировано DAO
+     * @return список всех сущностей класса, которым было инициализировано DAO
+     * @since 0.1
+     */
     public List<Object> findAll() {
         startOperation();
         try{

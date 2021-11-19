@@ -13,29 +13,26 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * Контроллер для консольного представления
+ * Возможно, в будущем будет преобразован в общий контроллер и для веб-приложения
+ *
+ * @version 0.1
+ * @since 0.1
+ */
 public class ConsoleController extends EtdaController {
 
+    /**
+     * последний запрос, обработанный контроллером из представления
+     */
     private ConsoleViewRequest lastListRequest;
 
     private final static Logger logger = LoggerFactory.getLogger(ConsoleController.class);
 
-    private static Map<ConsoleViewOptions, Class> entitiesList = new HashMap<>();
-
-    static {
-        entitiesList.put(ConsoleViewOptions.EMPLOYEES_LIST, Employee.class);
-        entitiesList.put(ConsoleViewOptions.DEPARTMENTS_LIST, Department.class);
-        entitiesList.put(ConsoleViewOptions.SALARIES_LIST, Salary.class);
-        entitiesList.put(ConsoleViewOptions.TITLES_LIST, Title.class);
-        entitiesList.put(ConsoleViewOptions.CURRENT_DEPARTMENT_EMPLOYEES_LIST, CurrentDepartmentEmployee.class);
-        entitiesList.put(ConsoleViewOptions.DEPARTMENT_EMPLOYEES_LIST, DepartmentEmployee.class);
-        entitiesList.put(ConsoleViewOptions.MANAGERS_LIST, DepartmentManager.class);
-        entitiesList.put(ConsoleViewOptions.DEPARTMENT_EMPLOYEES_LATEST_DATE, DepartmentEmployeeLatestDate.class);
-        entitiesList.put(ConsoleViewOptions.CREATE_EMPLOYEE, Employee.class);
-        entitiesList.put(ConsoleViewOptions.UPDATE_EMPLOYEE, Employee.class);
-        entitiesList.put(ConsoleViewOptions.DELETE_EMPLOYEE, Employee.class);
-
-    }
-
+    /**
+     * В данный момент по умолчанию контроллер работает с простым консольным представлением
+     * @since 0.1
+     */
     public ConsoleController() {
         model = EtdaModel.getSimpleModel();
         view = new SimpleConsoleView();
@@ -43,6 +40,18 @@ public class ConsoleController extends EtdaController {
         view.updateSelf();
     }
 
+    /**
+     * Возвращает список сущностей на основе параметров запроса
+     * Предполагается, что в запросе request установлены следующие параметры для запроса:
+     * offset - смещение относительно полной выборки
+     * filter - строка фильтра для выборки
+     *
+     * После обработки запроса метод формирует объект ConsoleViewUpdate и передает в метод обработки событий представления
+     * @param clazz класс сущности
+     * @param request объект запроса
+     *
+     * @since 0.1
+     */
     @Override
     public void getScrollableList(Class clazz, ConsoleViewRequest request) {
         try {
@@ -74,6 +83,16 @@ public class ConsoleController extends EtdaController {
         }
     }
 
+    /**
+     * Возвращает полный список сущностей
+     * Параметры запроса (offset, filter) не учитываются
+     *
+     * После обработки запроса метод формирует объект ConsoleViewUpdate и передает в метод обработки событий представления
+     * @param clazz класс сущности
+     * @param request объект запроса
+     *
+     * @since 0.1
+     */
     @Override
     public void getEntireList(Class clazz, ConsoleViewRequest request) {
         try {
@@ -95,6 +114,11 @@ public class ConsoleController extends EtdaController {
     }
 
 
+    /**
+     * Обрабатывает запрос из представления
+     * @param request объект запроса
+     * @since 0.1
+     */
     @Override
     public void processUserAction(ConsoleViewRequest request) {
         logger.debug("Processing request {}", request);
@@ -104,23 +128,21 @@ public class ConsoleController extends EtdaController {
             view.setCurrentOption(option);
             switch (option.getActionType()) {
                 case SCROLLABLE:
-                    this.getScrollableList(entitiesList.get(option), request);
+                    this.getScrollableList(option.getEntityClass(), request);
                     break;
                 case SHOW:
-                    this.getEntireList(entitiesList.get(option), request);
+                    this.getEntireList(option.getEntityClass(), request);
                     break;
                 case CREATE:
-                    this.createEntity(entitiesList.get(option), request.getBean());
+                    this.createEntity(option.getEntityClass(), request.getBean());
                     break;
                 case UPDATE:
-                    this.updateEntity(entitiesList.get(option), request.getBean());
+                    this.updateEntity(option.getEntityClass(), request.getBean());
                     break;
                 case DELETE:
-                    this.deleteEntity(entitiesList.get(option), request.getId());
+                    this.deleteEntity(option.getEntityClass(), request.getId());
                     break;
-
             }
-
         } catch (Exception ex) {
             logger.error(ex.getMessage());
         }
@@ -132,12 +154,6 @@ public class ConsoleController extends EtdaController {
             model.createEntity(clazz, bean);
             ConsoleViewUpdate consoleViewUpdate = new ConsoleViewUpdate();
             consoleViewUpdate.addMessage("Successfully created");
-
-            /*if (view.getCurrentOption().getActionType().equals(ConsoleActionType.SCROLLABLE)){
-
-                view.changeState(ViewState.WAITING_USER_KEY);
-            }*/
-
             view.changeState(ViewState.MENU);
             ((ConsoleView) this.view).processConsoleViewUpdate(consoleViewUpdate);
         } catch (Exception ex) {
@@ -152,12 +168,6 @@ public class ConsoleController extends EtdaController {
             model.deleteEntity(clazz, id);
             ConsoleViewUpdate consoleViewUpdate = new ConsoleViewUpdate();
             consoleViewUpdate.addMessage("Successfully deleted");
-
-            /*if (view.getCurrentOption().getActionType().equals(ConsoleActionType.SCROLLABLE)){
-
-                view.changeState(ViewState.WAITING_USER_KEY);
-            }*/
-
             view.changeState(ViewState.MENU);
             ((ConsoleView) this.view).processConsoleViewUpdate(consoleViewUpdate);
         } catch (Exception ex) {
@@ -180,6 +190,13 @@ public class ConsoleController extends EtdaController {
         }
     }
 
+    /**
+     * Возвращает сущность по id
+     * @param clazz класс сущности
+     * @param id id
+     * @return сущность с искомым id
+     * @since 0.1
+     */
     @Override
     public Object getEntity(Class clazz, Serializable id) {
         return model.getEntity(clazz, id);

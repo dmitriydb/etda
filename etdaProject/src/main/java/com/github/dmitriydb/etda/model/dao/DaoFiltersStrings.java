@@ -5,7 +5,24 @@ import com.github.dmitriydb.etda.model.simplemodel.domain.*;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * Класс, который содержит строки для HQL-оператора WHERE для фильтра сущностей в модели
+ * Данные строки просто добавляются в конец запроса
+ * Используется в классе SimpleDAO {@link com.github.dmitriydb.etda.model.dao.SimpleDAO} чтобы фильтровать сущности типа Object единоообразным способом
+ *
+ * Список имен параметров, которые используются в фильтрах:
+ * filter - обычная строка
+ * number - число
+ *
+ * Возможно в будущем понадобится фильтровать сущности по дате, но лучше прибегнуть к специфическим классам для отдельных фильтров
+ *
+ * @version 0.1
+ * @since 0.1
+ */
 public class DaoFiltersStrings {
+    /**
+     * Карта, которая содержит соответствие строки поиска классу сущности
+     */
     public static final Map<Class, String> DAO_FILTERS;
 
     static {

@@ -3,6 +3,14 @@ package com.github.dmitriydb.etda.model.simplemodel.domain;
 import javax.persistence.*;
 import java.util.Objects;
 
+/**
+ * Отдел фирмы
+ * Первичный ключ - ID отдела (строка)
+ * Бизнес ключ - ID и наименование отдела
+ *
+ * @version 0.1
+ * @since 0.1
+ */
 @Entity
 @Table(name="departments")
 public class Department {

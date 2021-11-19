@@ -3,6 +3,14 @@ package com.github.dmitriydb.etda.model.simplemodel.domain;
 import javax.persistence.*;
 import java.sql.Date;
 
+/**
+ * Назначение должности сотруднику
+ * Первичный ключ: объект класса TitleOrder
+ * Бизнес ключ: все публичные поля
+ *
+ * @version 0.1
+ * @since 0.1
+ */
 @Entity
 @Table(name="titles")
 public class Title {

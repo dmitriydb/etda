@@ -7,6 +7,16 @@ import javax.persistence.Table;
 import java.sql.Date;
 import java.util.Objects;
 
+/**
+ * Класс инкапсулирует последнее принятие сотрудника на работу в отдел
+ * Первичный ключ: номер сотрудника
+ * Бизнес ключ: номер сотрудника
+ *
+ * В теории в БД количество строк в этой таблице должно совпадать с количеством сотрудников (?)
+ *
+ * @version 0.1
+ * @since 0.1
+ */
 @Entity
 @Table(name = "dept_emp_latest_date")
 public class DepartmentEmployeeLatestDate {

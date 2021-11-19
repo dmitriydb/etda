@@ -4,6 +4,14 @@ import javax.persistence.*;
 import java.sql.Date;
 import java.util.Objects;
 
+/**
+ * Менеджер отдела
+ * Первичный ключ - объект класса DepartmentEmployeeSuite
+ * Бизнес ключ - все публичные поля
+ *
+ * @version 0.1
+ * @since 0.1
+ */
 @Entity
 @Table(name="dept_manager")
 public class DepartmentManager {

@@ -8,11 +8,15 @@ import javax.management.ObjectName;
 import java.io.Serializable;
 import java.util.List;
 
+/**
+ * Абстрактная модель данных
+ * @version 0.1
+ * @since 0.1
+ */
 public abstract class EtdaModel {
     public static EtdaModel getSimpleModel(){
         return new SimpleModel();
     }
-
 
     public abstract List<Object> findEntities(Class clazz, int maxResults, int offset);
 
