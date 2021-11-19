@@ -60,4 +60,6 @@ public abstract class EtdaView {
     public void setCurrentOption(ConsoleViewOptions currentOption) {
         this.currentOption = currentOption;
     }
+
+
 }

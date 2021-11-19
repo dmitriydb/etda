@@ -5,5 +5,6 @@ public enum ViewState {
     CREATED,
     WAITING_USER_INPUT,
     WAITING_USER_KEY,
-    RENDERING
+    RENDERING,
+    MENU
 }

@@ -5,7 +5,7 @@ import java.util.List;
 
 public class ConsoleViewUpdate {
 
-    private List<String> messages = new ArrayList<>();
+    private List<Object> messages = new ArrayList<>();
 
     private int total;
 
@@ -13,11 +13,11 @@ public class ConsoleViewUpdate {
 
     private int rightPosition;
 
-    public void addMessage(String message){
+    public void addMessage(Object message){
         this.messages.add(message);
     }
 
-    public List<String> getMessages() {
+    public List<Object> getMessages() {
         return messages;
     }
 

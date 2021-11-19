@@ -4,7 +4,7 @@ public enum ConsoleViewOptions {
 
     //List operations
     EMPLOYEES_LIST("EmployeesList", ConsoleActionType.SCROLLABLE),
-    DEPARTMENTS_LIST("DepartmentsList"),
+    DEPARTMENTS_LIST("DepartmentsList", ConsoleActionType.SHOW),
     TITLES_LIST("TitlesList", ConsoleActionType.SCROLLABLE),
     SALARIES_LIST("SalariesList",  ConsoleActionType.SCROLLABLE),
     MANAGERS_LIST("ManagersList",  ConsoleActionType.SCROLLABLE),
@@ -13,13 +13,13 @@ public enum ConsoleViewOptions {
     DEPARTMENT_EMPLOYEES_LATEST_DATE("DeptEmpLatestDate", ConsoleActionType.SCROLLABLE),
 
     //Create operations
-    CREATE_EMPLOYEE("CreateEmployee", ConsoleActionType.MODIFYING),
+    CREATE_EMPLOYEE("CreateEmployee", ConsoleActionType.CREATE),
 
     //Update operations
-    UPDATE_EMPLOYEE("UpdateEmployee", ConsoleActionType.MODIFYING),
+    UPDATE_EMPLOYEE("UpdateEmployee", ConsoleActionType.UPDATE),
 
     //Delete operations
-    DELETE_EMPLOYEE("DeleteEmployee", ConsoleActionType.MODIFYING);
+    DELETE_EMPLOYEE("DeleteEmployee", ConsoleActionType.DELETE);
 
     private String optionLabel;
     private ConsoleActionType actionType;
