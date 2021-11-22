@@ -39,11 +39,16 @@ public class SimpleDAO extends AbstractDAO {
     }
 
     public void update(Object e) {
+        try{
         startOperation();
         logger.debug("Updating an object to {}", e.toString());
         session.update(e);
         logger.debug("Object was successfully updated: {}", e.toString());
         endOperation();
+        }
+        catch (Exception ex){
+            logger.error("Error", ex);
+        }
     }
 
 

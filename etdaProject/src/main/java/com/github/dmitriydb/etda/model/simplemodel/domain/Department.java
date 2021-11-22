@@ -55,9 +55,6 @@ public class Department {
 
     @Override
     public String toString() {
-        return "Department{" +
-                "departmentId='" + departmentId + '\'' +
-                ", name='" + name + '\'' +
-                '}';
+        return String.format("%20s %30s", departmentId, name);
     }
 }

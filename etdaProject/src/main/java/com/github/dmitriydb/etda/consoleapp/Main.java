@@ -22,6 +22,6 @@ public class Main {
     private static final Logger logger = LoggerFactory.getLogger(Main.class);
     public static void main(String[] args){
         DbManager.init();
-        new ConsoleController();
+        new ConsoleController().startWork();
     }
 }

@@ -68,10 +68,6 @@ public class Salary {
 
     @Override
     public String toString() {
-        return "Salary{" +
-                "salaryOrder=" + salaryOrder +
-                ", salary=" + salary +
-                ", toDate=" + toDate +
-                '}';
+        return String.format("%20d %20d %20s %20s", salaryOrder.getEmployeeNumber(), salary, salaryOrder.getFromDate(), toDate);
     }
 }

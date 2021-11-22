@@ -42,9 +42,6 @@ public class Title {
 
     @Override
     public String toString() {
-        return "Title{" +
-                "titleOrder=" + titleOrder +
-                ", toDate=" + toDate +
-                '}';
+        return String.format("%20d %25s %20s %20s", titleOrder.getEmployeeNumber(), titleOrder.getTitle(), titleOrder.getFromDate(), toDate);
     }
 }

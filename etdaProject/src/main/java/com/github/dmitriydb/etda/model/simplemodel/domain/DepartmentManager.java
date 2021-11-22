@@ -67,10 +67,6 @@ public class DepartmentManager {
 
     @Override
     public String toString() {
-        return "DepartmentManager{" +
-                "departmentManagerSuite=" + departmentManagerSuite +
-                ", fromDate=" + fromDate +
-                ", toDate=" + toDate +
-                '}';
+        return String.format("%20d %20s %20s %20s", departmentManagerSuite.getEmployeeNumber(), departmentManagerSuite.getDepartmentId(), fromDate, toDate);
     }
 }

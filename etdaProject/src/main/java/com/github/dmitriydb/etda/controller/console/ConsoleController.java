@@ -40,6 +40,9 @@ public class ConsoleController extends EtdaController {
         model = EtdaModel.getSimpleModel();
         view = new SimpleConsoleView();
         view.setController(this);
+    }
+
+    public void startWork(){
         view.updateSelf();
     }
 

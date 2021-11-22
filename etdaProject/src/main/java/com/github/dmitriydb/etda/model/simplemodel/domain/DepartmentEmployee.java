@@ -68,10 +68,6 @@ public class DepartmentEmployee {
 
     @Override
     public String toString() {
-        return "DepartmentEmployee{" +
-                "departmentEmployeeSuite=" + departmentEmployeeSuite +
-                ", fromDate=" + fromDate +
-                ", toDate=" + toDate +
-                '}';
+        return String.format("%20d %20s %20s %20s", departmentEmployeeSuite.getEmployeeNumber(), departmentEmployeeSuite.getDepartmentId(), fromDate, toDate);
     }
 }

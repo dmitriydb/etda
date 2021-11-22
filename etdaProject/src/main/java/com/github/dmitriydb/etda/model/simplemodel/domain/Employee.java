@@ -103,14 +103,7 @@ public class Employee {
 
     @Override
     public String toString() {
-        return "Employee{" +
-                "employeeNumber=" + employeeNumber +
-                ", birth_date=" + birth_date +
-                ", firstName='" + firstName + '\'' +
-                ", lastName='" + lastName + '\'' +
-                ", gender=" + gender +
-                ", hireDate=" + hireDate +
-                '}';
+        return String.format("%10d %20s %20s %5c %15s %15s", employeeNumber, lastName, firstName, getGender(), birth_date, hireDate);
     }
 
 }

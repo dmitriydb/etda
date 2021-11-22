@@ -1,6 +1,8 @@
 package com.github.dmitriydb.etda.model;
 
+import com.github.dmitriydb.etda.model.dao.DepartmentManagerDAO;
 import com.github.dmitriydb.etda.model.simplemodel.dao.SimpleDaoFactory;
+import com.github.dmitriydb.etda.model.simplemodel.domain.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -13,13 +15,13 @@ import java.util.List;
  * @version 0.1
  * @since 0.1
  */
-public class SimpleModel extends EtdaModel{
+public class SimpleModel extends EtdaModel {
 
     private EtdaDaoFactory daoFactory = new SimpleDaoFactory();
 
     private static final Logger logger = LoggerFactory.getLogger(SimpleDaoFactory.class);
 
-    SimpleModel(){
+    SimpleModel() {
 
     }
 
@@ -45,17 +47,26 @@ public class SimpleModel extends EtdaModel{
 
     @Override
     public void createEntity(Class clazz, Object entity) {
-            daoFactory.getSimpleDAO(clazz).create(entity);
+        daoFactory.getSimpleDAO(clazz).create(entity);
     }
 
     @Override
     public boolean updateEntity(Class clazz, Object entity) {
-            daoFactory.getSimpleDAO(clazz).update(entity);
-            return true;
+        daoFactory.getSimpleDAO(clazz).update(entity);
+        return true;
     }
 
     @Override
     public void deleteEntity(Class clazz, Serializable id) {
+        if (clazz.equals(DepartmentEmployee.class))
+            daoFactory.getDepartmentEmployeeDAO().deleteDepartmentEmployeeByEmpNumber((Long) id);
+        else if (clazz.equals(DepartmentManager.class))
+            daoFactory.getDepartmentManagerDAO().deleteManagerByEmployeeNumber((Long) id);
+        else if (clazz.equals(Salary.class))
+            daoFactory.getSalaryDAO().deleteSalaryByEmployeeID((Long) id);
+        else if (clazz.equals(Title.class))
+            daoFactory.getTitleDao().deleteTitleByEmployeeID((Long) id);
+        else
             daoFactory.getSimpleDAO(clazz).delete(id);
     }
 

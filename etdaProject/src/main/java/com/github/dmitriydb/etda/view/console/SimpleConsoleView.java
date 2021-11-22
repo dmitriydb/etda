@@ -2,15 +2,17 @@ package com.github.dmitriydb.etda.view.console;
 
 import com.github.dmitriydb.etda.consoleapp.WindowsCmdUtil;
 import com.github.dmitriydb.etda.model.RegexConstraints;
-import com.github.dmitriydb.etda.model.simplemodel.domain.Employee;
+import com.github.dmitriydb.etda.model.simplemodel.domain.*;
 import com.github.dmitriydb.etda.resources.ResourceBundleManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.Serializable;
 import java.sql.Date;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+
 
 /**
  * Простое консольное представление для терминала Windows
@@ -103,17 +105,17 @@ public class SimpleConsoleView extends ConsoleView {
                 }
                 case 'n': {
                     isProcessLastRequest = true;
-                    createEmployee();
+                    createEntity(ConsoleViewOptions.CREATE_EMPLOYEE);
                     break;
                 }
                 case 'd': {
                     isProcessLastRequest = true;
-                    deleteEmployee();
+                    deleteEntity(ConsoleViewOptions.DELETE_EMPLOYEE);
                     break;
                 }
                 case 'u': {
                     isProcessLastRequest = true;
-                    updateEmployee();
+                    updateEntity(ConsoleViewOptions.UPDATE_EMPLOYEE);
                     break;
                 }
                 default: {
@@ -184,6 +186,7 @@ public class SimpleConsoleView extends ConsoleView {
             out.println(l("WrongName"));
             name = in.nextLine();
         }
+
         e.setFirstName(name);
         out.println(l("EnterSurname"));
         String surname = in.nextLine();
@@ -203,6 +206,126 @@ public class SimpleConsoleView extends ConsoleView {
         char c = gender.trim().equals("1") ? 'M' : 'F';
         e.setGender(c);
         return e;
+    }
+
+    private Department updateDepartment(Department original){
+        out.println(l("EnterDepartmentName") + encase(original.getName()));
+        String name = in.nextLine();
+        while (!RegexConstraints.match(name, RegexConstraints.VALID_DEPARTMENT_NAME)){
+            out.println(l("WrongName"));
+            name = in.nextLine();
+        }
+        original.setName(name);
+        return original;
+    }
+
+    private Department inputDepartment() {
+        Department e = new Department();
+        out.println(l("EnterDepartmentId"));
+        String code = in.nextLine();
+        while (!RegexConstraints.match(code, RegexConstraints.VALID_DEPARTMENT_NUMBER)){
+            out.println(l("WrongCode"));
+            code = in.nextLine();
+        }
+        e.setDepartmentId(code);
+        out.println(l("EnterDepartmentName"));
+        String name = in.nextLine();
+        while (!RegexConstraints.match(name, RegexConstraints.VALID_DEPARTMENT_NAME)){
+            out.println(l("WrongName"));
+            name = in.nextLine();
+        }
+        e.setName(name);
+        return e;
+    }
+
+    /**
+     * Метод, который просит пользователя ввести строку до тех пор, пока она не будет проходить валидацию
+     * Если метод возвращает null, то это означает конец ввода
+     * @param pattern паттерн валидации
+     * @param message сообщение, которое будет выводиться при непрошедшей валидации
+     *
+     * @since 0.1
+     */
+    private String getValidString(String pattern, String message){
+        String s = in.nextLine();
+        while (!RegexConstraints.match(s, pattern)){
+            System.out.println(message);
+            s = in.nextLine();
+        }
+        return s;
+    }
+
+    private Title inputTitle(){
+        Title t = new Title();
+        TitleOrder order = new TitleOrder();
+        Long id = getID();
+        order.setEmployeeNumber(id);
+        out.println(l("EnterTitle"));
+        String title = getValidString(RegexConstraints.VALID_TITLE_NAME, l("WrongTitle"));
+        order.setTitle(title);
+        out.println(l("EnterStartDate"));
+        Date startDate = inputDate();
+        out.println(l("EnterEndDate"));
+        Date endDate = inputDate();
+        order.setFromDate(startDate);
+        t.setTitleOrder(order);
+        t.setToDate(endDate);
+        return t;
+    }
+
+    private Salary inputSalary(){
+        Salary s = new Salary();
+        SalaryOrder order = new SalaryOrder();
+        Long id = getID();
+        order.setEmployeeNumber(id);
+        out.println(l("EnterSalaryAmount"));
+        String sAmount = getValidString(RegexConstraints.VALID_SALARY_AMOUNT_PATTERN, l("WrongAmount"));
+        Long salary = Long.valueOf(sAmount);
+        s.setSalary(salary);
+        out.println(l("EnterStartDate"));
+        Date startDate = inputDate();
+        out.println(l("EnterEndDate"));
+        Date endDate = inputDate();
+        order.setFromDate(startDate);
+        s.setToDate(endDate);
+        s.setSalaryOrder(order);
+        return s;
+    }
+
+    private DepartmentEmployee inputDepartmentEmployee(){
+        DepartmentEmployee e = new DepartmentEmployee();
+        DepartmentEmployeeSuite suite = new DepartmentEmployeeSuite();
+        Long id = getID();
+        suite.setEmployeeNumber(id);
+        out.println(l("EnterDepartmentId"));
+        String departmentCode = getValidString(RegexConstraints.VALID_DEPARTMENT_NUMBER, l("WrongCode"));
+        suite.setDepartmentId(departmentCode);
+        out.println(l("EnterStartDate"));
+        Date startDate = inputDate();
+        out.println(l("EnterEndDate"));
+        Date endDate = inputDate();
+        e.setFromDate(startDate);
+        e.setToDate(endDate);
+       e.setDepartmentEmployeeSuite(suite);
+        return e;
+    }
+
+    private DepartmentManager inputManager(){
+        DepartmentManager manager = new DepartmentManager();
+        DepartmentEmployeeSuite suite = new DepartmentEmployeeSuite();
+        Long id = getID();
+        suite.setEmployeeNumber(id);
+        out.println(l("EnterDepartmentId"));
+        String departmentCode = getValidString(RegexConstraints.VALID_DEPARTMENT_NUMBER, l("WrongCode"));
+        suite.setDepartmentId(departmentCode);
+        out.println(l("EnterStartDate"));
+        Date startDate = inputDate();
+        out.println(l("EnterEndDate"));
+        Date endDate = inputDate();
+        manager.setFromDate(startDate);
+        manager.setToDate(endDate);
+        manager.setDepartmentManagerSuite(suite);
+        return manager;
     }
 
     /**
@@ -225,89 +348,63 @@ public class SimpleConsoleView extends ConsoleView {
         return id;
     }
 
-
-    private void createEmployee(){
-        Employee e = inputEmployee();
+    private void createEntity(ConsoleViewOptions option){
+        Object e = inputEntity(option);
         if (e != null) {
-            ConsoleViewRequest request = new ConsoleViewRequest(String.valueOf(ConsoleViewOptions.CREATE_EMPLOYEE.ordinal() + 1), 0);
+            ConsoleViewRequest request = new ConsoleViewRequest(String.valueOf(option.ordinal() + 1), 0);
             request.setBean(e);
             processUserAction(request);
         }
     }
 
-    private void deleteEmployee(){
+    private Object inputEntity(ConsoleViewOptions option){
+        if (option == ConsoleViewOptions.CREATE_EMPLOYEE)
+            return inputEmployee();
+        if (option == ConsoleViewOptions.CREATE_DEPARTMENT)
+            return inputDepartment();
+        if (option == ConsoleViewOptions.CREATE_TITLE)
+            return inputTitle();
+        if (option == ConsoleViewOptions.CREATE_SALARY)
+            return inputSalary();
+        if (option == ConsoleViewOptions.CREATE_DEPT_EMP)
+            return inputDepartmentEmployee();
+        if (option == ConsoleViewOptions.CREATE_DEPT_MANAGER)
+            return inputManager();
+        return null;
+    }
+
+    private Object updateEntity(Object original){
+        if (original instanceof Employee) return updateEmployee((Employee) original);
+        if (original instanceof Department) return updateDepartment((Department) original);
+        else return original;
+    }
+
+    private void deleteEntity(ConsoleViewOptions option){
         Long id = getID();
-        ConsoleViewRequest request = new ConsoleViewRequest(String.valueOf(ConsoleViewOptions.DELETE_EMPLOYEE.ordinal() + 1), 0);
+        ConsoleViewRequest request = new ConsoleViewRequest(String.valueOf(option.ordinal() + 1), 0);
         request.setId(id);
         processUserAction(request);
     }
 
-    /**
-     * Делегирует обработку запроса контроллеру
-     * @param request
-     */
-    private void processUserAction(ConsoleViewRequest request){
-        controller.processUserAction(request);
-    }
+    private void updateEntity(ConsoleViewOptions option){
+        Serializable id;
+        if (!option.equals(ConsoleViewOptions.UPDATE_DEPARTMENT))
+            id = getID();
+        else{
+            System.out.println(l("EnterDepartmentId"));
+            id = getValidString(RegexConstraints.VALID_DEPARTMENT_NUMBER, l("WrongCode"));
+        }
 
-
-    private void updateEmployee(){
-        Long id = getID();
-        Object result = controller.getEntity(Employee.class, id);
+        Object result = controller.getEntity(option.getEntityClass(), id);
         if (result == null){
             out.println(l("IdNotExists"));
             processInput();
         }
-        Employee e = (Employee) result;
-        e = updateEmployee(e);
-        ConsoleViewRequest request = new ConsoleViewRequest(String.valueOf(ConsoleViewOptions.UPDATE_EMPLOYEE.ordinal() + 1), 0);
+        Object e = result;
+        e = updateEntity(e);
+        ConsoleViewRequest request = new ConsoleViewRequest(String.valueOf(option.ordinal() + 1), 0);
         request.setBean(e);
         processUserAction(request);
-    }
-
-    /**
-     * Обрабатывает выбор пользователем пункта основного меню
-     */
-    @Override
-    protected void processInput() {
-        filter = "";
-        out.println(line(resourceBundle.getString("action")));
-        listOptions();
-        this.changeState(ViewState.WAITING_USER_INPUT);
-        String line = in.nextLine();
-
-        try {
-            Integer i = Integer.valueOf(line);
-            ConsoleViewOptions option = ConsoleViewOptions.values()[i - 1];
-            switch (option) {
-                case CREATE_EMPLOYEE: {
-                    createEmployee();
-                    break;
-                }
-                case DELETE_EMPLOYEE: {
-                    deleteEmployee();
-                    break;
-                }
-                case UPDATE_EMPLOYEE: {
-                    updateEmployee();
-                    break;
-                }
-                default: {
-                    this.changeState(ViewState.WAITING_CONTROLLER);
-                    ConsoleViewRequest request = new ConsoleViewRequest(line, 0);
-                    lastRequest = request;
-                    processUserAction(request);
-                    break;
-                }
-            }
-        } catch (NumberFormatException ex) {
-            out.println(l("WrongMenuOption"));
-            processInput();
-        }
-    }
-
-    private String encase(String s){
-        return "[" + s + "]";
     }
 
     private Employee updateEmployee(Employee original) {
@@ -336,6 +433,62 @@ public class SimpleConsoleView extends ConsoleView {
         char c = gender.trim().equals("1") ? 'M' : 'F';
         original.setGender(c);
         return original;
+    }
+
+
+    /**
+     * Делегирует обработку запроса контроллеру
+     * @param request
+     *
+     * @since 0.1
+     */
+    private void processUserAction(ConsoleViewRequest request){
+        controller.processUserAction(request);
+    }
+
+    /**
+     * Обрабатывает выбор пользователем пункта основного меню
+     */
+    @Override
+    protected void processInput() {
+        filter = "";
+        out.println(line(resourceBundle.getString("action")));
+        listOptions();
+        this.changeState(ViewState.WAITING_USER_INPUT);
+        String line = in.nextLine();
+
+        try {
+            Integer i = Integer.valueOf(line);
+            ConsoleViewOptions option = ConsoleViewOptions.values()[i - 1];
+            switch (option.getActionType()) {
+                case CREATE: {
+                    createEntity(option);
+                    break;
+                }
+                case DELETE: {
+                    deleteEntity(option);
+                    break;
+                }
+                case UPDATE: {
+                    updateEntity(option);
+                    break;
+                }
+                default: {
+                    this.changeState(ViewState.WAITING_CONTROLLER);
+                    ConsoleViewRequest request = new ConsoleViewRequest(line, 0);
+                    lastRequest = request;
+                    processUserAction(request);
+                    break;
+                }
+            }
+        } catch (NumberFormatException ex) {
+            out.println(l("WrongMenuOption"));
+            processInput();
+        }
+    }
+
+    private String encase(String s){
+        return "[" + s + "]";
     }
 
     @Override

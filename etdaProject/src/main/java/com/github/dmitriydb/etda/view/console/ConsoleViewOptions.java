@@ -20,15 +20,20 @@ public enum ConsoleViewOptions {
     DEPARTMENT_EMPLOYEES_LIST("DeptEmpList",  ConsoleActionType.SCROLLABLE, DepartmentEmployee.class),
     CURRENT_DEPARTMENT_EMPLOYEES_LIST("CurrentDeptEmpList",  ConsoleActionType.SCROLLABLE, CurrentDepartmentEmployee.class),
     DEPARTMENT_EMPLOYEES_LATEST_DATE("DeptEmpLatestDate", ConsoleActionType.SCROLLABLE, DepartmentEmployeeLatestDate.class),
-
-    //Create operations
     CREATE_EMPLOYEE("CreateEmployee", ConsoleActionType.CREATE, Employee.class),
-
-    //Update operations
     UPDATE_EMPLOYEE("UpdateEmployee", ConsoleActionType.UPDATE, Employee.class),
-
-    //Delete operations
-    DELETE_EMPLOYEE("DeleteEmployee", ConsoleActionType.DELETE, Employee.class);
+    DELETE_EMPLOYEE("DeleteEmployee", ConsoleActionType.DELETE, Employee.class),
+    CREATE_DEPARTMENT("CreateDepartment", ConsoleActionType.CREATE, Department.class),
+    UPDATE_DEPARTMENT("UpdateDepartment", ConsoleActionType.UPDATE, Department.class),
+    DELETE_DEPARTMENT("DeleteDepartment", ConsoleActionType.DELETE, Department.class),
+    CREATE_TITLE("CreateTitle", ConsoleActionType.CREATE, Title.class),
+    DELETE_TITLE("DeleteTitle", ConsoleActionType.DELETE, Title.class),
+    CREATE_SALARY("CreateSalary", ConsoleActionType.CREATE, Salary.class),
+    DELETE_SALARY("DeleteSalary", ConsoleActionType.DELETE, Salary.class),
+    CREATE_DEPT_EMP("CreateDeptEmp", ConsoleActionType.CREATE, DepartmentEmployee.class),
+    DELETE_DEPT_EMP("DeleteDeptEmp", ConsoleActionType.DELETE, DepartmentEmployee.class),
+    CREATE_DEPT_MANAGER("CreateDeptManager", ConsoleActionType.CREATE, DepartmentManager.class),
+    DELETE_DEPT_MANAGER("DeleteDeptManager", ConsoleActionType.DELETE, DepartmentManager.class);
 
     /**
      * Название действия
