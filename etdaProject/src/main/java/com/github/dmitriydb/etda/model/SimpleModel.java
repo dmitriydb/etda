@@ -44,39 +44,19 @@ public class SimpleModel extends EtdaModel{
     }
 
     @Override
-    public boolean createEntity(Class clazz, Object entity) {
-        try{
+    public void createEntity(Class clazz, Object entity) {
             daoFactory.getSimpleDAO(clazz).create(entity);
-            return true;
-        }
-        catch (Exception ex){
-            logger.error(ex.getMessage());
-            return false;
-        }
     }
 
     @Override
     public boolean updateEntity(Class clazz, Object entity) {
-        try{
             daoFactory.getSimpleDAO(clazz).update(entity);
             return true;
-        }
-        catch (Exception ex){
-            logger.error(ex.getMessage());
-            return false;
-        }
     }
 
     @Override
-    public boolean deleteEntity(Class clazz, Serializable id) {
-        try{
+    public void deleteEntity(Class clazz, Serializable id) {
             daoFactory.getSimpleDAO(clazz).delete(id);
-            return true;
-        }
-        catch (Exception ex){
-            logger.error(ex.getMessage());
-            return false;
-        }
     }
 
     @Override

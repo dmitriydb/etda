@@ -24,73 +24,36 @@ public class SimpleDAO extends AbstractDAO {
         this.clazz = clazz;
     }
 
-    public boolean create(Object e) {
+    public void create(Object e) {
         startOperation();
-        try{
-            session.save(e);
-            logger.debug("Object {} was successfully created", e.toString());
-            return true;
-        }
-        catch (Exception ex){
-            logger.error("Error occurred while creating object {}: {}", e, ex.getMessage());
-            return false;
-        }
-        finally {
-            endOperation();
-        }
+        session.save(e);
+        logger.debug("Object {} was successfully created", e.toString());
+        endOperation();
     }
-
 
     public Object read(Serializable id) {
         startOperation();
-        try{
-            Object e = session.get(clazz, id);
-            return e;
-        }
-        catch (Exception ex){
-            logger.error("Error occurred while reading object with id {}: {}", id, ex.getMessage());
-            return null;
-        }
-        finally {
-            endOperation();
-        }
+        Object e = session.get(clazz, id);
+        endOperation();
+        return e;
+    }
 
+    public void update(Object e) {
+        startOperation();
+        logger.debug("Updating an object to {}", e.toString());
+        session.update(e);
+        logger.debug("Object was successfully updated: {}", e.toString());
+        endOperation();
     }
 
 
-    public boolean update(Object e) {
+    public void delete(Serializable id) throws IllegalArgumentException{
+        logger.debug("Trying to delete entity with id {}", id);
         startOperation();
-        try{
-            logger.debug("Updating an object to {}", e.toString());
-            session.update(e);
-            logger.debug("Object was successfully updated: {}", e.toString());
-            return true;
-        }
-        catch (Exception ex){
-            logger.error("Error occurred while updating object {} : {}", e, ex.getMessage());
-            return false;
-        }
-        finally {
-            endOperation();
-        }
-    }
-
-
-    public boolean delete(Serializable id) {
-        startOperation();
-        try{
-            Object e = session.get(clazz, id);
-            session.delete(e);
-            logger.debug("Object {} was successfully deleted", e.toString());
-            return true;
-        }
-        catch (Exception ex){
-            logger.error("Error occurred while deleting object with id {}: {}", id, ex.getMessage());
-            return false;
-        }
-        finally {
-            endOperation();
-        }
+        Object e = session.get(clazz, id);
+        session.delete(e);
+        logger.debug("Object {} was successfully deleted", e.toString());
+        endOperation();
     }
 
     /**

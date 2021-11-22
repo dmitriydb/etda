@@ -16,6 +16,7 @@ public class ConsoleViewUpdate {
 
     private List<Object> messages = new ArrayList<>();
 
+
     public void addMessage(Object message){
         this.messages.add(message);
     }

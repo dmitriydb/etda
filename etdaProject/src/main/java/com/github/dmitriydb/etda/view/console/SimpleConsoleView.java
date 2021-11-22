@@ -1,20 +1,16 @@
 package com.github.dmitriydb.etda.view.console;
 
 import com.github.dmitriydb.etda.consoleapp.WindowsCmdUtil;
-import com.github.dmitriydb.etda.controller.EtdaController;
+import com.github.dmitriydb.etda.model.RegexConstraints;
 import com.github.dmitriydb.etda.model.simplemodel.domain.Employee;
 import com.github.dmitriydb.etda.resources.ResourceBundleManager;
-import com.googlecode.lanterna.terminal.DefaultTerminalFactory;
-import com.googlecode.lanterna.terminal.Terminal;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.swing.text.View;
-import java.io.IOException;
-import java.io.Serializable;
 import java.sql.Date;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.Scanner;
 
 /**
  * Простое консольное представление для терминала Windows
@@ -24,7 +20,10 @@ import java.util.Scanner;
  */
 public class SimpleConsoleView extends ConsoleView {
 
-    private Scanner in = new Scanner(System.in);
+    private ConsoleViewRequest lastRequest;
+    private boolean isProcessLastRequest = false;
+
+    String dateFormat = "d.M.yyyy";
 
     //сохраненные объекты из прошлого обновления от контроллера
     private ArrayList<Object> cachedLines = new ArrayList<>();
@@ -40,8 +39,10 @@ public class SimpleConsoleView extends ConsoleView {
 
     @Override
     public void updateSelf() {
+        isProcessLastRequest = false;
+
         if (this.currentState == ViewState.CREATED) {
-            System.out.println(line(resourceBundle.getString("welcome")));
+            out.println(line(resourceBundle.getString("welcome")));
             processInput();
         } else if (this.currentState == ViewState.WAITING_USER_INPUT || this.currentState == ViewState.WAITING_CONTROLLER) {
             processInput();
@@ -51,7 +52,7 @@ public class SimpleConsoleView extends ConsoleView {
             logger.debug("WAITING_USER_KEY");
             while (true) {
                 if (!filter.equals("")) {
-                    System.out.println("Current filter [" + filter + "]");
+                    out.println("Current filter [" + filter + "]");
                 }
                 processSingleCharacter();
             }
@@ -85,23 +86,43 @@ public class SimpleConsoleView extends ConsoleView {
             processInput();
         } else if (this.currentOption.getActionType().equals(ConsoleActionType.SCROLLABLE)) {
             String option = String.valueOf(currentOption.ordinal() + 1);
-            if (c == '+') {
-                this.setOffset(getOffset() + 1);
-                ConsoleViewRequest request = new ConsoleViewRequest(option, getOffset());
-                request.setFilter(filter);
-                controller.processUserAction(request);
-            } else if (c == '-') {
-                this.setOffset(getOffset() - 1);
-                ConsoleViewRequest request = new ConsoleViewRequest(option, getOffset());
-                request.setFilter(filter);
-                controller.processUserAction(request);
-            } else {
-                setOffset(0);
-                filter = s;
-                ConsoleViewRequest request = new ConsoleViewRequest(option, getOffset());
-                request.setFilter(filter);
-                controller.processUserAction(request);
-
+            switch (c) {
+                case '+': {
+                    this.setOffset(getOffset() + 1);
+                    ConsoleViewRequest request = new ConsoleViewRequest(option, getOffset());
+                    request.setFilter(filter);
+                    processUserAction(request);
+                    break;
+                }
+                case '-': {
+                    this.setOffset(getOffset() - 1);
+                    ConsoleViewRequest request = new ConsoleViewRequest(option, getOffset());
+                    request.setFilter(filter);
+                    processUserAction(request);
+                    break;
+                }
+                case 'n': {
+                    isProcessLastRequest = true;
+                    createEmployee();
+                    break;
+                }
+                case 'd': {
+                    isProcessLastRequest = true;
+                    deleteEmployee();
+                    break;
+                }
+                case 'u': {
+                    isProcessLastRequest = true;
+                    updateEmployee();
+                    break;
+                }
+                default: {
+                    setOffset(0);
+                    filter = s;
+                    ConsoleViewRequest request = new ConsoleViewRequest(option, getOffset());
+                    request.setFilter(filter);
+                    processUserAction(request);
+                }
             }
         }
     }
@@ -114,8 +135,35 @@ public class SimpleConsoleView extends ConsoleView {
             String optionName = line(option.getOptionLabel());
             Integer seqNumber = option.ordinal() + 1;
             String op = String.format("%d) %s", seqNumber, line(resourceBundle.getString(optionName)));
-            System.out.println(op);
+            out.println(op);
         }
+    }
+
+    private boolean isDateValid(String date){
+        try{
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern(dateFormat);
+            LocalDate d = LocalDate.parse(date, formatter);
+            return true;
+        }
+        catch (Exception ex){
+            return false;
+        }
+    }
+
+    /**
+     * Запрашивает дату у пользователя, пока он не введет корректную в региональном формате
+     * Либо если он нажмет специальную клавишу выхода - вернет в меню
+     * @return дата типа java.sql.date
+     */
+    private Date inputDate(){
+        String sDate = in.nextLine();
+        while (!isDateValid(sDate)){
+            out.println(l("WrongDate"));
+            out.println(l("DateFormat") + l(dateFormat));
+            sDate = in.nextLine();
+        }
+        LocalDate date = LocalDate.parse(sDate, DateTimeFormatter.ofPattern(dateFormat));
+        return Date.valueOf(date);
     }
 
     @Override
@@ -130,19 +178,27 @@ public class SimpleConsoleView extends ConsoleView {
      */
     private Employee inputEmployee() {
         Employee e = new Employee();
-        System.out.println(l("EnterName"));
+        out.println(l("EnterName"));
         String name = in.nextLine();
+        while (!RegexConstraints.match(name, RegexConstraints.VALID_NAME_PATTERN)){
+            out.println(l("WrongName"));
+            name = in.nextLine();
+        }
         e.setFirstName(name);
-        System.out.println(l("EnterSurname"));
+        out.println(l("EnterSurname"));
         String surname = in.nextLine();
+        while (!RegexConstraints.match(surname, RegexConstraints.VALID_SURNAME_PATTERN)){
+            out.println(l("WrongSurname"));
+            surname = in.nextLine();
+        }
         e.setLastName(surname);
-        System.out.println(l("EnterBirthday"));
-        String birthday = in.nextLine();
-        e.setBirth_date(Date.valueOf(birthday));
-        System.out.println(l("EnterHireDate"));
-        String hireDate = in.nextLine();
-        e.setHireDate(Date.valueOf(hireDate));
-        System.out.println(l("EnterGender"));
+        out.println(l("EnterBirthday"));
+        Date birthday = inputDate();
+        e.setBirth_date(birthday);
+        out.println(l("EnterHireDate"));
+        Date hireDate = inputDate();
+        e.setHireDate(hireDate);
+        out.println(l("EnterGender"));
         String gender = in.nextLine();
         char c = gender.trim().equals("1") ? 'M' : 'F';
         e.setGender(c);
@@ -163,10 +219,50 @@ public class SimpleConsoleView extends ConsoleView {
      * @return корректное число типа Long
      */
     private Long getID() {
-        System.out.println(l("EnterLineNumber"));
+        out.println(l("EnterLineNumber"));
         String line = in.nextLine();
         Long id = Long.valueOf(line);
         return id;
+    }
+
+
+    private void createEmployee(){
+        Employee e = inputEmployee();
+        if (e != null) {
+            ConsoleViewRequest request = new ConsoleViewRequest(String.valueOf(ConsoleViewOptions.CREATE_EMPLOYEE.ordinal() + 1), 0);
+            request.setBean(e);
+            processUserAction(request);
+        }
+    }
+
+    private void deleteEmployee(){
+        Long id = getID();
+        ConsoleViewRequest request = new ConsoleViewRequest(String.valueOf(ConsoleViewOptions.DELETE_EMPLOYEE.ordinal() + 1), 0);
+        request.setId(id);
+        processUserAction(request);
+    }
+
+    /**
+     * Делегирует обработку запроса контроллеру
+     * @param request
+     */
+    private void processUserAction(ConsoleViewRequest request){
+        controller.processUserAction(request);
+    }
+
+
+    private void updateEmployee(){
+        Long id = getID();
+        Object result = controller.getEntity(Employee.class, id);
+        if (result == null){
+            out.println(l("IdNotExists"));
+            processInput();
+        }
+        Employee e = (Employee) result;
+        e = updateEmployee(e);
+        ConsoleViewRequest request = new ConsoleViewRequest(String.valueOf(ConsoleViewOptions.UPDATE_EMPLOYEE.ordinal() + 1), 0);
+        request.setBean(e);
+        processUserAction(request);
     }
 
     /**
@@ -175,7 +271,7 @@ public class SimpleConsoleView extends ConsoleView {
     @Override
     protected void processInput() {
         filter = "";
-        System.out.println(line(resourceBundle.getString("action")));
+        out.println(line(resourceBundle.getString("action")));
         listOptions();
         this.changeState(ViewState.WAITING_USER_INPUT);
         String line = in.nextLine();
@@ -185,41 +281,29 @@ public class SimpleConsoleView extends ConsoleView {
             ConsoleViewOptions option = ConsoleViewOptions.values()[i - 1];
             switch (option) {
                 case CREATE_EMPLOYEE: {
-                    Employee e = inputEmployee();
-                    if (e != null) {
-                        ConsoleViewRequest request = new ConsoleViewRequest(line, 0);
-                        request.setBean(e);
-                        controller.processUserAction(request);
-                    }
+                    createEmployee();
                     break;
                 }
                 case DELETE_EMPLOYEE: {
-                    Long id = getID();
-                    ConsoleViewRequest request = new ConsoleViewRequest(line, 0);
-                    request.setId(id);
-                    controller.processUserAction(request);
+                    deleteEmployee();
                     break;
                 }
                 case UPDATE_EMPLOYEE: {
-                    Long id = getID();
-                    Employee e = (Employee) controller.getEntity(Employee.class, id);
-                    e = updateEmployee(e);
-                    ConsoleViewRequest request = new ConsoleViewRequest(line, 0);
-                    request.setBean(e);
-                    controller.processUserAction(request);
+                    updateEmployee();
                     break;
                 }
                 default: {
                     this.changeState(ViewState.WAITING_CONTROLLER);
-                    controller.processUserAction(new ConsoleViewRequest(line, 0));
+                    ConsoleViewRequest request = new ConsoleViewRequest(line, 0);
+                    lastRequest = request;
+                    processUserAction(request);
                     break;
                 }
             }
-        } catch (Exception ex) {
-            logger.error(ex.getMessage());
+        } catch (NumberFormatException ex) {
+            out.println(l("WrongMenuOption"));
             processInput();
         }
-
     }
 
     private String encase(String s){
@@ -227,19 +311,27 @@ public class SimpleConsoleView extends ConsoleView {
     }
 
     private Employee updateEmployee(Employee original) {
-        System.out.println(l("EnterName") + encase(original.getFirstName()));
+        out.println(l("EnterName") + encase(original.getFirstName()));
         String name = in.nextLine();
+        while (!RegexConstraints.match(name, RegexConstraints.VALID_NAME_PATTERN)){
+            out.println(l("WrongName"));
+            name = in.nextLine();
+        }
         original.setFirstName(name);
-        System.out.println(l("EnterSurname") + encase(original.getLastName()));
+        out.println(l("EnterSurname") + encase(original.getLastName()));
         String surname = in.nextLine();
+        while (!RegexConstraints.match(surname, RegexConstraints.VALID_SURNAME_PATTERN)){
+            out.println(l("WrongSurname"));
+            surname = in.nextLine();
+        }
         original.setLastName(surname);
-        System.out.println(l("EnterBirthday") + encase(original.getBirth_date().toString()));
-        String birthday = in.nextLine();
-        original.setBirth_date(Date.valueOf(birthday));
-        System.out.println(l("EnterHireDate") + encase(original.getHireDate().toString()));
-        String hireDate = in.nextLine();
-        original.setHireDate(Date.valueOf(hireDate));
-        System.out.println(l("EnterGender") + "\n" + encase(original.getGender().toString()));
+        out.println(l("EnterBirthday") + encase(original.getBirth_date().toString()));
+        Date birthday = inputDate();
+        original.setBirth_date(birthday);
+        out.println(l("EnterHireDate") + encase(original.getHireDate().toString()));
+        Date hireDate = inputDate();
+        original.setHireDate(hireDate);
+        out.println(l("EnterGender") + "\n" + encase(original.getGender().toString()));
         String gender = in.nextLine();
         char c = gender.trim().equals("1") ? 'M' : 'F';
         original.setGender(c);
@@ -248,13 +340,23 @@ public class SimpleConsoleView extends ConsoleView {
 
     @Override
     public void processConsoleViewUpdate(ConsoleViewUpdate update) {
-        logger.debug("Пришел апдейт {}", update);
+        logger.debug("Пришел апдейт {}", line(update.toString()));
         cachedLines.clear();
         for (Object message : update.getMessages()) {
-            System.out.println(message);
+            if (message instanceof String)
+                out.println(l(message.toString()));
+            else
+                out.println(message.toString());
             cachedLines.add(message);
         }
-        //System.out.format("[Показаны %d - %d]\n", update.getLeftPosition(), update.getRightPosition());
+
+        if (isProcessLastRequest && lastRequest != null){
+            logger.debug("last request = {}, isProcess = {}", lastRequest.toString(), isProcessLastRequest);
+            isProcessLastRequest = false;
+            this.processUserAction(lastRequest);
+        }
+
+        //out.format("[Показаны %d - %d]\n", update.getLeftPosition(), update.getRightPosition());
         updateSelf();
     }
 }

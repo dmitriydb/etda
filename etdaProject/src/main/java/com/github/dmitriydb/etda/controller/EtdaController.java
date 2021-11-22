@@ -23,22 +23,6 @@ public abstract class EtdaController {
     }
 
     /**
-     * Получает из модели прокручиваемый и фильтруемый список сущностей
-     * @param clazz класс сущности
-     * @param request запрос с параметрами
-     * @since 0.1
-     */
-    public abstract void getScrollableList(Class clazz, ConsoleViewRequest request);
-
-    /**
-     * Получает из модели полный список сущностей, для которого неприменима фильтрация и прокрутка
-     * @param clazz класс сущности
-     * @param request запрос
-     * @since 0.1
-     */
-    public abstract void getEntireList(Class clazz, ConsoleViewRequest request);
-
-    /**
      * Метод вызывается представлением когда нужно обработать действие пользователя
      * @param request инкапсулированный запрос пользователя
      */
