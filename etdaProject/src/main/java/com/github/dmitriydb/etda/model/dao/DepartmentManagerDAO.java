@@ -6,7 +6,17 @@ import org.hibernate.query.Query;
 
 import java.util.List;
 
+/**
+ * DAO для класса DepartmentManager
+ *
+ * @version 0.1
+ * @since 0.1
+ */
 public class DepartmentManagerDAO extends AbstractDAO{
+    /**
+     * Находит и удаляет последнюю (по дате from_date) запись о менеджере с номером employeeNumber
+     * @param employeeNumber
+     */
     public void deleteManagerByEmployeeNumber(Long employeeNumber){
         startOperation();
         Query query = session.createQuery("FROM DepartmentManager WHERE departmentManagerSuite.employeeNumber = :number ORDER BY departmentManagerSuite.fromDate DESC");

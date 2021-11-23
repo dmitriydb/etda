@@ -1,4 +1,4 @@
-<configuration debug="true">
+<configuration debug="false">
 
     <!--Properties-->
 
@@ -28,7 +28,7 @@
     </appender>
 
     <!-- Loggers -->
-    <logger name="com.github.dmitriydb.etda" level="debug">
+    <logger name="com.github.dmitriydb.etda" level="info">
         <appender-ref ref="CONSOLE APP" />
         <appender-ref ref="STDOUT" />
     </logger>

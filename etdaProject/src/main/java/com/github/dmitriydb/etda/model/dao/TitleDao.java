@@ -6,7 +6,16 @@ import org.hibernate.query.Query;
 
 import java.util.List;
 
+
+/**
+ * DAO для класса Title
+ */
 public class TitleDao extends AbstractDAO {
+
+    /**
+     * Находит и удаляет последнюю (по дате from_date) запись о должности для сотрудника с номером employeeNumber
+     * @param employeeNumber
+     */
     public void deleteTitleByEmployeeID(Long employeeNumber){
         startOperation();
         Query query = session.createQuery("FROM Title WHERE titleOrder.employeeNumber = :number ORDER BY titleOrder.fromDate DESC");

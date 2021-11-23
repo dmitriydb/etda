@@ -34,6 +34,8 @@ public abstract class ConsoleView extends EtdaView {
      * Этот метод возвращает строку, корректную для вывода в соответствующем терминале (telnet, cmd...)
      * Каждый конкретный view должен переопределить данный метод
      * @return
+     *
+     * @since 0.1
      */
     protected abstract String line(String line);
 

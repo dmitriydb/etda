@@ -25,9 +25,8 @@ public class SimpleTitleDAO extends SimpleDAO {
     }
 
     /**
-     * поиск должности по номеру сотрудника
+     * поиск должностей по номеру сотрудника
      * @param id номер сотрудника
-     * @return
      * @since 0.1
      */
     public List<Title> findAllByEmployeeNumber(Long id) {

@@ -67,6 +67,6 @@ public class CurrentDepartmentEmployee {
 
     @Override
     public String toString() {
-        return String.format("%20d %20s %20s %20s", departmentEmployeeSuite.getDepartmentId(), departmentEmployeeSuite.getDepartmentId(), fromDate, toDate);
+        return String.format("%20s %20s %20s %20s", departmentEmployeeSuite.getDepartmentId(), departmentEmployeeSuite.getDepartmentId(), fromDate, toDate);
     }
 }

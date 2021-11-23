@@ -1,5 +1,11 @@
 package com.github.dmitriydb.etda.model;
 
+/**
+ * Класс, который содержит регулярные выражения для валидации введенных пользователем данных
+ *
+ * @version 0.1
+ * @since 0.1
+ */
 public class RegexConstraints {
     public static final String VALID_NAME_PATTERN = "^[а-яА-Яa-zA-Z'\\s-]{1,30}$";
     public static final String VALID_SURNAME_PATTERN = "^[а-яА-Яa-zA-Z'\\s-]{1,30}$";

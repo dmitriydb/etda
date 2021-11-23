@@ -12,6 +12,7 @@ import java.sql.Date;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.NoSuchElementException;
 
 
 /**
@@ -56,7 +57,7 @@ public class SimpleConsoleView extends ConsoleView {
                 if (!filter.equals("")) {
                     out.println("Current filter [" + filter + "]");
                 }
-                processSingleCharacter();
+                if (!processSingleCharacter()) break;
             }
         }
     }
@@ -64,20 +65,31 @@ public class SimpleConsoleView extends ConsoleView {
     /**
      * считывает символ с терминала и делегирует выполнение команды, привязанной к этому символу,
      * методу processCommand
-     *
+     * <p>
+     * если возникает исключение NoSuchElementException, то возвращает false
+     * <p>
      * Используется в ответ на ввод пользователя на экране со списком данных
+     *
+     * @since 0.1
      */
-    private void processSingleCharacter() {
-        String s = in.nextLine();
-        if (!s.trim().equals(""))
-            processCommand(s);
+    private boolean processSingleCharacter() {
+        try {
+            String s = in.nextLine();
+            if (!s.trim().equals(""))
+                processCommand(s);
+        } catch (NoSuchElementException ex) {
+            return false;
+        }
+        return true;
     }
 
     /**
      * Обрабатывает первый символ строки и выполняет команду, привязанную к этому символу
-     *
+     * <p>
      * Используется в ответ на ввод пользователя на экране со списком данных
+     *
      * @param s
+     * @since 0.1
      */
     private void processCommand(String s) {
         logger.debug("Current option = {}", this.currentOption);
@@ -131,6 +143,8 @@ public class SimpleConsoleView extends ConsoleView {
 
     /**
      * Перечисляет все доступные опции меню
+     *
+     * @since 0.1
      */
     private void listOptions() {
         for (ConsoleViewOptions option : ConsoleViewOptions.values()) {
@@ -141,13 +155,12 @@ public class SimpleConsoleView extends ConsoleView {
         }
     }
 
-    private boolean isDateValid(String date){
-        try{
+    private boolean isDateValid(String date) {
+        try {
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern(dateFormat);
             LocalDate d = LocalDate.parse(date, formatter);
             return true;
-        }
-        catch (Exception ex){
+        } catch (Exception ex) {
             return false;
         }
     }
@@ -155,11 +168,13 @@ public class SimpleConsoleView extends ConsoleView {
     /**
      * Запрашивает дату у пользователя, пока он не введет корректную в региональном формате
      * Либо если он нажмет специальную клавишу выхода - вернет в меню
+     *
      * @return дата типа java.sql.date
+     * @since 0.1
      */
-    private Date inputDate(){
+    private Date inputDate() {
         String sDate = in.nextLine();
-        while (!isDateValid(sDate)){
+        while (!isDateValid(sDate)) {
             out.println(l("WrongDate"));
             out.println(l("DateFormat") + l(dateFormat));
             sDate = in.nextLine();
@@ -176,13 +191,15 @@ public class SimpleConsoleView extends ConsoleView {
     /**
      * Запрашивает у пользователя данные и создает объект класса Employee
      * для дальнейшей передачи в контроллер для создания в БД
+     *
      * @return объект типа Employee
+     * @since 0.1
      */
     private Employee inputEmployee() {
         Employee e = new Employee();
         out.println(l("EnterName"));
         String name = in.nextLine();
-        while (!RegexConstraints.match(name, RegexConstraints.VALID_NAME_PATTERN)){
+        while (!RegexConstraints.match(name, RegexConstraints.VALID_NAME_PATTERN)) {
             out.println(l("WrongName"));
             name = in.nextLine();
         }
@@ -190,7 +207,7 @@ public class SimpleConsoleView extends ConsoleView {
         e.setFirstName(name);
         out.println(l("EnterSurname"));
         String surname = in.nextLine();
-        while (!RegexConstraints.match(surname, RegexConstraints.VALID_SURNAME_PATTERN)){
+        while (!RegexConstraints.match(surname, RegexConstraints.VALID_SURNAME_PATTERN)) {
             out.println(l("WrongSurname"));
             surname = in.nextLine();
         }
@@ -208,10 +225,10 @@ public class SimpleConsoleView extends ConsoleView {
         return e;
     }
 
-    private Department updateDepartment(Department original){
+    private Department updateDepartment(Department original) {
         out.println(l("EnterDepartmentName") + encase(original.getName()));
         String name = in.nextLine();
-        while (!RegexConstraints.match(name, RegexConstraints.VALID_DEPARTMENT_NAME)){
+        while (!RegexConstraints.match(name, RegexConstraints.VALID_DEPARTMENT_NAME)) {
             out.println(l("WrongName"));
             name = in.nextLine();
         }
@@ -223,14 +240,14 @@ public class SimpleConsoleView extends ConsoleView {
         Department e = new Department();
         out.println(l("EnterDepartmentId"));
         String code = in.nextLine();
-        while (!RegexConstraints.match(code, RegexConstraints.VALID_DEPARTMENT_NUMBER)){
+        while (!RegexConstraints.match(code, RegexConstraints.VALID_DEPARTMENT_NUMBER)) {
             out.println(l("WrongCode"));
             code = in.nextLine();
         }
         e.setDepartmentId(code);
         out.println(l("EnterDepartmentName"));
         String name = in.nextLine();
-        while (!RegexConstraints.match(name, RegexConstraints.VALID_DEPARTMENT_NAME)){
+        while (!RegexConstraints.match(name, RegexConstraints.VALID_DEPARTMENT_NAME)) {
             out.println(l("WrongName"));
             name = in.nextLine();
         }
@@ -241,21 +258,21 @@ public class SimpleConsoleView extends ConsoleView {
     /**
      * Метод, который просит пользователя ввести строку до тех пор, пока она не будет проходить валидацию
      * Если метод возвращает null, то это означает конец ввода
+     *
      * @param pattern паттерн валидации
      * @param message сообщение, которое будет выводиться при непрошедшей валидации
-     *
      * @since 0.1
      */
-    private String getValidString(String pattern, String message){
+    private String getValidString(String pattern, String message) {
         String s = in.nextLine();
-        while (!RegexConstraints.match(s, pattern)){
+        while (!RegexConstraints.match(s, pattern)) {
             System.out.println(message);
             s = in.nextLine();
         }
         return s;
     }
 
-    private Title inputTitle(){
+    private Title inputTitle() {
         Title t = new Title();
         TitleOrder order = new TitleOrder();
         Long id = getID();
@@ -273,7 +290,7 @@ public class SimpleConsoleView extends ConsoleView {
         return t;
     }
 
-    private Salary inputSalary(){
+    private Salary inputSalary() {
         Salary s = new Salary();
         SalaryOrder order = new SalaryOrder();
         Long id = getID();
@@ -292,7 +309,7 @@ public class SimpleConsoleView extends ConsoleView {
         return s;
     }
 
-    private DepartmentEmployee inputDepartmentEmployee(){
+    private DepartmentEmployee inputDepartmentEmployee() {
         DepartmentEmployee e = new DepartmentEmployee();
         DepartmentEmployeeSuite suite = new DepartmentEmployeeSuite();
         Long id = getID();
@@ -306,11 +323,11 @@ public class SimpleConsoleView extends ConsoleView {
         Date endDate = inputDate();
         e.setFromDate(startDate);
         e.setToDate(endDate);
-       e.setDepartmentEmployeeSuite(suite);
+        e.setDepartmentEmployeeSuite(suite);
         return e;
     }
 
-    private DepartmentManager inputManager(){
+    private DepartmentManager inputManager() {
         DepartmentManager manager = new DepartmentManager();
         DepartmentEmployeeSuite suite = new DepartmentEmployeeSuite();
         Long id = getID();
@@ -330,8 +347,10 @@ public class SimpleConsoleView extends ConsoleView {
 
     /**
      * Получает строку из текстовых ресурсов по лейблу
+     *
      * @param label
      * @return
+     * @since 0.1
      */
     private String l(String label) {
         return line(resourceBundle.getString(label));
@@ -339,7 +358,9 @@ public class SimpleConsoleView extends ConsoleView {
 
     /**
      * Получает и возвращает введенный пользователем ID записи
+     *
      * @return корректное число типа Long
+     * @since 0.1
      */
     private Long getID() {
         out.println(l("EnterLineNumber"));
@@ -348,7 +369,7 @@ public class SimpleConsoleView extends ConsoleView {
         return id;
     }
 
-    private void createEntity(ConsoleViewOptions option){
+    private void createEntity(ConsoleViewOptions option) {
         Object e = inputEntity(option);
         if (e != null) {
             ConsoleViewRequest request = new ConsoleViewRequest(String.valueOf(option.ordinal() + 1), 0);
@@ -357,7 +378,7 @@ public class SimpleConsoleView extends ConsoleView {
         }
     }
 
-    private Object inputEntity(ConsoleViewOptions option){
+    private Object inputEntity(ConsoleViewOptions option) {
         if (option == ConsoleViewOptions.CREATE_EMPLOYEE)
             return inputEmployee();
         if (option == ConsoleViewOptions.CREATE_DEPARTMENT)
@@ -373,30 +394,30 @@ public class SimpleConsoleView extends ConsoleView {
         return null;
     }
 
-    private Object updateEntity(Object original){
+    private Object updateEntity(Object original) {
         if (original instanceof Employee) return updateEmployee((Employee) original);
         if (original instanceof Department) return updateDepartment((Department) original);
         else return original;
     }
 
-    private void deleteEntity(ConsoleViewOptions option){
+    private void deleteEntity(ConsoleViewOptions option) {
         Long id = getID();
         ConsoleViewRequest request = new ConsoleViewRequest(String.valueOf(option.ordinal() + 1), 0);
         request.setId(id);
         processUserAction(request);
     }
 
-    private void updateEntity(ConsoleViewOptions option){
+    private void updateEntity(ConsoleViewOptions option) {
         Serializable id;
         if (!option.equals(ConsoleViewOptions.UPDATE_DEPARTMENT))
             id = getID();
-        else{
+        else {
             System.out.println(l("EnterDepartmentId"));
             id = getValidString(RegexConstraints.VALID_DEPARTMENT_NUMBER, l("WrongCode"));
         }
 
         Object result = controller.getEntity(option.getEntityClass(), id);
-        if (result == null){
+        if (result == null) {
             out.println(l("IdNotExists"));
             processInput();
         }
@@ -410,14 +431,14 @@ public class SimpleConsoleView extends ConsoleView {
     private Employee updateEmployee(Employee original) {
         out.println(l("EnterName") + encase(original.getFirstName()));
         String name = in.nextLine();
-        while (!RegexConstraints.match(name, RegexConstraints.VALID_NAME_PATTERN)){
+        while (!RegexConstraints.match(name, RegexConstraints.VALID_NAME_PATTERN)) {
             out.println(l("WrongName"));
             name = in.nextLine();
         }
         original.setFirstName(name);
         out.println(l("EnterSurname") + encase(original.getLastName()));
         String surname = in.nextLine();
-        while (!RegexConstraints.match(surname, RegexConstraints.VALID_SURNAME_PATTERN)){
+        while (!RegexConstraints.match(surname, RegexConstraints.VALID_SURNAME_PATTERN)) {
             out.println(l("WrongSurname"));
             surname = in.nextLine();
         }
@@ -438,16 +459,18 @@ public class SimpleConsoleView extends ConsoleView {
 
     /**
      * Делегирует обработку запроса контроллеру
-     * @param request
      *
+     * @param request
      * @since 0.1
      */
-    private void processUserAction(ConsoleViewRequest request){
+    private void processUserAction(ConsoleViewRequest request) {
         controller.processUserAction(request);
     }
 
     /**
      * Обрабатывает выбор пользователем пункта основного меню
+     *
+     * @since 0.1
      */
     @Override
     protected void processInput() {
@@ -455,9 +478,8 @@ public class SimpleConsoleView extends ConsoleView {
         out.println(line(resourceBundle.getString("action")));
         listOptions();
         this.changeState(ViewState.WAITING_USER_INPUT);
-        String line = in.nextLine();
-
         try {
+            String line = in.nextLine();
             Integer i = Integer.valueOf(line);
             ConsoleViewOptions option = ConsoleViewOptions.values()[i - 1];
             switch (option.getActionType()) {
@@ -484,10 +506,12 @@ public class SimpleConsoleView extends ConsoleView {
         } catch (NumberFormatException ex) {
             out.println(l("WrongMenuOption"));
             processInput();
+        } catch (NoSuchElementException ex) {
+
         }
     }
 
-    private String encase(String s){
+    private String encase(String s) {
         return "[" + s + "]";
     }
 
@@ -502,14 +526,11 @@ public class SimpleConsoleView extends ConsoleView {
                 out.println(message.toString());
             cachedLines.add(message);
         }
-
-        if (isProcessLastRequest && lastRequest != null){
+        if (isProcessLastRequest && lastRequest != null) {
             logger.debug("last request = {}, isProcess = {}", lastRequest.toString(), isProcessLastRequest);
             isProcessLastRequest = false;
             this.processUserAction(lastRequest);
         }
-
-        //out.format("[Показаны %d - %d]\n", update.getLeftPosition(), update.getRightPosition());
         updateSelf();
     }
 }

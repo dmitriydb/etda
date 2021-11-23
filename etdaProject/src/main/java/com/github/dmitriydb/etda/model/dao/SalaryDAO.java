@@ -6,7 +6,15 @@ import org.hibernate.query.Query;
 
 import java.util.List;
 
+/**
+ * DAO дял класса Salary
+ */
 public class SalaryDAO extends AbstractDAO {
+
+    /**
+     * Находит и удаляет последнюю (по дате from_date) запись о зарплате для сотрудника с номером employeeNumber
+     * @param employeeNumber
+     */
     public void deleteSalaryByEmployeeID(Long employeeNumber){
         startOperation();
         Query query = session.createQuery("FROM Salary WHERE salaryOrder.employeeNumber = :number ORDER BY salaryOrder.fromDate DESC");

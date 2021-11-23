@@ -20,11 +20,14 @@ public abstract class EtdaModel {
 
     /**
      * Возвращает пустой список, если результаты не найдены
+     *
+     * @since 0.1
      */
     public abstract List<Object> findEntities(Class clazz, int maxResults, int offset);
 
     /**
      * Возвращает пустой список, если результаты не найдены
+     * @since 0.1
      */
     public abstract List<Object> findEntitiesFiltered(Class clazz, String filter, int maxResults, int offset);
 
@@ -32,21 +35,25 @@ public abstract class EtdaModel {
 
     /**
      * Возвращает пустой список, если результаты не найдены
+     * @since 0.1
      */
     public abstract List<Object> findList(Class clazz, int maxResults, int offset);
 
     /**
      * Создает сущность, либо генерирует исключение IllegalArgumentException
+     * @since 0.1
      */
     public abstract void createEntity(Class clazz, Object entity);
 
     /**
      * Обновляет объект, либо генерирует исключение IllegalArgumentException (например, если объекта с таким ID не существует)
+     * @since 0.1
      * */
     public abstract boolean updateEntity(Class clazz, Object entity);
 
     /**
      * Удаляет объект, либо генерирует исключение IllegalArgumentException (например, если объекта с таким ID не существует)
+     * @since 0.1
      */
     public abstract void deleteEntity(Class clazz, Serializable id) throws IllegalArgumentException;
 
@@ -55,6 +62,7 @@ public abstract class EtdaModel {
      * @param clazz класс искомой сущности
      * @param id id сущности
      * @return результат поиска (1 объект)
+     * @since 0.1
      */
     public abstract Object getEntity(Class clazz, Serializable id);
 
