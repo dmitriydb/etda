@@ -15,10 +15,15 @@ import java.util.Scanner;
  *
  * Возможные реализации в будущем: представление для telnet-а и на основе консольной библиотека (jcurses, lanterna и т.д)
  *
- * @version 0.1
+ * @version 0.1.1
  * @since 0.1
  */
 public abstract class ConsoleView extends EtdaView {
+
+    /**
+     * Текущий набор опций в консольном представлении
+     */
+    private OptionsSet options;
 
     /**
      * Поток терминального ввода. По умолчанию - System.in
@@ -57,5 +62,13 @@ public abstract class ConsoleView extends EtdaView {
 
     public void setOut(PrintStream out) {
         this.out = out;
+    }
+
+    public OptionsSet getOptions() {
+        return options;
+    }
+
+    public void setOptions(OptionsSet options) {
+        this.options = options;
     }
 }

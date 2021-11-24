@@ -2,6 +2,8 @@ package com.github.dmitriydb.etda.model.simplemodel.dao;
 
 import com.github.dmitriydb.etda.model.EtdaDaoFactory;
 import com.github.dmitriydb.etda.model.dao.*;
+import com.github.dmitriydb.etda.security.User;
+import com.github.dmitriydb.etda.security.UserDAO;
 
 
 /**
@@ -46,5 +48,10 @@ public class SimpleDaoFactory extends EtdaDaoFactory {
     @Override
     public TitleDao getTitleDao() {
         return new TitleDao();
+    }
+
+    @Override
+    public UserDAO getUserDao() {
+        return new UserDAO();
     }
 }

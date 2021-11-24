@@ -4,6 +4,9 @@ import com.github.dmitriydb.etda.consoleapp.WindowsCmdUtil;
 import com.github.dmitriydb.etda.model.RegexConstraints;
 import com.github.dmitriydb.etda.model.simplemodel.domain.*;
 import com.github.dmitriydb.etda.resources.ResourceBundleManager;
+import com.github.dmitriydb.etda.security.SecurityManager;
+import com.github.dmitriydb.etda.security.SecurityRole;
+import com.github.dmitriydb.etda.security.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -18,7 +21,7 @@ import java.util.NoSuchElementException;
 /**
  * Простое консольное представление для терминала Windows
  *
- * @version 0.1
+ * @version 0.1.1
  * @since 0.1
  */
 public class SimpleConsoleView extends ConsoleView {
@@ -99,18 +102,17 @@ public class SimpleConsoleView extends ConsoleView {
             this.setOffset(0);
             processInput();
         } else if (this.currentOption.getActionType().equals(ConsoleActionType.SCROLLABLE)) {
-            String option = String.valueOf(currentOption.ordinal() + 1);
             switch (c) {
                 case '+': {
                     this.setOffset(getOffset() + 1);
-                    ConsoleViewRequest request = new ConsoleViewRequest(option, getOffset());
+                    ConsoleViewRequest request = new ConsoleViewRequest(currentOption, getOffset());
                     request.setFilter(filter);
                     processUserAction(request);
                     break;
                 }
                 case '-': {
                     this.setOffset(getOffset() - 1);
-                    ConsoleViewRequest request = new ConsoleViewRequest(option, getOffset());
+                    ConsoleViewRequest request = new ConsoleViewRequest(currentOption, getOffset());
                     request.setFilter(filter);
                     processUserAction(request);
                     break;
@@ -133,7 +135,7 @@ public class SimpleConsoleView extends ConsoleView {
                 default: {
                     setOffset(0);
                     filter = s;
-                    ConsoleViewRequest request = new ConsoleViewRequest(option, getOffset());
+                    ConsoleViewRequest request = new ConsoleViewRequest(currentOption, getOffset());
                     request.setFilter(filter);
                     processUserAction(request);
                 }
@@ -144,13 +146,15 @@ public class SimpleConsoleView extends ConsoleView {
     /**
      * Перечисляет все доступные опции меню
      *
-     * @since 0.1
+     * Теперь работает с любыми списками класса OptionsSet
+     *
+     * @since 0.1.1
      */
     private void listOptions() {
-        for (ConsoleViewOptions option : ConsoleViewOptions.values()) {
+        Integer seqNumber = 1;
+        for (ConsoleViewOptions option : this.getOptions().options) {
             String optionName = line(option.getOptionLabel());
-            Integer seqNumber = option.ordinal() + 1;
-            String op = String.format("%d) %s", seqNumber, line(resourceBundle.getString(optionName)));
+            String op = String.format("%d) %s", seqNumber++, line(resourceBundle.getString(optionName)));
             out.println(op);
         }
     }
@@ -372,7 +376,7 @@ public class SimpleConsoleView extends ConsoleView {
     private void createEntity(ConsoleViewOptions option) {
         Object e = inputEntity(option);
         if (e != null) {
-            ConsoleViewRequest request = new ConsoleViewRequest(String.valueOf(option.ordinal() + 1), 0);
+            ConsoleViewRequest request = new ConsoleViewRequest(option, 0);
             request.setBean(e);
             processUserAction(request);
         }
@@ -402,7 +406,7 @@ public class SimpleConsoleView extends ConsoleView {
 
     private void deleteEntity(ConsoleViewOptions option) {
         Long id = getID();
-        ConsoleViewRequest request = new ConsoleViewRequest(String.valueOf(option.ordinal() + 1), 0);
+        ConsoleViewRequest request = new ConsoleViewRequest(option, 0);
         request.setId(id);
         processUserAction(request);
     }
@@ -423,7 +427,7 @@ public class SimpleConsoleView extends ConsoleView {
         }
         Object e = result;
         e = updateEntity(e);
-        ConsoleViewRequest request = new ConsoleViewRequest(String.valueOf(option.ordinal() + 1), 0);
+        ConsoleViewRequest request = new ConsoleViewRequest(option, 0);
         request.setBean(e);
         processUserAction(request);
     }
@@ -458,6 +462,74 @@ public class SimpleConsoleView extends ConsoleView {
 
 
     /**
+     * Метод запрашивает у пользователя строку до тех пор, пока она не будет соответствовать паттерну
+     *
+     * @param initialMessageLabel лейбл сообщения, которое показывается в начале ввода
+     * @param wrongMessageLabel лейбл сообщения, которое будет показываться после каждой ошибки
+     * @param pattern регулярное выражение для проверки
+     * @return
+     */
+    private String getValidString(String initialMessageLabel, String wrongMessageLabel, String pattern){
+        out.println(l(initialMessageLabel));
+        String s = in.nextLine();
+        while (!RegexConstraints.match(s, pattern)) {
+            out.println(l(wrongMessageLabel));
+            s = in.nextLine();
+        }
+        return s;
+    }
+
+    /**
+     * Запрашивает у пользователя данные для регистрации и возвращает объект класса User
+     * По умолчанию роль пользователя устанавливается в Employee
+     * @return
+     *
+     * @since 0.1.1
+     */
+    private User registerUser(){
+        User u = new User();
+        u.setSecurityRole(SecurityRole.EMPLOYEE_ROLE());
+        String username = getValidString("EnterUsername", "WrongUsername", RegexConstraints.VALID_USERNAME);
+        String password = "";
+        String passwordAgain = "";
+        do{
+            if (!password.equals(passwordAgain)){
+                System.out.println(l("PasswordsDoNotMatch"));
+            }
+            password = getValidString("EnterPassword", "WrongPassword", RegexConstraints.VALID_PASSWORD);
+            passwordAgain = getValidString("EnterPasswordAgain", "WrongPassword", RegexConstraints.VALID_PASSWORD);
+        }
+        while (!password.equals(passwordAgain));
+        passwordAgain = null;
+        password = SecurityManager.hashPassword(password);
+        System.out.println(l("EnterEmail"));
+        String email = in.nextLine();
+        while (!email.equals("") || RegexConstraints.match(email, RegexConstraints.VALID_EMAIL)){
+            System.out.println(l("WrongEmail"));
+            email = in.nextLine();
+        }
+        u.setName(username);
+        u.setPassword(password);
+        u.setEmail(email);
+        return u;
+    }
+
+
+    /**
+     * Метод запрашивает у пользователя логин и пароль
+     * Затем отправляет контроллеру данные на авторизацию
+     * @return пустой объект User с заполненными полями name и password
+     */
+    private User loginUser(){
+        User u = new User();
+        String username = getValidString("EnterUsername", "WrongUsername", RegexConstraints.VALID_USERNAME);
+        String password = getValidString("EnterPassword", "WrongPassword", RegexConstraints.VALID_PASSWORD);
+        u.setName(username);
+        u.setPassword(password);
+        return u;
+    }
+
+    /**
      * Делегирует обработку запроса контроллеру
      *
      * @param request
@@ -470,7 +542,9 @@ public class SimpleConsoleView extends ConsoleView {
     /**
      * Обрабатывает выбор пользователем пункта основного меню
      *
-     * @since 0.1
+     * Теперь должен учитывать номер опции в конкретном наборе опций класса OptionsSet
+     *
+     * @since 0.1.1
      */
     @Override
     protected void processInput() {
@@ -481,7 +555,7 @@ public class SimpleConsoleView extends ConsoleView {
         try {
             String line = in.nextLine();
             Integer i = Integer.valueOf(line);
-            ConsoleViewOptions option = ConsoleViewOptions.values()[i - 1];
+            ConsoleViewOptions option = getOptions().options.get(i - 1);
             switch (option.getActionType()) {
                 case CREATE: {
                     createEntity(option);
@@ -495,19 +569,45 @@ public class SimpleConsoleView extends ConsoleView {
                     updateEntity(option);
                     break;
                 }
+                case USER_OPERATION:{
+                    switch (option){
+                        case LOGIN:
+                        {
+                            User u = loginUser();
+                            ConsoleViewRequest request = new ConsoleViewRequest(ConsoleViewOptions.LOGIN);
+                            request.setBean(u);
+                            controller.processUserAction(request);
+                            break;
+                        }
+                        case REGISTER:{
+                            User u = registerUser();
+                            ConsoleViewRequest request = new ConsoleViewRequest(ConsoleViewOptions.REGISTER);
+                            request.setBean(u);
+                            controller.processUserAction(request);
+                            break;
+                        }
+                        case EXIT: {
+                            System.out.println(l("Bye"));
+                            System.exit(0);
+                            break;
+                        }
+                    }
+                }
                 default: {
                     this.changeState(ViewState.WAITING_CONTROLLER);
-                    ConsoleViewRequest request = new ConsoleViewRequest(line, 0);
+                    ConsoleViewRequest request = new ConsoleViewRequest(option, 0);
                     lastRequest = request;
                     processUserAction(request);
                     break;
                 }
             }
-        } catch (NumberFormatException ex) {
-            out.println(l("WrongMenuOption"));
-            processInput();
         } catch (NoSuchElementException ex) {
 
+        }
+        catch (Exception ex) {
+            logger.error("Error", ex);
+            out.println(l("WrongMenuOption"));
+            processInput();
         }
     }
 

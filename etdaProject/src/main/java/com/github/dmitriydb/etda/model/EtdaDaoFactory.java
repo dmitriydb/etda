@@ -2,11 +2,12 @@ package com.github.dmitriydb.etda.model;
 
 import com.github.dmitriydb.etda.model.dao.*;
 import com.github.dmitriydb.etda.model.simplemodel.dao.SimpleTitleDAO;
+import com.github.dmitriydb.etda.security.UserDAO;
 
 /**
  * Абстрактная фабрика DAO
  *
- * @version 0.1
+ * @version 0.1.1
  * @since 0.1
  */
 public abstract class EtdaDaoFactory {
@@ -24,4 +25,6 @@ public abstract class EtdaDaoFactory {
     public abstract SalaryDAO getSalaryDAO();
 
     public abstract TitleDao getTitleDao();
+
+    public abstract UserDAO getUserDao();
 }

@@ -1,6 +1,7 @@
 package com.github.dmitriydb.etda.view;
 
 import com.github.dmitriydb.etda.controller.EtdaController;
+import com.github.dmitriydb.etda.security.User;
 import com.github.dmitriydb.etda.view.console.ConsoleViewOptions;
 import com.github.dmitriydb.etda.view.console.ViewState;
 
@@ -10,10 +11,15 @@ import java.util.ResourceBundle;
 /**
  * Абстрактный класс представления для приложения
  *
- * @version 0.1
+ * @version 0.1.1
  * @since 0.1
  */
 public abstract class EtdaView {
+
+    /**
+     * Пользователь, работающий с данным представлением в текущий момент
+     */
+    private User user;
 
     /**
      * Региональные настройки пользователя в текущем представлении
@@ -90,5 +96,27 @@ public abstract class EtdaView {
         this.currentOption = currentOption;
     }
 
+    public User getUser() {
+        return user;
+    }
 
+    public void setUser(User user) {
+        this.user = user;
+    }
+
+    public Locale getLocale() {
+        return locale;
+    }
+
+    public void setLocale(Locale locale) {
+        this.locale = locale;
+    }
+
+    public ResourceBundle getResourceBundle() {
+        return resourceBundle;
+    }
+
+    public void setResourceBundle(ResourceBundle resourceBundle) {
+        this.resourceBundle = resourceBundle;
+    }
 }

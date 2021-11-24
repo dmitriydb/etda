@@ -1,6 +1,8 @@
 package com.github.dmitriydb.etda.dbutils;
 
 import com.github.dmitriydb.etda.model.simplemodel.domain.*;
+import com.github.dmitriydb.etda.security.SecurityRole;
+import com.github.dmitriydb.etda.security.User;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.cfg.Configuration;
@@ -10,7 +12,7 @@ import org.hibernate.cfg.Configuration;
  * На текущий момент используется, чтобы инициализировать Hibernate и создать фабрику сессий
  * В дальнейшем раздает новые сессии по запросу
  *
- * @version 0.1
+ * @version 0.1.1
  * @since 0.1
  */
 public class DbManager {
@@ -27,7 +29,10 @@ public class DbManager {
         cfg.addAnnotatedClass(DepartmentEmployee.class);
         cfg.addAnnotatedClass(CurrentDepartmentEmployee.class);
         cfg.addAnnotatedClass(DepartmentEmployeeLatestDate.class);
+        cfg.addAnnotatedClass(User.class);
+        cfg.addAnnotatedClass(SecurityRole.class);
         sessionFactory = cfg.buildSessionFactory();
+        SecurityRole.init();
     }
 
     public static Session getSession(){

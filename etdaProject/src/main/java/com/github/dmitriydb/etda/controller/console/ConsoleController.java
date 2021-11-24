@@ -2,8 +2,12 @@ package com.github.dmitriydb.etda.controller.console;
 
 import com.github.dmitriydb.etda.controller.EtdaController;
 import com.github.dmitriydb.etda.model.EtdaModel;
+import com.github.dmitriydb.etda.model.dao.SimpleDAO;
 import com.github.dmitriydb.etda.model.simplemodel.domain.*;
 import com.github.dmitriydb.etda.resources.ResourceBundleManager;
+import com.github.dmitriydb.etda.security.SecurityManager;
+import com.github.dmitriydb.etda.security.User;
+import com.github.dmitriydb.etda.security.UserDAO;
 import com.github.dmitriydb.etda.view.console.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -19,7 +23,7 @@ import java.util.ResourceBundle;
  * Контроллер для консольного представления
  * Возможно, в будущем будет преобразован в общий контроллер и для веб-приложения
  *
- * @version 0.1
+ * @version 0.1.1
  * @since 0.1
  */
 public class ConsoleController extends EtdaController {
@@ -39,6 +43,7 @@ public class ConsoleController extends EtdaController {
     public ConsoleController() {
         model = EtdaModel.getSimpleModel();
         view = new SimpleConsoleView();
+        ((ConsoleView)view).setOptions(new StartMenuOptionsSet());
         view.setController(this);
     }
 
@@ -132,16 +137,7 @@ public class ConsoleController extends EtdaController {
     @Override
     public void processUserAction(ConsoleViewRequest request) {
         logger.debug("Processing request {}", request);
-        Integer optionNumber = null;
-        try{
-            optionNumber = Integer.valueOf(request.getRequestMessage().trim());
-        }
-        catch (NumberFormatException ex){
-            logger.error("Error when parsing option number {}", request.getRequestMessage().trim(), ex);
-            errorLabelMessage("WrongOption");
-            return;
-        }
-        ConsoleViewOptions option = ConsoleViewOptions.values()[optionNumber - 1];
+        ConsoleViewOptions option = request.getRequestMessage();
         view.setCurrentOption(option);
         switch (option.getActionType()) {
             case SCROLLABLE:
@@ -159,8 +155,99 @@ public class ConsoleController extends EtdaController {
             case DELETE:
                 this.deleteEntity(option.getEntityClass(), request.getId());
                 break;
+            case USER_OPERATION:{
+                switch (option){
+                    case REGISTER: registerUser(request);
+                    case LOGIN: authorizeUser(request);
+                }
+                break;
+            }
+
+        }
+    }
+
+    /**
+     * Метод авторизует пользователя и если авторизация успешна, то
+     * устанавливает пользователя в представление и выдает соответствующие права
+     *
+     * @since 0.1.1
+     * @param request
+     */
+    private void authorizeUser(ConsoleViewRequest request){
+        logger.debug("authorizeUser");
+        logger.debug("request = {}", request);
+        User u = (User)request.getBean();
+        User u2 = new UserDAO().getUserByName(u.getName());
+        //Нет такого пользователя
+        if (u2 == null){
+            ConsoleViewUpdate consoleViewUpdate = new ConsoleViewUpdate();
+            consoleViewUpdate.addMessage("UserNotExists");
+            view.changeState(ViewState.MENU);
+            ((ConsoleView) this.view).processConsoleViewUpdate(consoleViewUpdate);
+            return;
+        }
+        //Пароль неправильный
+
+        if (!SecurityManager.checkPass(u.getPassword(), u2.getPassword())){
+            ConsoleViewUpdate consoleViewUpdate = new ConsoleViewUpdate();
+            consoleViewUpdate.addMessage("InvalidPassword");
+            view.changeState(ViewState.MENU);
+            ((ConsoleView) this.view).processConsoleViewUpdate(consoleViewUpdate);
+            return;
         }
 
+        ConsoleViewUpdate consoleViewUpdate = new ConsoleViewUpdate();
+        consoleViewUpdate.addMessage("SucLogin");
+        OptionsSet options = new OptionsSet();
+        for (ConsoleViewOptions availableOption : u2.getSecurityRole().getGrantedConsoleOptions()){
+            options.addOption(availableOption);
+        }
+        ((ConsoleView)view).setOptions(options);
+        view.changeState(ViewState.MENU);
+        view.setUser(u2);
+        ((ConsoleView) this.view).processConsoleViewUpdate(consoleViewUpdate);
+
+    }
+
+    /**
+     * Метод регистрирует пользователя и если регистрация успешна, то выдает права и устанавливает
+     * пользователя в представление
+     *
+     * @since 0.1.1
+     * @param request
+     */
+    private void registerUser(ConsoleViewRequest request){
+        logger.debug("request = {}", request);
+        User u = (User)request.getBean();
+        logger.debug("User = {}", u.toString());
+        if (new UserDAO().isUserExists(u.getName())){
+            ConsoleViewUpdate consoleViewUpdate = new ConsoleViewUpdate();
+            consoleViewUpdate.addMessage("LoginExists");
+            view.changeState(ViewState.MENU);
+            ((ConsoleView) this.view).processConsoleViewUpdate(consoleViewUpdate);
+            return;
+        }
+        try{
+            new SimpleDAO(User.class).create(u);
+            ConsoleViewUpdate consoleViewUpdate = new ConsoleViewUpdate();
+            consoleViewUpdate.addMessage("SucRegister");
+            OptionsSet options = new OptionsSet();
+            for (ConsoleViewOptions availableOption : u.getSecurityRole().getGrantedConsoleOptions()){
+                options.addOption(availableOption);
+            }
+            ((ConsoleView)view).setOptions(options);
+            view.changeState(ViewState.MENU);
+            view.setUser(u);
+            ((ConsoleView) this.view).processConsoleViewUpdate(consoleViewUpdate);
+        }
+        catch (Exception ex){
+            logger.error("Error", ex);
+            ConsoleViewUpdate consoleViewUpdate = new ConsoleViewUpdate();
+            consoleViewUpdate.addMessage("ErrorRegister");
+            view.changeState(ViewState.MENU);
+            ((ConsoleView) this.view).processConsoleViewUpdate(consoleViewUpdate);
+            logger.error("Error", ex);
+        }
     }
 
     private void createEntity(Class clazz, Object bean) {

@@ -6,7 +6,7 @@ import java.io.Serializable;
  * Класс, инкапсулирующий запрос к контроллеру из представления
  *
  * В будущем будет заменен на подходящий протокол
- * @version 0.1
+ * @version 0.1.1
  * @since 0.1
  */
 public class ConsoleViewRequest extends ViewRequest{
@@ -19,16 +19,16 @@ public class ConsoleViewRequest extends ViewRequest{
 
     /**
      * Сообщение
-     * В данный момент передается номер операции, который равен порядковому номеру элемента перечисления ConsoleViewOptions + 1
+     * Передается объект класса ConsoleViewOptions, определяющий конкретную операцию
      *
      * {@link com.github.dmitriydb.etda.view.console.ConsoleViewOptions}
      */
-    private final String requestMessage;
+    private final ConsoleViewOptions requestMessage;
 
     /**
      * смещение для возможности прокручивания выборки
      */
-    private final int offset;
+    private int offset;
 
     /**
      * строка фильтра для фильтрации выборки
@@ -40,12 +40,16 @@ public class ConsoleViewRequest extends ViewRequest{
      */
     private Serializable id;
 
-    public ConsoleViewRequest(String requestMessage, int offset) {
+    public ConsoleViewRequest(ConsoleViewOptions requestMessage, int offset) {
         this.requestMessage = requestMessage;
         this.offset = offset;
     }
 
-    public String getRequestMessage() {
+    public ConsoleViewRequest(ConsoleViewOptions requestMessage) {
+        this.requestMessage = requestMessage;
+    }
+
+    public ConsoleViewOptions getRequestMessage() {
         return requestMessage;
     }
 
@@ -72,8 +76,11 @@ public class ConsoleViewRequest extends ViewRequest{
     @Override
     public String toString() {
         return "ConsoleViewRequest{" +
-                "requestMessage='" + requestMessage + '\'' +
+                "bean=" + bean +
+                ", requestMessage=" + requestMessage +
                 ", offset=" + offset +
+                ", filter='" + filter + '\'' +
+                ", id=" + id +
                 '}';
     }
 

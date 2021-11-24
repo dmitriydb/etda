@@ -25,6 +25,7 @@ public class SimpleDAO extends AbstractDAO {
     }
 
     public void create(Object e) {
+        logger.debug("Object {}", e);
         startOperation();
         session.save(e);
         logger.debug("Object {} was successfully created", e.toString());
@@ -33,9 +34,17 @@ public class SimpleDAO extends AbstractDAO {
 
     public Object read(Serializable id) {
         startOperation();
-        Object e = session.get(clazz, id);
-        endOperation();
-        return e;
+        try{
+            Object e = session.get(clazz, id);
+            return e;
+        }
+        catch (Exception ex){
+            logger.error("Error: ", ex);
+            return null;
+        }
+        finally {
+            endOperation();
+        }
     }
 
     public void update(Object e) {
