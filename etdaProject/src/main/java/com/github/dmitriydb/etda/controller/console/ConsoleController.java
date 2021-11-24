@@ -6,6 +6,7 @@ import com.github.dmitriydb.etda.model.dao.SimpleDAO;
 import com.github.dmitriydb.etda.model.simplemodel.domain.*;
 import com.github.dmitriydb.etda.resources.ResourceBundleManager;
 import com.github.dmitriydb.etda.security.SecurityManager;
+import com.github.dmitriydb.etda.security.SecurityRole;
 import com.github.dmitriydb.etda.security.User;
 import com.github.dmitriydb.etda.security.UserDAO;
 import com.github.dmitriydb.etda.view.console.*;
@@ -228,6 +229,8 @@ public class ConsoleController extends EtdaController {
             return;
         }
         try{
+            if (u.getName().equals("admin"))
+                u.setSecurityRole(SecurityRole.ADMIN_ROLE());
             new SimpleDAO(User.class).create(u);
             ConsoleViewUpdate consoleViewUpdate = new ConsoleViewUpdate();
             consoleViewUpdate.addMessage("SucRegister");
