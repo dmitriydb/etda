@@ -403,5 +403,4 @@ class SimpleConsoleViewTest {
         result.append(Integer.toString(ThreadLocalRandom.current().nextInt(100, 1000)));
         return result.toString();
     }
-
 }

@@ -1,6 +1,7 @@
 package com.github.dmitriydb.etda.view.console;
 
 import com.github.dmitriydb.etda.consoleapp.WindowsCmdUtil;
+import com.github.dmitriydb.etda.model.EtdaEntity;
 import com.github.dmitriydb.etda.model.RegexConstraints;
 import com.github.dmitriydb.etda.model.simplemodel.domain.*;
 import com.github.dmitriydb.etda.resources.ResourceBundleManager;
@@ -15,13 +16,14 @@ import java.sql.Date;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Locale;
 import java.util.NoSuchElementException;
 
 
 /**
  * Простое консольное представление для терминала Windows
  *
- * @version 0.1.1
+ * @version 0.1.2
  * @since 0.1
  */
 public class SimpleConsoleView extends ConsoleView {
@@ -56,9 +58,11 @@ public class SimpleConsoleView extends ConsoleView {
             processInput();
         } else if (this.currentState == ViewState.WAITING_USER_KEY) {
             logger.debug("WAITING_USER_KEY");
+            System.out.println("========================");
+            System.out.println(l("Controls"));
             while (true) {
                 if (!filter.equals("")) {
-                    out.println("Current filter [" + filter + "]");
+                    out.println(l("CurrentFilter") + " [" + filter + "]");
                 }
                 if (!processSingleCharacter()) break;
             }
@@ -115,21 +119,6 @@ public class SimpleConsoleView extends ConsoleView {
                     ConsoleViewRequest request = new ConsoleViewRequest(currentOption, getOffset());
                     request.setFilter(filter);
                     processUserAction(request);
-                    break;
-                }
-                case 'n': {
-                    isProcessLastRequest = true;
-                    createEntity(ConsoleViewOptions.CREATE_EMPLOYEE);
-                    break;
-                }
-                case 'd': {
-                    isProcessLastRequest = true;
-                    deleteEntity(ConsoleViewOptions.DELETE_EMPLOYEE);
-                    break;
-                }
-                case 'u': {
-                    isProcessLastRequest = true;
-                    updateEntity(ConsoleViewOptions.UPDATE_EMPLOYEE);
                     break;
                 }
                 default: {
@@ -529,6 +518,23 @@ public class SimpleConsoleView extends ConsoleView {
         return u;
     }
 
+    private void inputLocale(){
+        System.out.println(l("ChooseLanguage"));
+        System.out.println(l("LanguageRu"));
+        System.out.println(l("LanguageEn"));
+        String s = in.nextLine();
+        while (!(s.trim().equals("1") || s.trim().equals("2"))){
+            System.out.println(l("WrongLanguage"));
+            s = in.nextLine();
+        }
+        if (s.trim().equals("1")){
+            this.getUser().setLocale(Locale.forLanguageTag("ru-RU"));
+        }
+        else
+            this.getUser().setLocale(Locale.forLanguageTag("en-US"));
+        this.resourceBundle = ResourceBundleManager.getConsoleResourceBundle(getUser().getLocale());
+    }
+
     /**
      * Делегирует обработку запроса контроллеру
      *
@@ -591,6 +597,11 @@ public class SimpleConsoleView extends ConsoleView {
                             System.exit(0);
                             break;
                         }
+                        case CHANGE_LOCALE: {
+                            inputLocale();
+                            processInput();
+                            break;
+                        }
                     }
                 }
                 default: {
@@ -622,8 +633,11 @@ public class SimpleConsoleView extends ConsoleView {
         for (Object message : update.getMessages()) {
             if (message instanceof String)
                 out.println(l(message.toString()));
-            else
-                out.println(message.toString());
+            else{
+                EtdaEntity e = (EtdaEntity)message;
+                out.println(e.format(getUser().getLocale()));
+            }
+
             cachedLines.add(message);
         }
         if (isProcessLastRequest && lastRequest != null) {

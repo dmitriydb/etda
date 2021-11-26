@@ -6,7 +6,7 @@ import com.github.dmitriydb.etda.model.simplemodel.domain.*;
  * Класс, который содержит возможные действия пользователя в консольном интерфейсе
  *
  * Возможно стоит перенести на более высокий уровень и распространить на веб-приложение
- * @version 0.1.1
+ * @version 0.1.2
  * @since 0.1
  */
 public enum ConsoleViewOptions {
@@ -36,6 +36,7 @@ public enum ConsoleViewOptions {
     DELETE_DEPT_MANAGER("DeleteDeptManager", ConsoleActionType.DELETE, DepartmentManager.class),
     REGISTER("Register", ConsoleActionType.USER_OPERATION, null),
     LOGIN("Login", ConsoleActionType.USER_OPERATION, null),
+    CHANGE_LOCALE("ChangeLocale", ConsoleActionType.USER_OPERATION, null),
     EXIT("Exit", ConsoleActionType.USER_OPERATION, null);
 
     /**

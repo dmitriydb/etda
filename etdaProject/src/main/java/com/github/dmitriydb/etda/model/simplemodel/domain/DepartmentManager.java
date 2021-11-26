@@ -1,7 +1,11 @@
 package com.github.dmitriydb.etda.model.simplemodel.domain;
 
+import com.github.dmitriydb.etda.model.EtdaEntity;
+import com.github.dmitriydb.etda.model.LocaleManager;
+
 import javax.persistence.*;
 import java.sql.Date;
+import java.util.Locale;
 import java.util.Objects;
 
 /**
@@ -9,12 +13,12 @@ import java.util.Objects;
  * Первичный ключ - объект класса DepartmentEmployeeSuite
  * Бизнес ключ - все публичные поля
  *
- * @version 0.1
+ * @version 0.1.2
  * @since 0.1
  */
 @Entity
 @Table(name="dept_manager")
-public class DepartmentManager {
+public class DepartmentManager implements EtdaEntity {
     @Id
     @Embedded
     private DepartmentEmployeeSuite departmentManagerSuite;
@@ -68,5 +72,12 @@ public class DepartmentManager {
     @Override
     public String toString() {
         return String.format("%20d %20s %20s %20s", departmentManagerSuite.getEmployeeNumber(), departmentManagerSuite.getDepartmentId(), fromDate, toDate);
+    }
+
+    public String format(Locale locale){
+        return String.format("%20d %20s %20s %20s", departmentManagerSuite.getEmployeeNumber(), departmentManagerSuite.getDepartmentId(),
+                LocaleManager.formatSqlDateToLocaleFormat(fromDate, locale),
+                LocaleManager.formatSqlDateToLocaleFormat(toDate, locale)
+        );
     }
 }

@@ -1,7 +1,12 @@
 package com.github.dmitriydb.etda.model.simplemodel.domain;
 
+import com.github.dmitriydb.etda.model.EtdaEntity;
+import com.github.dmitriydb.etda.model.LocaleManager;
+import net.bytebuddy.asm.Advice;
+
 import javax.persistence.*;
 import java.sql.Date;
+import java.util.Locale;
 import java.util.Objects;
 
 /**
@@ -9,12 +14,12 @@ import java.util.Objects;
  * Первичным ключом является объект класса SalaryOrder,
  * В бизнес-ключ входят все публичные поля
  *
- * @version 0.1
+ * @version 0.1.2
  * @since 0.1
  */
 @Entity
 @Table(name="salaries")
-public class Salary {
+public class Salary implements EtdaEntity {
 
     @Id
     @Embedded
@@ -69,5 +74,13 @@ public class Salary {
     @Override
     public String toString() {
         return String.format("%20d %20d %20s %20s", salaryOrder.getEmployeeNumber(), salary, salaryOrder.getFromDate(), toDate);
+    }
+
+    public String format(Locale locale){
+        return String.format("%20d %20s %20s %20s", salaryOrder.getEmployeeNumber(),
+                LocaleManager.formatSalaryToLocaleFormat(salary, locale),
+                LocaleManager.formatSqlDateToLocaleFormat(salaryOrder.getFromDate(), locale),
+                LocaleManager.formatSqlDateToLocaleFormat(toDate, locale)
+        );
     }
 }

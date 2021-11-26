@@ -1,19 +1,23 @@
 package com.github.dmitriydb.etda.model.simplemodel.domain;
 
+import com.github.dmitriydb.etda.model.EtdaEntity;
+import com.github.dmitriydb.etda.model.LocaleManager;
+
 import javax.persistence.*;
 import java.sql.Date;
+import java.util.Locale;
 
 /**
  * Назначение должности сотруднику
  * Первичный ключ: объект класса TitleOrder
  * Бизнес ключ: все публичные поля
  *
- * @version 0.1
+ * @version 0.1.2
  * @since 0.1
  */
 @Entity
 @Table(name="titles")
-public class Title {
+public class Title implements EtdaEntity {
     @Id
     @Embedded
     private TitleOrder titleOrder;
@@ -44,4 +48,11 @@ public class Title {
     public String toString() {
         return String.format("%20d %25s %20s %20s", titleOrder.getEmployeeNumber(), titleOrder.getTitle(), titleOrder.getFromDate(), toDate);
     }
+
+    public String format(Locale locale){
+        return String.format("%20d %25s %20s %20s", titleOrder.getEmployeeNumber(), titleOrder.getTitle(),
+                LocaleManager.formatSqlDateToLocaleFormat(titleOrder.getFromDate(), locale),
+                LocaleManager.formatSqlDateToLocaleFormat(toDate, locale));
+    }
+
 }

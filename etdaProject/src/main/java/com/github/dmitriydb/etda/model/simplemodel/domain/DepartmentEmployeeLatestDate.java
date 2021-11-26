@@ -1,10 +1,14 @@
 package com.github.dmitriydb.etda.model.simplemodel.domain;
 
+import com.github.dmitriydb.etda.model.EtdaEntity;
+import com.github.dmitriydb.etda.model.LocaleManager;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
 import java.sql.Date;
+import java.util.Locale;
 import java.util.Objects;
 
 /**
@@ -14,12 +18,12 @@ import java.util.Objects;
  *
  * В теории в БД количество строк в этой таблице должно совпадать с количеством сотрудников (?)
  *
- * @version 0.1
+ * @version 0.1.2
  * @since 0.1
  */
 @Entity
 @Table(name = "dept_emp_latest_date")
-public class DepartmentEmployeeLatestDate {
+public class DepartmentEmployeeLatestDate implements EtdaEntity {
     @Id
     @Column(name="emp_no", nullable = false)
     private Long employeeNumber;
@@ -75,5 +79,11 @@ public class DepartmentEmployeeLatestDate {
         return String.format("%20d %20s %20s", employeeNumber, fromDate, toDate);
     }
 
+    public String format(Locale locale){
+        return String.format("%20d %20s %20s", employeeNumber,
+                LocaleManager.formatSqlDateToLocaleFormat(fromDate, locale),
+                LocaleManager.formatSqlDateToLocaleFormat(toDate, locale)
+        );
+    }
 
 }

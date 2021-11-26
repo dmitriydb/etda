@@ -1,6 +1,7 @@
 package com.github.dmitriydb.etda.model.simplemodel.domain;
 
 import javax.persistence.*;
+import java.util.Locale;
 import java.util.Objects;
 
 /**
@@ -8,7 +9,7 @@ import java.util.Objects;
  * Первичный ключ - ID отдела (строка)
  * Бизнес ключ - ID и наименование отдела
  *
- * @version 0.1
+ * @version 0.1.2
  * @since 0.1
  */
 @Entity
@@ -55,6 +56,10 @@ public class Department {
 
     @Override
     public String toString() {
+        return String.format("%20s %30s", departmentId, name);
+    }
+
+    public String format(Locale locale){
         return String.format("%20s %30s", departmentId, name);
     }
 }

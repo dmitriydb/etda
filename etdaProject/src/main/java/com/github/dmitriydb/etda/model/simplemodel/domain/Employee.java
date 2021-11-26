@@ -1,7 +1,11 @@
 package com.github.dmitriydb.etda.model.simplemodel.domain;
 
+import com.github.dmitriydb.etda.model.EtdaEntity;
+import com.github.dmitriydb.etda.model.LocaleManager;
+
 import javax.persistence.*;
 import java.sql.Date;
+import java.util.Locale;
 import java.util.Objects;
 
 
@@ -10,12 +14,12 @@ import java.util.Objects;
  * Первичным ключом является номер сотрудника
  * В бизнес ключ входят дата рождения, имя, фамилия и пол
  *
- * @version 0.1
+ * @version 0.1.2
  * @since 0.1
  */
 @Entity
 @Table(name="employees")
-public class Employee {
+public class Employee implements EtdaEntity {
 
     @Column(name="emp_no", nullable = false)
     @Id
@@ -105,5 +109,11 @@ public class Employee {
     public String toString() {
         return String.format("%10d %20s %20s %5c %15s %15s", employeeNumber, lastName, firstName, getGender(), birth_date, hireDate);
     }
+
+    public String format(Locale locale) {
+        return String.format("%10d %20s %20s %5c %15s %15s", employeeNumber, lastName, firstName, getGender(),
+                LocaleManager.formatSqlDateToLocaleFormat(birth_date, locale), LocaleManager.formatSqlDateToLocaleFormat(hireDate, locale));
+    }
+
 
 }

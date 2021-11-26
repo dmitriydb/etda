@@ -8,12 +8,13 @@ import java.sql.Time;
 import java.sql.Timestamp;
 import java.time.Instant;
 import java.util.Date;
+import java.util.Locale;
 import java.util.Objects;
 
 /**
  * Класс, который инкапсулирует данные пользователя приложения
  *
- * @version 0.1.1
+ * @version 0.1.2
  * @since 0.1.1
  */
 @Entity
@@ -37,6 +38,9 @@ public class User {
 
     @NotNull
     private String password;
+
+    @NotNull
+    private Locale locale = Locale.forLanguageTag("ru-RU");
 
     private String email;
 
@@ -108,6 +112,14 @@ public class User {
         return securityRole.equals(user.securityRole) && name.equals(user.name) && Objects.equals(email, user.email);
     }
 
+    public Locale getLocale() {
+        return locale;
+    }
+
+    public void setLocale(Locale locale) {
+        this.locale = locale;
+    }
+
     @Override
     public int hashCode() {
         return Objects.hash(securityRole, name, email);
@@ -120,6 +132,7 @@ public class User {
                 ", createdTS=" + createdTS +
                 ", lastLogin=" + lastLogin +
                 ", name='" + name + '\'' +
+                ", locale=" + locale +
                 ", email='" + email + '\'' +
                 '}';
     }

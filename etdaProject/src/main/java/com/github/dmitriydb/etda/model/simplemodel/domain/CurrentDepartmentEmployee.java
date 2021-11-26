@@ -1,19 +1,23 @@
 package com.github.dmitriydb.etda.model.simplemodel.domain;
 
+import com.github.dmitriydb.etda.model.EtdaEntity;
+import com.github.dmitriydb.etda.model.LocaleManager;
+
 import javax.persistence.*;
 import java.sql.Date;
+import java.util.Locale;
 import java.util.Objects;
 
 /**
  * Класс инкапсулирует информацию о текущем отделе сотрудника
  * Первичным ключом является объект класса departmentEmployeeSuite
  *
- * @version 0.1
+ * @version 0.1.2
  * @since 0.1
  */
 @Entity
 @Table(name="current_dept_emp")
-public class CurrentDepartmentEmployee {
+public class CurrentDepartmentEmployee implements EtdaEntity{
 
     @Id
     @Embedded
@@ -69,4 +73,12 @@ public class CurrentDepartmentEmployee {
     public String toString() {
         return String.format("%20s %20s %20s %20s", departmentEmployeeSuite.getDepartmentId(), departmentEmployeeSuite.getDepartmentId(), fromDate, toDate);
     }
+
+    public String format(Locale locale){
+        return String.format("%20s %20s %20s %20s", departmentEmployeeSuite.getDepartmentId(), departmentEmployeeSuite.getDepartmentId(),
+                LocaleManager.formatSqlDateToLocaleFormat(fromDate, locale),
+                LocaleManager.formatSqlDateToLocaleFormat(toDate, locale)
+        );
+    }
+
 }
