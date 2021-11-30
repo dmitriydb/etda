@@ -1,6 +1,8 @@
 package com.github.dmitriydb.etda.security;
 
 import org.mindrot.jbcrypt.BCrypt;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Класс, который занимается хэшированием и проверкой паролей
@@ -11,11 +13,17 @@ import org.mindrot.jbcrypt.BCrypt;
  */
 public class SecurityManager {
 
+    private final static Logger logger = LoggerFactory.getLogger(SecurityManager.class);
+
     public static String hashPassword(String plainTextPassword){
-        return BCrypt.hashpw(plainTextPassword, BCrypt.gensalt());
+        String result = BCrypt.hashpw(plainTextPassword, BCrypt.gensalt());
+        logger.debug("Encoding {} to {}", plainTextPassword, result);
+        return result;
     }
 
     public static boolean checkPass(String plainPassword, String hashedPassword) {
-        return  (BCrypt.checkpw(plainPassword, hashedPassword));
+        boolean result = BCrypt.checkpw(plainPassword, hashedPassword);
+        logger.debug("Matching {} with {} = {}", plainPassword, hashedPassword, result);
+        return result;
     }
 }

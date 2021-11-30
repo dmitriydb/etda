@@ -109,7 +109,12 @@ public class User {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         User user = (User) o;
-        return securityRole.equals(user.securityRole) && name.equals(user.name) && Objects.equals(email, user.email);
+        return Objects.equals(name, user.name);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(name);
     }
 
     public Locale getLocale() {
@@ -118,11 +123,6 @@ public class User {
 
     public void setLocale(Locale locale) {
         this.locale = locale;
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(securityRole, name, email);
     }
 
     @Override

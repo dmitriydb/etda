@@ -21,7 +21,7 @@ public class SimpleModel extends EtdaModel {
 
     private static final Logger logger = LoggerFactory.getLogger(SimpleDaoFactory.class);
 
-    SimpleModel() {
+    public SimpleModel() {
 
     }
 
