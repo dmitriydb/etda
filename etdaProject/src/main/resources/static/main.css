@@ -1,0 +1,65 @@
+@import url("https://fonts.googleapis.com/css?family=Open+Sans|Roboto:400,700&display=swap");
+
+html, body{
+  margin: 0;
+}
+
+header{
+  width: 100vw;
+  height: 50px;
+  border-bottom: 1px solid grey;
+  background-color: white;
+  display: table;
+}
+
+footer{
+  width: 100vw;
+  height: 5vh;
+  border-top: 1px solid grey;
+  background-color: white;
+}
+
+.content{
+  width: 100%;
+  height: 100%;
+}
+
+.main-menu-buttons{
+  display: table-cell;
+  vertical-align: middle;
+  margin-left: 200px;
+  height: 100%;
+}
+
+.main-menu-icons{
+  border: 1px solid red;
+  display: table-cell;
+  vertical-align: middle;
+  margin-left: 200px;
+  height: 100%;
+}
+
+.main-menu-icon{
+  margin-left: 100px;
+  color: grey;
+  font-weight: bold;
+  font-family: "Open Sans", serif;
+}
+
+
+.main-menu-button{
+  margin-left: 100px;
+  color: grey;
+  font-weight: bold;
+  font-family: "Open Sans", serif;
+}
+
+span a:hover{
+  cursor: pointer;
+  color: black;
+}
+
+span a{
+  text-decoration: none;
+  color: grey;
+}

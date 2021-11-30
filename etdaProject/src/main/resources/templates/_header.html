@@ -1,0 +1,18 @@
+<header>
+  <div class="main-menu-buttons">
+    <span class="main-menu-button"><a th:href="@{/employees}">Employees</a></span>
+    <span class="main-menu-button"><a th:href="@{/departments}">Departments</a></span>
+    <span class="main-menu-button"><a th:href="@{/managers}">Managers</a></span>
+    <span class="main-menu-button"><a th:href="@{/salaries}">Salaries</a></span>
+    <span class="main-menu-button"><a th:href="@{/titles}">Titles</a></span>
+  </div>
+  <div class="main-menu-icons">
+    <th:block sec:authorize="!isAuthenticated()">
+      <span class="main-menu-icon"><a th:href="@{/register}">Register</a></span>
+      <span class="main-menu-icon"><a th:href="@{/login}">Login</a></span>
+    </th:block>
+    <th:block sec:authorize="isAuthenticated()">
+      <span class="main-menu-icon"><a th:href="@{/logout}">Sign off</a></span>
+    </th:block>
+  </div>
+</header>

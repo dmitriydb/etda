@@ -1,0 +1,43 @@
+table{
+  border-collapse: separate;
+  width: 50%;
+  margin-left: 25%;
+}
+
+tr{
+  height: 50px;
+  width: 50%;
+  text-align: center;
+  background-color: lightgrey;
+  text-color: white;
+  margin: 50px;
+}
+
+td {
+    border-radius: 25px;
+    margin: 50px;
+    padding: 0px;
+}
+
+.last-cell{
+  position: relative;
+
+}
+
+.close {
+  color: red;
+  position: relative;
+  float: right;
+  position: absolute;
+     top: 0px;
+     right: 0px;
+}
+
+.close:hover{
+  color:darkred;
+  cursor:pointer;
+}
+
+.f{
+  background-color: white;
+}

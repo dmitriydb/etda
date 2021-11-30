@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="ru" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <title>Список сотрудников</title>
+    <link rel="stylesheet" th:href="@{/main.css}">
+    <link rel="stylesheet" th:href="@{/employees.css}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css">
+  </head>
+  <body>
+    <th:block th:include="/_header"></th:block>
+    <div class="content">
+    <table>
+      <tr>
+        <td class="f">Номер</td>
+        <td class="f">Фамилия</td>
+        <td class="f">Имя</td>
+        <td class="f">Дата рождения</td>
+        <td class="f">Дата принятия на работу</td>
+        <td class="f">Пол</td>
+      </tr>
+      <tr th:each="employee : ${employees}">
+        <td th:utext="${employee.employeeNumber}"></td>
+        <td th:utext="${employee.lastName}"></td>
+        <td th:utext="${employee.firstName}"></td>
+        <td th:utext="${employee.gender}"></td>
+        <td th:utext="${employee.birth_date}"></td>
+        <td class="last-cell" ><span th:utext="${employee.hireDate}"></span><span class="close fa fa-window-close"></span></td>
+      </tr>
+  </table>
+
+    </div>
+    <th:block th:include="/_footer"></th:block>
+  </body>
+</html>
