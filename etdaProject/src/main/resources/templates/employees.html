@@ -6,12 +6,16 @@
     <link rel="stylesheet" th:href="@{/main.css}">
     <link rel="stylesheet" th:href="@{/employees.css}">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script type="text/javascript" th:src="@{/employees.js}"></script>
   </head>
   <body>
     <th:block th:include="/_header"></th:block>
+    <!-- Панель выбора страницы -->
+    <th:block th:include="/_pagination"></th:block>
     <div class="content">
-    <table>
-      <tr>
+    <table class="content-table">
+      <tr class="tr-header">
         <td class="f">Номер</td>
         <td class="f">Фамилия</td>
         <td class="f">Имя</td>
@@ -19,17 +23,17 @@
         <td class="f">Дата принятия на работу</td>
         <td class="f">Пол</td>
       </tr>
-      <tr th:each="employee : ${employees}">
-        <td th:utext="${employee.employeeNumber}"></td>
-        <td th:utext="${employee.lastName}"></td>
-        <td th:utext="${employee.firstName}"></td>
-        <td th:utext="${employee.gender}"></td>
-        <td th:utext="${employee.birth_date}"></td>
-        <td class="last-cell" ><span th:utext="${employee.hireDate}"></span><span class="close fa fa-window-close"></span></td>
+      <tr class="tr-header" th:each="employee : ${employees}">
+        <td class="td-content" th:utext="${employee.employeeNumber}"></td>
+        <td class="td-content" th:utext="${employee.lastName}"></td>
+        <td class="td-content" th:utext="${employee.firstName}"></td>
+        <td class="td-content" th:utext="${employee.gender}"></td>
+        <td class="td-content" th:utext="${employee.birth_date}"></td>
+        <td class="last-cell td-content" ><span th:utext="${employee.hireDate}"></span><span class="close fa fa-window-close"></span></td>
       </tr>
   </table>
-
     </div>
+
     <th:block th:include="/_footer"></th:block>
   </body>
 </html>

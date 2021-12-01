@@ -1,27 +1,30 @@
-table{
-  border-collapse: separate;
+@import url("https://fonts.googleapis.com/css?family=Open+Sans|Roboto:400,700&display=swap");
+
+.content-table{
+  border-collapse: collapse;
   width: 50%;
   margin-left: 25%;
+  margin-top: 50px;
+  margin-bottom: 50px;
 }
 
-tr{
+.tr-header{
   height: 50px;
   width: 50%;
   text-align: center;
-  background-color: lightgrey;
   text-color: white;
   margin: 50px;
+  border: 1px solid grey;
 }
 
-td {
-    border-radius: 25px;
+.td-content {
     margin: 50px;
     padding: 0px;
+    font-family: Roboto serif;
 }
 
 .last-cell{
   position: relative;
-
 }
 
 .close {
@@ -29,8 +32,8 @@ td {
   position: relative;
   float: right;
   position: absolute;
-     top: 0px;
-     right: 0px;
+  top: 0px;
+  right: 0px;
 }
 
 .close:hover{
@@ -40,4 +43,41 @@ td {
 
 .f{
   background-color: white;
+}
+
+.pagination{
+  display: flex;
+  justify-content: center;
+}
+
+.page-buttons-table{
+  align-self: center;
+  margin: 50px;
+  width:250px;
+  border-collapse: separate;
+}
+
+.page-button{
+  font-family: "Open Sans", serif;
+  font-size: 0.75em;
+  width: 25px;
+  height: 25px;
+  padding: 0px;
+  margin: 0px;
+  text-align: center;
+  border: 1px solid grey;
+}
+
+.page-button:hover{
+  cursor: pointer;
+  background-color: lightblue;
+}
+
+.selected{
+  font-weight: bold;
+  background-color: lightgreen;
+}
+
+.page-buttons-row{
+  height: 100%;
 }

@@ -18,7 +18,6 @@ import org.springframework.context.annotation.ComponentScan;
 @ComponentScan(basePackages = { "com.github"} )
 
 public class WebApp {
-
     public static void main(String[] args){
         DbManager.init();
         try {
@@ -27,5 +26,4 @@ public class WebApp {
             e.printStackTrace();
         }
     }
-
 }

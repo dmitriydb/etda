@@ -12,13 +12,6 @@ import java.util.List;
 @Controller
 public class MainController {
 
-    @GetMapping("/employees")
-    public String showEmployees(Model model) {
-        List<Object> list = new SimpleModel().findEntities(Employee.class, 20, 0);
-        model.addAttribute("employees", list);
-        return "employees";
-    }
-
     @GetMapping("/")
     public String mainPage() {
         return "index";
