@@ -101,12 +101,13 @@
         <td class="f">Дата принятия на работу</td>
       </tr>
       <tr class="tr-header" th:each="employee : ${employees}">
-        <td class="td-content" th:utext="${employee.employeeNumber}"></td>
+        <td class="td-content-uneditable" th:utext="${employee.employeeNumber}"></td>
         <td class="td-content" th:utext="${employee.lastName}"></td>
         <td class="td-content" th:utext="${employee.firstName}"></td>
         <td class="td-content" th:utext="${employee.gender}"></td>
         <td class="td-content" th:utext="${employee.birth_date}"></td>
-        <td class="last-cell td-content" ><span th:utext="${employee.hireDate}"></span><span class="delete fa fa-window-close"></span></td>
+        <td class="td-content" th:utext="${employee.hireDate}"></td>
+        <td class="last-cell" ><span class="delete fa fa-window-close"></span></td>
       </tr>
   </table>
     </div>

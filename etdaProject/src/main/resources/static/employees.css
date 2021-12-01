@@ -23,6 +23,13 @@
     font-family: Roboto serif;
 }
 
+.td-content-uneditable {
+    margin: 50px;
+    padding: 0px;
+    font-family: Roboto serif;
+    color: grey;
+}
+
 .last-cell{
   position: relative;
 }

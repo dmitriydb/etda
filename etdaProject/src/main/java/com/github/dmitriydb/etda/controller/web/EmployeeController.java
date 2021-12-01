@@ -88,4 +88,13 @@ public class EmployeeController {
         return "redirect:/employees/1";
     }
 
+    @GetMapping("/employees/update/{pageNumber}/{empNumber}")
+    public String updateEmployee(Model model, @PathVariable String empNumber, @PathVariable String pageNumber){
+        int page = Integer.valueOf(pageNumber).intValue();
+        Long employeeNumber = Long.valueOf(empNumber);
+        messages.add(resourceBundle.getString("SucUpdated"));
+        model.addAttribute("currentPage", page);
+        return "redirect:/employees/" + page;
+    }
+
 }
