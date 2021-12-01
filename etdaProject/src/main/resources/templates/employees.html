@@ -10,10 +10,21 @@
     <script type="text/javascript" th:src="@{/employees.js}"></script>
   </head>
   <body>
+
+    <!-- Переменные для интернационализации приложения -->
+    <input type="hidden" name="areYouSureToDelete" id="areYouSureToDelete" th:value="${areYouSureToDelete}">
+
     <th:block th:include="/_header"></th:block>
     <!-- Панель выбора страницы -->
     <th:block th:include="/_pagination"></th:block>
     <div class="content">
+
+      <div class="messages">
+        <table class="message-table">
+            <tr class="message" th:each="message : ${messages}"><p th:text = "${message}"></p><br></tr>
+        </table>
+      </div>
+
     <table class="content-table">
       <tr class="tr-header">
         <td class="f">Номер</td>

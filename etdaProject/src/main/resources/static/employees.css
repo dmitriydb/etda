@@ -1,10 +1,12 @@
 @import url("https://fonts.googleapis.com/css?family=Open+Sans|Roboto:400,700&display=swap");
 
+
+
 .content-table{
   border-collapse: collapse;
   width: 50%;
   margin-left: 25%;
-  margin-top: 50px;
+  margin-top: 25px;
   margin-bottom: 50px;
 }
 
@@ -80,4 +82,20 @@
 
 .page-buttons-row{
   height: 100%;
+}
+
+.messages{
+  align-self: center;
+  text-align: center;
+  color: red;
+}
+
+.message-table{
+  width: 200px;
+  text-align: center;
+}
+
+.message{
+  text-align: center;
+  width: 200px;
 }

@@ -13,6 +13,13 @@
   <body>
 
     <div class="content">
+
+      <div class="messages">
+        <table class="message-table">
+            <tr class="message" th:each="message : ${messages}"><p th:text = "${message}"></p><br></tr>
+        </table>
+      </div>
+
       <table class="content-table">
         <tr class="tr-header">
           <td class="f">Номер</td>
