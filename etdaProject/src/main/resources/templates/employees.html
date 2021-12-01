@@ -17,7 +17,73 @@
     <th:block th:include="/_header"></th:block>
     <!-- Панель выбора страницы -->
     <th:block th:include="/_pagination"></th:block>
-    <div class="content">
+
+    <div id="openModal" class="modal">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h3 class="modal-title">Добавление сотрудника</h3>
+            <a href="#close" title="Close" class="close">×</a>
+          </div>
+          <div class="modal-body">
+            <form action="#" th:action="@{/employees/add}" th:object="${employee}" method="post">
+              <table>
+                <tr>
+                  <td>
+                    Имя
+                  </td>
+                    <td>
+                    <input type="text" name="name" value="" th:field="*{firstName}" placeholder="Иван">
+                    </td>
+                </tr>
+                <tr>
+                  <td>
+                    Фамилия
+                  </td>
+                    <td>
+                    <input type="text" name="surname" value="" th:field="*{lastName}" placeholder="Иванов">
+                    </td>
+                </tr>
+                <tr>
+                  <td>
+                    Дата рождения
+                  </td>
+                    <td>
+                    <input type="date" name="birthday" th:field="*{birth_date}" value="">
+                    </td>
+                </tr>
+                <tr>
+                  <td>
+                    Пол
+                  </td>
+                    <td>
+                      <select class="gender" name="gender" th:field="*{gender}" >
+                          <option value="M" selected>М</option>
+                          <option value="F">Ж</option>
+                      </select>
+                    </td>
+                </tr>
+                <tr>
+                  <td>
+                    Дата принятия на работу
+                  </td>
+                    <td>
+                    <input type="date" name="hireDate" value="" th:field="*{hireDate}" >
+                    </td>
+                </tr>
+              </table>
+              <input type="submit" name="addEmployee" value="Добавить">
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+
+<div class="content">
+
+  <div class="action-buttons">
+    <span class="action-button"><a href="#openModal">Добавить сотрудника</a></span>
+  </div>
 
       <div class="messages">
         <table class="message-table">
@@ -30,9 +96,9 @@
         <td class="f">Номер</td>
         <td class="f">Фамилия</td>
         <td class="f">Имя</td>
+        <td class="f">Пол</td>
         <td class="f">Дата рождения</td>
         <td class="f">Дата принятия на работу</td>
-        <td class="f">Пол</td>
       </tr>
       <tr class="tr-header" th:each="employee : ${employees}">
         <td class="td-content" th:utext="${employee.employeeNumber}"></td>
@@ -40,7 +106,7 @@
         <td class="td-content" th:utext="${employee.firstName}"></td>
         <td class="td-content" th:utext="${employee.gender}"></td>
         <td class="td-content" th:utext="${employee.birth_date}"></td>
-        <td class="last-cell td-content" ><span th:utext="${employee.hireDate}"></span><span class="close fa fa-window-close"></span></td>
+        <td class="last-cell td-content" ><span th:utext="${employee.hireDate}"></span><span class="delete fa fa-window-close"></span></td>
       </tr>
   </table>
     </div>

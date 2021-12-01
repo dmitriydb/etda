@@ -6,7 +6,7 @@ document.addEventListener("DOMContentLoaded", function(){
   let x = Number(document.getElementById("currentPage").value);
   let areYouSureToDelete = document.getElementById("areYouSureToDelete").value;
 
-  $(".close").click(function(){
+  $(".delete").click(function(){
     let c = confirm(areYouSureToDelete);
     if (c){
       //находим номер сотрудника
@@ -20,7 +20,10 @@ document.addEventListener("DOMContentLoaded", function(){
     }
   });
 
-
+  $(".close").click(function(){
+    let splits = window.location.href.split("#");
+    window.location.href = splits[0];
+  });
 
   let added = 0;
   let pageButtons = $(".page-buttons-row")[0];
@@ -50,6 +53,7 @@ document.addEventListener("DOMContentLoaded", function(){
 
 
   $(".page-button").click(function(){
+    console.log("1");
     let pageNumber = Number(this.textContent);
     if (isNaN(pageNumber)) return;
     window.location.href = getNewPageLocation(pageNumber);

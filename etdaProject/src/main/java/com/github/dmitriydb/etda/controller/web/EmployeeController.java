@@ -9,7 +9,9 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
@@ -41,9 +43,10 @@ public class EmployeeController {
     }
 
     private void addMessages(Model model) {
+        //объекты для заполнения
+        model.addAttribute("employee", new Employee());
 
         //лейблы для интернационализации
-
         model.addAttribute("areYouSureToDelete", WindowsCmdUtil.convertToTerminalString(resourceBundle.getString("AreYouSureToDelete")));
         List<String> result = new ArrayList<>();
         for (String s : messages) {
@@ -76,6 +79,13 @@ public class EmployeeController {
         messages.add(resourceBundle.getString("SucDeleted"));
         model.addAttribute("currentPage", page);
         return "redirect:/employees/" + page;
+    }
+
+    @PostMapping("/employees/add")
+    public String addEmployee(Model model, @ModelAttribute Employee employee){
+        new SimpleModel().createEntity(Employee.class, employee);
+        messages.add(resourceBundle.getString("SucAdded"));
+        return "redirect:/employees/1";
     }
 
 }
