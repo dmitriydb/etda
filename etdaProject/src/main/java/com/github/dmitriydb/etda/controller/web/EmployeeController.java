@@ -8,10 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.*;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
@@ -34,10 +31,19 @@ public class EmployeeController {
 
 
     @GetMapping("/employees")
-    public String showEmployees(Model model) {
-        List<Object> list = new SimpleModel().findEntities(Employee.class, maxPageSize, 0);
+    public String showEmployees(Model model, @RequestParam(defaultValue = "") String filter) {
+        List<Object> list;
+        if (filter == null || filter.trim().equals("")){
+            list = new SimpleModel().findEntities(Employee.class, maxPageSize, 0);
+            model.addAttribute("filter", "");
+        }
+        else{
+            list = new SimpleModel().findEntitiesFiltered(Employee.class, filter, maxPageSize, 0);
+            model.addAttribute("filter", filter);
+        }
         model.addAttribute("employees", list);
         model.addAttribute("currentPage", 1);
+        model.addAttribute("maxPages", list.size() / maxPageSize);
         addMessages(model);
         return "employees";
     }
@@ -58,11 +64,21 @@ public class EmployeeController {
 
 
     @GetMapping("/employees/{pageNumber}")
-    public String showEmployeesPage(Model model, @PathVariable String pageNumber) {
+    public String showEmployeesPage(Model model, @PathVariable String pageNumber, @RequestParam(defaultValue = "") String filter) {
         int page = Integer.valueOf(pageNumber).intValue();
-        List<Object> list = new SimpleModel().findEntities(Employee.class, maxPageSize, getOffsetByPage(page));
+
+        List<Object> list;
+        if (filter == null || filter.trim().equals("")){
+            list = new SimpleModel().findEntities(Employee.class, maxPageSize, getOffsetByPage(page));
+            model.addAttribute("filter", "");
+        }
+        else{
+            list = new SimpleModel().findEntitiesFiltered(Employee.class, filter, maxPageSize, getOffsetByPage(page));
+            model.addAttribute("filter", filter);
+        }
         model.addAttribute("employees", list);
         model.addAttribute("currentPage", page);
+        model.addAttribute("maxPages", list.size() / maxPageSize);
         addMessages(model);
         return "employees";
     }
@@ -70,7 +86,6 @@ public class EmployeeController {
     private int getOffsetByPage(int page){
         return maxPageSize * (page - 1);
     }
-
     @GetMapping("/employees/delete/{pageNumber}/{empNumber}")
     public String deleteEmployee(Model model, @PathVariable String empNumber, @PathVariable String pageNumber){
         int page = Integer.valueOf(pageNumber).intValue();
@@ -88,10 +103,10 @@ public class EmployeeController {
         return "redirect:/employees/1";
     }
 
-    @GetMapping("/employees/update/{pageNumber}/{empNumber}")
-    public String updateEmployee(Model model, @PathVariable String empNumber, @PathVariable String pageNumber){
+    @PostMapping("/employees/update")
+    public String updateEmployee(Model model, @ModelAttribute Employee employee, @RequestParam("currentPage") String pageNumber){
         int page = Integer.valueOf(pageNumber).intValue();
-        Long employeeNumber = Long.valueOf(empNumber);
+        new SimpleModel().updateEntity(Employee.class, employee);
         messages.add(resourceBundle.getString("SucUpdated"));
         model.addAttribute("currentPage", page);
         return "redirect:/employees/" + page;

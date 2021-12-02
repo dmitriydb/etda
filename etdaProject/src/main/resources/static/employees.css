@@ -225,6 +225,16 @@
   justify-content: center;
 }
 
+.filter {
+  display: flex;
+  justify-content: center;
+}
+
+.filter-input{
+  border-radius: 5px;
+  text-align: center;
+}
+
 .action-button{
   align-self: center;
   border: 1px solid black;
@@ -241,4 +251,9 @@ color: grey;
 
 .action-button:hover{
 color: black;
+}
+
+.td-content:hover{
+  cursor: pointer;
+  color:grey;
 }

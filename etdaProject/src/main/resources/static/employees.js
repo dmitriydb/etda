@@ -4,10 +4,16 @@ const maxPages = 10;
 let editChanges = new Map();
 
 document.addEventListener("DOMContentLoaded", function(){
+
   //получаем номер текущей страницы
   let x = Number(document.getElementById("currentPage").value);
-  //let areYouSureToDelete = document.getElementById("areYouSureToDelete").value;
+  let areYouSureToDelete = document.getElementById("areYouSureToDelete").value;
 
+  let curFilter = document.getElementById("currentFilterString").value;
+  if (curFilter){
+    console.log(curFilter);
+    document.getElementById("filter-input").value = curFilter;
+  }
   $(".td-content").on('keypress',function(e) {
       if(e.which == 13) {
             let newValue = $(this).children("input").val();
@@ -16,18 +22,46 @@ document.addEventListener("DOMContentLoaded", function(){
             let empNo = Number($(td).html());
             let oldValue = editChanges.get(empNo);
 
-            console.log(newValue);
-            console.log(oldValue);
-            console.log(empNo);
-
             if (!editChanges.has(empNo) || (newValue != oldValue)){
-                let newLocation = getDeletePageLocation() + "update/" + x + "/" + empNo;
-                window.location.href = newLocation;
+
+            function getTdContent(td){
+              if (td.includes("input")){
+                return newValue;
+              }
+              else {
+                return td;
+              }
+            }
+
+
+            let empNo = getTdContent($(tds[0]).html());
+            let lastName = getTdContent($(tds[1]).html());
+            let firstName = getTdContent($(tds[2]).html());
+            let gender = getTdContent($(tds[3]).html());
+            let birthday = getTdContent($(tds[4]).html());
+            let hiredate = getTdContent($(tds[5]).html());
+
+                document.getElementById("newEmpNo").value = empNo;
+                document.getElementById("newName").value = firstName;
+                document.getElementById("newSurname").value = lastName;
+                document.getElementById("newBirthday").value = birthday;
+                document.getElementById("newGender").value = gender;
+                document.getElementById("newHiredate").value = hiredate;
+                document.getElementById("newCurrentPage").value = x;
+                document.forms.editForm.submit();
             }
 
             $(this).html("");
             $(this).html(newValue);
             editChanges.delete(empNo);
+      }
+  });
+
+  $(".filter-input").on('keypress',function(e) {
+      if(e.which == 13) {
+        let newPageAddress = getNewPageLocation(1);
+        let newLocation = addFilterParamToPage(newPageAddress, this.value);
+        window.location.href = newLocation;
       }
   });
 
@@ -41,16 +75,18 @@ document.addEventListener("DOMContentLoaded", function(){
     let empNo = Number($(td).html());
     editChanges.set(empNo, oldValue);
 
-    for (td of $(document).children("tr").children("td")){
-      let oldValue = $(td).html();
-      //let empNo = Number(.first().html());
-      //console.log(empNo + ":" + oldValue);
-      if ($(td).html().includes("input")){
-        let x = $(td).children("input").val();
-        $(td).html("");
-        $(td).html(x);
+    console.log("Looking for edited tds");
+
+    for (innerTd of $(".td-content")){
+      let oldValue = $(innerTd).html();
+      console.log(oldValue);
+      if ($(innerTd).html().includes("input")){
+        let oldVal = $(innerTd).children("input").val();
+        $(innerTd).html("");
+        $(innerTd).html(oldVal);
       }
     }
+    console.log("After looking for edited tds");
 
     $(this).html("");
     let input = document.createElement("input");
@@ -68,6 +104,7 @@ document.addEventListener("DOMContentLoaded", function(){
     input.value = oldValue;
     $(this).append(input);
   });
+
 
 
   $(".delete").click(function(){
@@ -120,14 +157,33 @@ document.addEventListener("DOMContentLoaded", function(){
     console.log("1");
     let pageNumber = Number(this.textContent);
     if (isNaN(pageNumber)) return;
-    window.location.href = getNewPageLocation(pageNumber);
+    let newLocation = getNewPageLocation(pageNumber);
+    let filterString = document.getElementById("currentFilterString").value;
+    if (filterString && filterString.trim() != "")
+    newLocation = addFilterParamToPage(newLocation, filterString);
+    window.location.href = newLocation;
   });
 });
 
-
+function addFilterParamToPage(url, newValue){
+  if (url.includes("?filter=")){
+    let splits = url.split("=");
+    splits[1] = newValue;
+    return splits.join("=");
+  }
+  else {
+    return url +"?filter=" + newValue;
+  }
+}
 
 //Возвращает новый адрес страницы после нажатия по кнопке выбора страницы
 function getNewPageLocation(pageNumber){
+  if (window.location.href.includes("?filter=")){
+    let str = window.location.href;
+    let part2 = "?" + str.split("?")[1];
+    let part1 = str.split("employees/")[0] + "employees/";
+    return part1 + pageNumber + part2;
+  }
   let splits = window.location.href.split("/");
   let lastSplit = splits[splits.length - 1];
   if (isNaN(lastSplit))
@@ -138,6 +194,8 @@ function getNewPageLocation(pageNumber){
     return newURL;
   }
 }
+
+
 
 //Возвращает адрес страницы для удаления элемента
 function getDeletePageLocation(){
