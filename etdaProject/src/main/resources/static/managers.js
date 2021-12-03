@@ -53,19 +53,15 @@ document.addEventListener("DOMContentLoaded", function(){
 
             //собираем данные со всей строки и отправляем через форму на сервер
             //для обновления записи
-            let empNo = getTdContent($(tds[0]).html());
-            let lastName = getTdContent($(tds[1]).html());
-            let firstName = getTdContent($(tds[2]).html());
-            let gender = getTdContent($(tds[3]).html());
-            let birthday = getTdContent($(tds[4]).html());
-            let hiredate = getTdContent($(tds[5]).html());
+            let newEmpNo = getTdContent($(tds[0]).html());
+            let newDepartmentId = getTdContent($(tds[1]).html());
+            let newFromDate = getTdContent($(tds[2]).html());
+            let newToDate = getTdContent($(tds[3]).html());
 
-            document.getElementById("newEmpNo").value = empNo;
-            document.getElementById("newName").value = firstName;
-            document.getElementById("newSurname").value = lastName;
-            document.getElementById("newBirthday").value = birthday;
-            document.getElementById("newGender").value = gender;
-            document.getElementById("newHiredate").value = hiredate;
+            document.getElementById("newEmpNo").value = newEmpNo;
+            document.getElementById("newDepartmentId").value = newDepartmentId;
+            document.getElementById("newFromDate").value = newFromDate;
+            document.getElementById("newToDate").value = newToDate;
             document.getElementById("newCurrentPage").value = x;
             document.forms.editForm.submit();
             }
@@ -140,7 +136,9 @@ document.addEventListener("DOMContentLoaded", function(){
     window.location.href = splits[0];
   });
 
-   //добавляем на страницу кнопки смены страницы
+
+
+  //добавляем на страницу кнопки смены страницы
 
   //количество добавленных кнопок
   let added = 0;
@@ -196,6 +194,7 @@ document.addEventListener("DOMContentLoaded", function(){
 
    // обработчик нажатия на кнопку смены страницы
    $(".page-button").click(function(){
+     console.log(1);
      let pageNumber = Number(this.textContent);
      if (isNaN(pageNumber)) return;
      let newLocation = getNewPageLocation(pageNumber);
@@ -224,7 +223,7 @@ function getNewPageLocation(pageNumber){
   if (window.location.href.includes("?filter=")){
     let str = window.location.href;
     let part2 = "?" + str.split("?")[1];
-    let part1 = str.split("employees/")[0] + "employees/";
+    let part1 = str.split("managers/")[0] + "managers/";
     return part1 + pageNumber + part2;
   }
   let splits = window.location.href.split("/");

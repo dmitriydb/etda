@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="ru" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <title>Список сотрудников</title>
+    <link rel="stylesheet" th:href="@{/main.css}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script type="text/javascript" th:src="@{/managers.js}"></script>
+  </head>
+  <body>
+
+    <!-- Переменные для интернационализации приложения -->
+    <input type="hidden" name="areYouSureToDelete" id="areYouSureToDelete" th:value="${areYouSureToDelete}">
+
+    <th:block th:include="/_header"></th:block>
+    <!-- Панель выбора страницы -->
+    <th:block th:include="/_pagination"></th:block>
+
+    <!-- Модальное окно добавления сотрудника -->
+    <div id="openModal" class="modal">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h3 class="modal-title">Назначить менеджера</h3>
+            <a href="#close" title="Close" class="close">×</a>
+          </div>
+          <div class="modal-body">
+            <form action="#" th:action="@{/managers/add}" th:object="${manager}" method="post">
+              <table>
+                <tr>
+                  <td>
+                    Номер сотрудника
+                  </td>
+                    <td>
+                    <input type="text" name="employeeNumber" value="" th:field="*{departmentManagerSuite.employeeNumber}">
+                    </td>
+                </tr>
+                <tr>
+                  <td>
+                    В отдел:
+                  </td>
+                    <td>
+                    <input type="text" name="departmentId" value="" th:field="*{departmentManagerSuite.departmentId}">
+                    </td>
+                </tr>
+                <tr>
+                  <td>
+                    Начиная с:
+                  </td>
+                    <td>
+                    <input type="date" name="fromDate" value="" th:field="*{fromDate}" >
+                    </td>
+                </tr>
+                <tr>
+                  <td>
+                    По:
+                  </td>
+                    <td>
+                    <input type="date" name="toDate" value="" th:field="*{toDate}" >
+                    </td>
+                </tr>
+              </table>
+              <input type="submit" name="addManager" value="Добавить">
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+
+<div class="content">
+
+  <!-- форма для редактирования данных сотрудника -->
+  <form action="#" name="editForm" th:action="@{/managers/update}" th:object="${manager}" method="post">
+    <input type="hidden" id="newEmpNo" name="newEmpNo" value="" th:field="*{departmentManagerSuite.employeeNumber}"/>
+    <input type="hidden" id="newDepartmentId" name="newDepartmentId" value="" th:field="*{departmentManagerSuite.departmentId}"/>
+    <input type="hidden" id="newFromDate" name="newFromDate" value="" th:field="*{fromDate}"/>
+    <input type="hidden" id="newToDate" name="newToDate" th:field="*{toDate}" value=""/>
+    <input type="hidden" id="newCurrentPage" name="currentPage" value=""/>
+  </form>
+
+  <!-- кнопки с действиями на странице -->
+  <div class="action-buttons">
+    <span class="action-button"><a href="#openModal">Назначить менеджера</a></span>
+  </div>
+
+  <!-- переменные конфигурации, приходят с сервера -->
+  <input type="hidden" id="currentFilterString" val="" name="currentFilterString" th:value="${filter}"/>
+  <input type="hidden" name="maxPages" id="maxPages" th:value="${maxPages}"/>
+
+  <!-- поле поиска -->
+  <div class="filter">
+      <input type="text" name="filter-input" id="filterInput" class="filter-input" value="" placeholder="Введите текст для поиска"/>
+  </div>
+
+  <!-- сообщения -->
+  <div class="messages">
+      <table class="message-table">
+          <tr class="message" th:each="message : ${messages}"><p th:text = "${message}"></p><br></tr>
+      </table>
+    </div>
+
+    <!-- главная таблица с контентом -->
+    <table class="content-table">
+      <tr class="tr-header">
+        <td class="f">Код сотрудника</td>
+        <td class="f">Назначен в отдел</td>
+        <td class="f">Начиная с:</td>
+        <td class="f">По:</td>
+      </tr>
+      <tr class="tr-header" th:each="manager : ${managers}">
+        <td class="td-content-uneditable" th:utext="${manager.departmentManagerSuite.employeeNumber}"></td>
+        <td class="td-content-uneditable" th:utext="${manager.departmentManagerSuite.departmentId}"></td>
+        <td class="td-content" th:utext="${manager.fromDate}"></td>
+        <td class="td-content" th:utext="${manager.toDate}"></td>
+        <td class="last-cell" ><span class="delete fa fa-window-close"></span></td>
+      </tr>
+  </table>
+    </div>
+    <th:block th:include="/_footer"></th:block>
+  </body>
+</html>
