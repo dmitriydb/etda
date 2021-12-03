@@ -8,8 +8,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.FieldError;
+import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
@@ -28,22 +32,22 @@ public class EmployeeController {
 
     private List<String> messages = new ArrayList<>();
 
-
-
     @GetMapping("/employees")
     public String showEmployees(Model model, @RequestParam(defaultValue = "") String filter) {
         List<Object> list;
         if (filter == null || filter.trim().equals("")){
             list = new SimpleModel().findEntities(Employee.class, maxPageSize, 0);
             model.addAttribute("filter", "");
+            model.addAttribute("maxPages", new SimpleModel().countEntities(Employee.class) / maxPageSize);
         }
         else{
             list = new SimpleModel().findEntitiesFiltered(Employee.class, filter, maxPageSize, 0);
             model.addAttribute("filter", filter);
+            model.addAttribute("maxPages", new SimpleModel().countEntitiesFiltered(Employee.class, filter) / maxPageSize);
         }
         model.addAttribute("employees", list);
         model.addAttribute("currentPage", 1);
-        model.addAttribute("maxPages", list.size() / maxPageSize);
+
         addMessages(model);
         return "employees";
     }
@@ -71,14 +75,15 @@ public class EmployeeController {
         if (filter == null || filter.trim().equals("")){
             list = new SimpleModel().findEntities(Employee.class, maxPageSize, getOffsetByPage(page));
             model.addAttribute("filter", "");
+            model.addAttribute("maxPages", new SimpleModel().countEntities(Employee.class) / maxPageSize);
         }
         else{
             list = new SimpleModel().findEntitiesFiltered(Employee.class, filter, maxPageSize, getOffsetByPage(page));
             model.addAttribute("filter", filter);
+            model.addAttribute("maxPages", new SimpleModel().countEntitiesFiltered(Employee.class, filter) / maxPageSize);
         }
         model.addAttribute("employees", list);
         model.addAttribute("currentPage", page);
-        model.addAttribute("maxPages", list.size() / maxPageSize);
         addMessages(model);
         return "employees";
     }
@@ -97,7 +102,11 @@ public class EmployeeController {
     }
 
     @PostMapping("/employees/add")
-    public String addEmployee(Model model, @ModelAttribute Employee employee){
+    public String addEmployee(Model model, @ModelAttribute @Valid Employee employee, BindingResult result){
+        if (result.hasErrors()){
+            messages.add(resourceBundle.getString("InputError"));
+            return "redirect:/employees/1";
+        }
         new SimpleModel().createEntity(Employee.class, employee);
         messages.add(resourceBundle.getString("SucAdded"));
         return "redirect:/employees/1";
@@ -111,5 +120,4 @@ public class EmployeeController {
         model.addAttribute("currentPage", page);
         return "redirect:/employees/" + page;
     }
-
 }

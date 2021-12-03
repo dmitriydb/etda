@@ -81,6 +81,9 @@
 
 <div class="content">
 
+  <!-- ошибки -->
+
+
   <form action="#" name="editForm" th:action="@{/employees/update}" th:object="${employee}" method="post">
     <input type="hidden" id="newEmpNo" name="empNumber" value="" th:field="*{employeeNumber}"/>
     <input type="hidden" id="newName" name="name" value="" th:field="*{firstName}"/>
@@ -97,10 +100,10 @@
   </div>
 
   <input type="hidden" id="currentFilterString" val="" name="currentFilterString" th:value="${filter}"/>
-  <input type="hidden" name="maxPages" th:value="${maxPages}"/>
+  <input type="hidden" name="maxPages" id="maxPages" th:value="${maxPages}"/>
 
   <div class="filter">
-      <input type="text" name="filter-input" id="filter-input" class="filter-input" value="" placeholder="Введите текст для поиска"/>
+      <input type="text" name="filter-input" id="filterInput" class="filter-input" value="" placeholder="Введите текст для поиска"/>
   </div>
 
       <div class="messages">

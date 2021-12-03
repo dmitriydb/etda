@@ -10,10 +10,29 @@ import java.util.List;
 
 /**
  * Абстрактная модель данных
- * @version 0.1
+ * @version 0.2
  * @since 0.1
  */
 public abstract class EtdaModel {
+
+
+    /**
+     * Возвращает количество отфильтрованных сущностей с классом clazz в базе
+     * @param clazz
+     * @param filter
+     * @return
+     *
+     * @since 0.2
+     */
+    public abstract long countEntitiesFiltered(Class clazz, String filter);
+
+    /**
+     * Возвращает количество сущностей с классом clazz в базе
+     * @param clazz
+     * @return
+     */
+    public abstract long countEntities(Class clazz);
+
     public static EtdaModel getSimpleModel(){
         return new SimpleModel();
     }

@@ -5,6 +5,8 @@ let editChanges = new Map();
 
 document.addEventListener("DOMContentLoaded", function(){
 
+
+
   //получаем номер текущей страницы
   let x = Number(document.getElementById("currentPage").value);
   let areYouSureToDelete = document.getElementById("areYouSureToDelete").value;
@@ -12,8 +14,16 @@ document.addEventListener("DOMContentLoaded", function(){
   let curFilter = document.getElementById("currentFilterString").value;
   if (curFilter){
     console.log(curFilter);
-    document.getElementById("filter-input").value = curFilter;
+    document.getElementById("filterInput").value = curFilter;
+    for (td of $("td")){
+      console.log (curFilter + " in " + $(td).html())
+        if ($(td).html().includes(curFilter)){
+          $(td).css('background-color', '#FFE8E8');
+        }
+    }
   }
+
+
   $(".td-content").on('keypress',function(e) {
       if(e.which == 13) {
             let newValue = $(this).children("input").val();
@@ -128,16 +138,36 @@ document.addEventListener("DOMContentLoaded", function(){
 
   let added = 0;
   let pageButtons = $(".page-buttons-row")[0];
+
+  let insertedPages = new Set();
+  let totalMaxPages = Number(document.getElementById("maxPages").value);
+
   for (i = x - 5; i < x + 10; i++){
     if (i <= 0) continue;
+    if (i > totalMaxPages + 1) continue;
+    insertedPages.add(i);
     let newButton = document.createElement("td");
     newButton.classList.add("page-button");
     if (i == x)
-    newButton.classList.add("selected");
+      newButton.classList.add("selected");
     newButton.textContent = i;
     $(".page-buttons-row")[0].append(newButton);
     added++;
     if (added >= 10) break;
+  }
+
+  if (!insertedPages.has(1)){
+    let newButton = document.createElement("td");
+    newButton.classList.add("page-button");
+    newButton.textContent = 1;
+    $(".page-buttons-row")[0].prepend(newButton);
+  }
+
+  if (!insertedPages.has(totalMaxPages + 1)){
+    let newButton = document.createElement("td");
+    newButton.classList.add("page-button");
+    newButton.textContent = totalMaxPages + 1;
+    $(".page-buttons-row")[0].append(newButton);
   }
 
   let newButton = document.createElement("td");
@@ -149,9 +179,12 @@ document.addEventListener("DOMContentLoaded", function(){
   $(".page-selector").click(function(){
     let newPageNumber = prompt("Введите номер страницы", "");
     if (!isNaN(newPageNumber) && (newPageNumber > 0))
-      window.location.href = getNewPageLocation(newPageNumber);
-  });
-
+    {
+      let totalMaxPages = Number(document.getElementById("maxPages").value);
+      if (newPageNumber <= totalMaxPages + 1)
+        window.location.href = getNewPageLocation(newPageNumber);
+    }
+});
 
   $(".page-button").click(function(){
     console.log("1");

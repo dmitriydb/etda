@@ -74,6 +74,16 @@ public class SimpleModel extends EtdaModel {
     public Object getEntity(Class clazz, Serializable id) {
         return daoFactory.getSimpleDAO(clazz).read(id);
     }
+
+    @Override
+    public long countEntitiesFiltered(Class clazz, String filter) {
+        return daoFactory.getSimpleDAO(clazz).countEntitiesFiltered(filter);
+    }
+
+    @Override
+    public long countEntities(Class clazz) {
+        return daoFactory.getSimpleDAO(clazz).countEntities();
+    }
 }
 
 

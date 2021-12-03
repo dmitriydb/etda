@@ -4,6 +4,7 @@ import com.github.dmitriydb.etda.model.EtdaEntity;
 import com.github.dmitriydb.etda.model.LocaleManager;
 
 import javax.persistence.*;
+import javax.validation.constraints.*;
 import java.sql.Date;
 import java.util.Locale;
 import java.util.Objects;
@@ -29,9 +30,14 @@ public class Employee implements EtdaEntity {
     @Column(name="birth_date", nullable = false)
     private Date birth_date;
 
+    @Size(min = 2, max=10)
+    @Pattern(regexp = "^[a-zA-Zа-яА-Я\\-]+$")
     @Column(name="first_name", nullable = false)
     private String firstName;
 
+    @Size(min = 2, max=10)
+    @Pattern(regexp = "^[a-zA-Zа-яА-Я\\-]+$")
+    @NotNull
     @Column(name="last_name", nullable = false)
     private String lastName;
 

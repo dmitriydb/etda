@@ -161,4 +161,49 @@ public class SimpleDAO extends AbstractDAO {
             endOperation();
         }
     }
+
+    public long countEntities(){
+        startOperation();
+        try{
+            javax.persistence.Query query = session.createQuery("SELECT COUNT (*) FROM " + clazz.getSimpleName());
+            long result = (long)query.getSingleResult();
+            return result;
+
+        }
+        catch (Exception ex){
+            ex.printStackTrace();
+            return 0;
+        }
+        finally {
+            endOperation();
+        }
+    }
+
+    public long countEntitiesFiltered(String filter){
+        startOperation();
+        try{
+            logger.debug("filter = {}", filter);
+            javax.persistence.Query query = session.createQuery("SELECT COUNT(*) FROM " + clazz.getSimpleName() + " " + DaoFiltersStrings.DAO_FILTERS.get(clazz));
+            if (DaoFiltersStrings.DAO_FILTERS.get(clazz).contains(":filter"))
+                query.setParameter("filter", "%" + filter + "%");
+            if (DaoFiltersStrings.DAO_FILTERS.get(clazz).contains(":number")){
+                try{
+                    Long x = Long.valueOf(filter);
+                    query.setParameter("number", x);
+                }
+                catch (NumberFormatException ex){
+                    query.setParameter("number", -1L);
+                }
+            }
+            long result = (long) query.getSingleResult();
+            return result;
+        }
+        catch (Exception ex){
+            logger.error("{}", ex.getMessage());
+            return 0;
+        }
+        finally {
+            endOperation();
+        }
+    }
 }
