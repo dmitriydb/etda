@@ -19,7 +19,7 @@ public class DepartmentManagerDAO extends AbstractDAO{
      */
     public void deleteManagerByEmployeeNumber(Long employeeNumber){
         startOperation();
-        Query query = session.createQuery("FROM DepartmentManager WHERE departmentManagerSuite.employeeNumber = :number ORDER BY departmentManagerSuite.fromDate DESC");
+        Query query = session.createQuery("FROM DepartmentManager WHERE departmentManagerSuite.employeeNumber = :number ORDER BY fromDate DESC");
         query.setParameter("number", employeeNumber);
         query.setMaxResults(1);
         List<DepartmentManager> resultSet = query.getResultList();

@@ -22,6 +22,10 @@ public abstract class EtdaController {
         view.updateSelf();
     }
 
+    public void setView(EtdaView view) {
+        this.view = view;
+    }
+
     /**
      * Метод вызывается представлением когда нужно обработать действие пользователя
      * @param request инкапсулированный запрос пользователя

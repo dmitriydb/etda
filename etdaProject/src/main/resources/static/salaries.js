@@ -22,7 +22,6 @@ document.addEventListener("DOMContentLoaded", function(){
 
     //и подсвечиваем красным все поля таблицы, которые содержат значение поиска для наглядности
     for (td of $("td")){
-      console.log (curFilter + " in " + $(td).html())
         if ($(td).html().includes(curFilter)){
           $(td).css('background-color', '#FFE8E8');
         }
@@ -54,12 +53,12 @@ document.addEventListener("DOMContentLoaded", function(){
             //собираем данные со всей строки и отправляем через форму на сервер
             //для обновления записи
             let newEmpNo = getTdContent($(tds[0]).html());
-            let newDepartmentId = getTdContent($(tds[1]).html());
+            let newSalary = getTdContent($(tds[1]).html());
             let newFromDate = getTdContent($(tds[2]).html());
             let newToDate = getTdContent($(tds[3]).html());
 
             document.getElementById("newEmpNo").value = newEmpNo;
-            document.getElementById("newDepartmentId").value = newDepartmentId;
+            document.getElementById("newSalary").value = newSalary;
             document.getElementById("newFromDate").value = newFromDate;
             document.getElementById("newToDate").value = newToDate;
             document.getElementById("newCurrentPage").value = x;
@@ -100,7 +99,6 @@ document.addEventListener("DOMContentLoaded", function(){
     // необходимо проверять по всем строкам таблицы
     for (innerTd of $(".td-content")){
       let oldValue = $(innerTd).html();
-      console.log(oldValue);
       if ($(innerTd).html().includes("input")){
         let oldVal = $(innerTd).children("input").val();
         $(innerTd).html("");
@@ -123,10 +121,10 @@ document.addEventListener("DOMContentLoaded", function(){
       let $parentTr = $(this).parent().parent();
       let $tds = $parentTr.find("td");
       let empNo = Number($tds[0].textContent);
-      let deptNo = $tds[1].textContent;
+      let fromDate = $tds[2].textContent;
 
       if (!isNaN(empNo)){
-        let newLocation = getDeletePageLocation() + "delete/" + x + "/" + empNo + ":" + deptNo;
+        let newLocation = getDeletePageLocation() + "delete/" + x + "/" + empNo + ":" + fromDate;
         window.location.href = newLocation;
       }
     }
@@ -196,7 +194,6 @@ document.addEventListener("DOMContentLoaded", function(){
 
    // обработчик нажатия на кнопку смены страницы
    $(".page-button").click(function(){
-     console.log(1);
      let pageNumber = Number(this.textContent);
      if (isNaN(pageNumber)) return;
      let newLocation = getNewPageLocation(pageNumber);
@@ -225,7 +222,7 @@ function getNewPageLocation(pageNumber){
   if (window.location.href.includes("?filter=")){
     let str = window.location.href;
     let part2 = "?" + str.split("?")[1];
-    let part1 = str.split("managers/")[0] + "managers/";
+    let part1 = str.split("salaries/")[0] + "salaries/";
     return part1 + pageNumber + part2;
   }
   let splits = window.location.href.split("/");

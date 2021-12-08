@@ -30,6 +30,8 @@ public class WindowsCmdUtil {
      * @since 0.1
      */
     public static String convertToTerminalString(String original){
+        if (original == null)
+            throw new IllegalArgumentException();
         byte[] b = original.getBytes(StandardCharsets.ISO_8859_1);
         return new String(b);
     }

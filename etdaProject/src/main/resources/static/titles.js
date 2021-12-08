@@ -54,12 +54,12 @@ document.addEventListener("DOMContentLoaded", function(){
             //собираем данные со всей строки и отправляем через форму на сервер
             //для обновления записи
             let newEmpNo = getTdContent($(tds[0]).html());
-            let newDepartmentId = getTdContent($(tds[1]).html());
+            let newTitle = getTdContent($(tds[1]).html());
             let newFromDate = getTdContent($(tds[2]).html());
             let newToDate = getTdContent($(tds[3]).html());
 
             document.getElementById("newEmpNo").value = newEmpNo;
-            document.getElementById("newDepartmentId").value = newDepartmentId;
+            document.getElementById("newTitle").value = newTitle;
             document.getElementById("newFromDate").value = newFromDate;
             document.getElementById("newToDate").value = newToDate;
             document.getElementById("newCurrentPage").value = x;
@@ -123,10 +123,11 @@ document.addEventListener("DOMContentLoaded", function(){
       let $parentTr = $(this).parent().parent();
       let $tds = $parentTr.find("td");
       let empNo = Number($tds[0].textContent);
-      let deptNo = $tds[1].textContent;
+      let title = $tds[1].textContent;
+      let fromDate = $tds[2].textContent;
 
       if (!isNaN(empNo)){
-        let newLocation = getDeletePageLocation() + "delete/" + x + "/" + empNo + ":" + deptNo;
+        let newLocation = getDeletePageLocation() + "delete/" + x + "/" + empNo + ":" + title + ":" + fromDate;
         window.location.href = newLocation;
       }
     }
@@ -196,7 +197,6 @@ document.addEventListener("DOMContentLoaded", function(){
 
    // обработчик нажатия на кнопку смены страницы
    $(".page-button").click(function(){
-     console.log(1);
      let pageNumber = Number(this.textContent);
      if (isNaN(pageNumber)) return;
      let newLocation = getNewPageLocation(pageNumber);
@@ -225,7 +225,7 @@ function getNewPageLocation(pageNumber){
   if (window.location.href.includes("?filter=")){
     let str = window.location.href;
     let part2 = "?" + str.split("?")[1];
-    let part1 = str.split("managers/")[0] + "managers/";
+    let part1 = str.split("titles/")[0] + "titles/";
     return part1 + pageNumber + part2;
   }
   let splits = window.location.href.split("/");

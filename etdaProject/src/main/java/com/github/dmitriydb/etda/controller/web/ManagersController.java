@@ -1,5 +1,6 @@
 package com.github.dmitriydb.etda.controller.web;
 
+import com.github.dmitriydb.etda.model.simplemodel.domain.DepartmentEmployeeSuite;
 import com.github.dmitriydb.etda.model.simplemodel.domain.DepartmentManager;
 import com.github.dmitriydb.etda.model.simplemodel.domain.Employee;
 import org.springframework.stereotype.Controller;
@@ -25,11 +26,16 @@ public class ManagersController extends WebController{
         return super.showPage(model, pageNumber, filter);
     }
 
-    @GetMapping("/managers/delete/{pageNumber}/{empNumber}")
-    public String deleteManager(Model model, @PathVariable String empNumber, @PathVariable String pageNumber){
+    @GetMapping("/managers/delete/{pageNumber}/{managerInfo}")
+    public String deleteManager(Model model, @PathVariable String managerInfo, @PathVariable String pageNumber){
         int page = Integer.valueOf(pageNumber).intValue();
-        Long employeeNumber = Long.valueOf(empNumber);
-        return super.deleteEntity(model, employeeNumber, pageNumber);
+        String[] splits = managerInfo.split(":");
+        Long empNo = Long.valueOf(splits[0]);
+        String deptCode = splits[1];
+        DepartmentEmployeeSuite suite = new DepartmentEmployeeSuite();
+        suite.setDepartmentId(deptCode);
+        suite.setEmployeeNumber(empNo);
+        return super.deleteEntity(model, suite, pageNumber);
     }
 
     @PostMapping("/managers/add")

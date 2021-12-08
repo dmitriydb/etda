@@ -12,4 +12,10 @@ public class StartMenuOptionsSet extends OptionsSet{
         options.add(ConsoleViewOptions.REGISTER);
         options.add(ConsoleViewOptions.EXIT);
     }
+
+    public boolean equals(Object object){
+        if (object instanceof StartMenuOptionsSet)
+            return true;
+        return false;
+    }
 }

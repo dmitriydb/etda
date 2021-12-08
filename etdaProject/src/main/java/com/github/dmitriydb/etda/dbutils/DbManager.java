@@ -12,7 +12,7 @@ import org.hibernate.cfg.Configuration;
  * На текущий момент используется, чтобы инициализировать Hibernate и создать фабрику сессий
  * В дальнейшем раздает новые сессии по запросу
  *
- * @version 0.1.1
+ * @version 0.2
  * @since 0.1
  */
 public class DbManager {
@@ -33,6 +33,14 @@ public class DbManager {
         cfg.addAnnotatedClass(SecurityRole.class);
         sessionFactory = cfg.buildSessionFactory();
         SecurityRole.init();
+    }
+
+    public void initSelf(){
+        DbManager.init();
+    }
+
+    public Session getNewSession(){
+        return sessionFactory.openSession();
     }
 
     public static Session getSession(){

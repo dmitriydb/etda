@@ -60,13 +60,22 @@ public class SimpleModel extends EtdaModel {
     public void deleteEntity(Class clazz, Serializable id) {
         if (clazz.equals(DepartmentEmployee.class))
             daoFactory.getDepartmentEmployeeDAO().deleteDepartmentEmployeeByEmpNumber((Long) id);
-        else if (clazz.equals(DepartmentManager.class))
-            daoFactory.getDepartmentManagerDAO().deleteManagerByEmployeeNumber((Long) id);
-        else if (clazz.equals(Salary.class))
-            daoFactory.getSalaryDAO().deleteSalaryByEmployeeID((Long) id);
-        else if (clazz.equals(Title.class))
-            daoFactory.getTitleDao().deleteTitleByEmployeeID((Long) id);
-        else
+        else if (clazz.equals(DepartmentManager.class)) {
+            if (id instanceof DepartmentEmployeeSuite)
+                daoFactory.getSimpleDAO(clazz).delete(id);
+            else
+                daoFactory.getDepartmentManagerDAO().deleteManagerByEmployeeNumber((Long) id);
+        } else if (clazz.equals(Salary.class)) {
+            if (id instanceof SalaryOrder)
+                daoFactory.getSimpleDAO(clazz).delete(id);
+            else
+                daoFactory.getSalaryDAO().deleteSalaryByEmployeeID((Long) id);
+        } else if (clazz.equals(Title.class)) {
+            if (id instanceof TitleOrder)
+                daoFactory.getSimpleDAO(clazz).delete(id);
+            else
+                daoFactory.getTitleDao().deleteTitleByEmployeeID((Long) id);
+        } else
             daoFactory.getSimpleDAO(clazz).delete(id);
     }
 

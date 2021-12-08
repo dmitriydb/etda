@@ -104,4 +104,8 @@ public abstract class EtdaView {
     public void setResourceBundle(ResourceBundle resourceBundle) {
         this.resourceBundle = resourceBundle;
     }
+
+    public ViewState getCurrentState() {
+        return currentState;
+    }
 }

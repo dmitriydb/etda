@@ -9,6 +9,7 @@ import com.github.dmitriydb.etda.security.SecurityManager;
 import com.github.dmitriydb.etda.security.SecurityRole;
 import com.github.dmitriydb.etda.security.User;
 import com.github.dmitriydb.etda.security.UserDAO;
+import com.github.dmitriydb.etda.view.EtdaView;
 import com.github.dmitriydb.etda.view.console.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -43,6 +44,18 @@ public class ConsoleController extends EtdaController {
     public ConsoleController() {
         model = EtdaModel.getSimpleModel();
         view = new SimpleConsoleView();
+        ((ConsoleView)view).setOptions(new StartMenuOptionsSet());
+        view.setController(this);
+    }
+
+    /**
+     * @since 0.2
+     * @param model
+     * @param view
+     */
+    public ConsoleController(EtdaModel model, EtdaView view) {
+        this.model = model;
+        this.view = view;
         ((ConsoleView)view).setOptions(new StartMenuOptionsSet());
         view.setController(this);
     }
