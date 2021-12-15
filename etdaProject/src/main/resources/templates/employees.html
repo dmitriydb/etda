@@ -127,7 +127,7 @@
         <td class="td-content" th:utext="${employee.lastName}"></td>
         <td class="td-content" th:utext="${employee.firstName}"></td>
         <td class="td-content" th:utext="${employee.gender}"></td>
-        <td class="td-content" th:utext="${#calendars.format(employee.birth_date,'dd.MM.yyyy')}">13 May 2011</td>
+        <td class="td-content" th:utext="${employee.birth_date}"></td>
         <td class="td-content" name="hireDate" th:utext="${employee.hireDate}"></td>
         <td class="last-cell" ><span class="delete fa fa-window-close"></span></td>
       </tr>

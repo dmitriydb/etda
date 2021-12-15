@@ -23,7 +23,7 @@ document.addEventListener("DOMContentLoaded", function(){
     //и подсвечиваем красным все поля таблицы, которые содержат значение поиска для наглядности
     for (td of $("td")){
       console.log (curFilter + " in " + $(td).html())
-        if ($(td).html().includes(curFilter)){
+        if ($(td).html().toLowerCase().includes(curFilter.toLowerCase())){
           $(td).css('background-color', '#FFE8E8');
         }
     }

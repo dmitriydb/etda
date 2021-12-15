@@ -6,6 +6,12 @@ import com.github.dmitriydb.etda.security.User;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.cfg.Configuration;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
+
+import javax.validation.Valid;
+import java.io.IOException;
+import java.util.Properties;
 
 /**
  * Вспомогательный класс для работы с БД
@@ -15,13 +21,28 @@ import org.hibernate.cfg.Configuration;
  * @version 0.2
  * @since 0.1
  */
+
+@Component
 public class DbManager {
 
     private static SessionFactory sessionFactory;
 
     public synchronized static void init() {
+
+
         if (sessionFactory != null) return;
         Configuration cfg = new Configuration();
+        try {
+            Properties springProperties = new Properties();
+            springProperties.load(DbManager.class.getClassLoader().getResourceAsStream("application.properties"));
+            String currentProfile = springProperties.getProperty("spring.profiles.active");
+            Properties hibernateProperties = new Properties();
+            hibernateProperties.load(DbManager.class.getClassLoader().getResourceAsStream("hibernate-" + currentProfile + ".properties"));
+            cfg.addProperties(hibernateProperties);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
         cfg.addAnnotatedClass(Employee.class);
         cfg.addAnnotatedClass(Salary.class);
         cfg.addAnnotatedClass(Department.class);
