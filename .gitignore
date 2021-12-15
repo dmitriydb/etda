@@ -1,4 +1,4 @@
 /target
 /.idea
-.gz
-.log
+*.gz
+*.log
