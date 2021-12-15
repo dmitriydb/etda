@@ -20,6 +20,7 @@ public class DbManager {
     private static SessionFactory sessionFactory;
 
     public static void init() {
+        if (sessionFactory != null) return;
         Configuration cfg = new Configuration();
         cfg.addAnnotatedClass(Employee.class);
         cfg.addAnnotatedClass(Salary.class);

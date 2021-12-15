@@ -5,6 +5,7 @@ import com.github.dmitriydb.etda.model.simplemodel.domain.Title;
 import org.hibernate.query.Query;
 
 import java.util.List;
+import java.util.NoSuchElementException;
 
 
 /**
@@ -22,6 +23,8 @@ public class TitleDao extends AbstractDAO {
         query.setParameter("number", employeeNumber);
         query.setMaxResults(1);
         List<Title> result = query.getResultList();
+        if (result.size() == 0)
+            throw new NoSuchElementException();
         for (Title s : result)
             session.delete(s);
         endOperation();

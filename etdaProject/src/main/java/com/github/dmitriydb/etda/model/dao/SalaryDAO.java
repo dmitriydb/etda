@@ -5,6 +5,7 @@ import com.github.dmitriydb.etda.model.simplemodel.domain.Salary;
 import org.hibernate.query.Query;
 
 import java.util.List;
+import java.util.NoSuchElementException;
 
 /**
  * DAO дял класса Salary
@@ -21,6 +22,8 @@ public class SalaryDAO extends AbstractDAO {
         query.setMaxResults(1);
         query.setParameter("number", employeeNumber);
         List<Salary> result = query.getResultList();
+        if (result.size() == 0)
+            throw new NoSuchElementException();
         for (Salary s : result)
             session.delete(s);
         endOperation();

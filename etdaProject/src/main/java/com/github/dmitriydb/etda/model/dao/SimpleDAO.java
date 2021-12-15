@@ -8,6 +8,7 @@ import org.slf4j.LoggerFactory;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.NoSuchElementException;
 
 /**
  * Простой DAO-класс, единообразно работающий с сущностями всех типов
@@ -49,23 +50,19 @@ public class SimpleDAO extends AbstractDAO {
 
     public void update(Object e) {
         logger.debug("Updating {}", e);
-        try{
         startOperation();
         logger.debug("Updating an object to {}", e.toString());
         session.update(e);
         logger.debug("Object was successfully updated: {}", e.toString());
         endOperation();
-        }
-        catch (Exception ex){
-            logger.error("Error", ex);
-        }
     }
 
 
-    public void delete(Serializable id) throws IllegalArgumentException{
+    public void delete(Serializable id) throws NoSuchElementException{
         logger.debug("Trying to delete entity with id {}", id);
         startOperation();
         Object e = session.get(clazz, id);
+        if (e == null) throw new NoSuchElementException();
         session.delete(e);
         logger.debug("Object {} was successfully deleted", e.toString());
         endOperation();
@@ -125,7 +122,6 @@ public class SimpleDAO extends AbstractDAO {
                     query.setParameter("number", -1L);
                 }
             }
-
             query.setMaxResults(maxResults);
             query.setFirstResult(offset);
             List<Object> result = query.getResultList();

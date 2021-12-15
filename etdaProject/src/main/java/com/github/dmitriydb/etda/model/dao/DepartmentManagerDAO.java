@@ -5,6 +5,7 @@ import com.github.dmitriydb.etda.model.simplemodel.domain.DepartmentManager;
 import org.hibernate.query.Query;
 
 import java.util.List;
+import java.util.NoSuchElementException;
 
 /**
  * DAO для класса DepartmentManager
@@ -23,6 +24,8 @@ public class DepartmentManagerDAO extends AbstractDAO{
         query.setParameter("number", employeeNumber);
         query.setMaxResults(1);
         List<DepartmentManager> resultSet = query.getResultList();
+        if (resultSet.size() == 0)
+            throw new NoSuchElementException();
         for (DepartmentManager e : resultSet){
             session.delete(e);
         }

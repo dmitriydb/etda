@@ -16,10 +16,7 @@ import org.slf4j.LoggerFactory;
 
 import javax.swing.text.View;
 import java.io.Serializable;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.ResourceBundle;
+import java.util.*;
 
 /**
  * Контроллер для консольного представления
@@ -81,8 +78,8 @@ public class ConsoleController extends EtdaController {
             ConsoleViewUpdate consoleViewUpdate = new ConsoleViewUpdate();
             if (request.getFilter() == null || request.getFilter().equals("")) {
                 List<Object> entities = model.findEntities(clazz, view.getMaxResults(), request.getOffset());
-                for (Object employee : entities) {
-                    consoleViewUpdate.addMessage(employee);
+                for (Object o : entities) {
+                    consoleViewUpdate.addMessage(o);
                 }
             } else {
                 List<Object> entities = model.findEntitiesFiltered(clazz, request.getFilter(), view.getMaxResults(), request.getOffset());
@@ -139,7 +136,6 @@ public class ConsoleController extends EtdaController {
         view.changeState(ViewState.MENU);
         ((ConsoleView) this.view).processConsoleViewUpdate(update);
     }
-
 
     /**
      * Обрабатывает запрос из представления
@@ -286,7 +282,16 @@ public class ConsoleController extends EtdaController {
             consoleViewUpdate.addMessage("SucDeleted");
             view.changeState(ViewState.MENU);
             ((ConsoleView) this.view).processConsoleViewUpdate(consoleViewUpdate);
-        } catch (IllegalArgumentException ex) {
+        } catch (NoSuchElementException ex) {
+            ex.printStackTrace();
+            errorLabelMessage("IdNotExists");
+        }
+        catch (RuntimeException ex) {
+            ex.printStackTrace();
+            errorLabelMessage("IdNotExists");
+        }
+        catch (Exception ex) {
+            ex.printStackTrace();
             errorLabelMessage("IdNotExists");
         }
     }
