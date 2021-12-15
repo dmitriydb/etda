@@ -13,9 +13,9 @@
     <!-- Переменные для интернационализации приложения -->
     <input type="hidden" name="areYouSureToDelete" id="areYouSureToDelete" th:value="${areYouSureToDelete}">
 
-    <th:block th:include="/_header"></th:block>
+    <th:block th:include="_header"></th:block>
     <!-- Панель выбора страницы -->
-    <th:block th:include="/_pagination"></th:block>
+    <th:block th:include="_pagination"></th:block>
 
     <!-- Модальное окно добавления сотрудника -->
     <div id="openModal" class="modal">
@@ -133,6 +133,6 @@
       </tr>
   </table>
     </div>
-    <th:block th:include="/_footer"></th:block>
+    <th:block th:include="_footer"></th:block>
   </body>
 </html>
