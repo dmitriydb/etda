@@ -3,6 +3,7 @@ package com.github.dmitriydb.etda.webapp.config;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.LocaleResolver;
+import org.springframework.web.servlet.i18n.LocaleChangeInterceptor;
 import org.springframework.web.servlet.i18n.SessionLocaleResolver;
 
 import java.util.Locale;
@@ -16,4 +17,6 @@ public class LocaleConfig {
         slr.setDefaultLocale(Locale.forLanguageTag("ru"));
         return slr;
     }
+
+
 }
