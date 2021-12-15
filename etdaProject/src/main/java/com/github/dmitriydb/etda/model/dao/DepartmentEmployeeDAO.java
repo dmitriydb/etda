@@ -6,6 +6,7 @@ import com.github.dmitriydb.etda.model.simplemodel.domain.DepartmentEmployeeSuit
 import org.hibernate.query.Query;
 
 import java.util.List;
+import java.util.NoSuchElementException;
 
 /**
  * DAO для класса DepartmentEmployee
@@ -22,10 +23,11 @@ public class DepartmentEmployeeDAO extends AbstractDAO{
      */
     public void deleteDepartmentEmployeeByEmpNumber(Long employeeNumber){
         startOperation();
-        Query query = session.createQuery("FROM DepartmentEmployee WHERE departmentEmployeeSuite.employeeNumber = :number ORDER BY departmentEmployeeSuite.fromDate DESC");
+        Query query = session.createQuery("FROM DepartmentEmployee WHERE departmentEmployeeSuite.employeeNumber = :number ORDER BY fromDate DESC");
         query.setParameter("number", employeeNumber);
         query.setMaxResults(1);
         List<DepartmentEmployee> resultSet = query.getResultList();
+        if (resultSet.size() == 0) throw new NoSuchElementException();
         for (DepartmentEmployee e : resultSet){
             session.delete(e);
         }

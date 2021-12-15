@@ -2,8 +2,7 @@ package com.github.dmitriydb.etda.model.simplemodel.dao;
 
 import com.github.dmitriydb.etda.model.EtdaDaoFactory;
 import com.github.dmitriydb.etda.model.dao.*;
-import com.github.dmitriydb.etda.security.User;
-import com.github.dmitriydb.etda.security.UserDAO;
+import com.github.dmitriydb.etda.model.dao.UserDAO;
 
 
 /**

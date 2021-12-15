@@ -26,12 +26,16 @@ public class LocaleManager {
      * @since 0.1.2
      */
     public static String formatSalaryToLocaleFormat(Long salary, Locale locale){
+        if (salary == null || locale == null)
+            throw new IllegalArgumentException();
         NumberFormat format = NumberFormat.getCurrencyInstance(locale);
         format.setCurrency(Currency.getInstance(locale));
         return format.format(salary);
     }
 
     public static String formatSqlDateToLocaleFormat(Date date, Locale locale){
+        if (date == null || locale == null)
+            throw new IllegalArgumentException();
         DateTimeFormatter formatter = DateTimeFormatter.ofLocalizedDate(FormatStyle.SHORT);
         return formatter.format(date.toLocalDate());
     }

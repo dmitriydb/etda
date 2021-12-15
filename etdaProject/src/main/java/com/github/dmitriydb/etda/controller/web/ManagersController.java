@@ -49,7 +49,6 @@ public class ManagersController extends WebController{
 
     @PostMapping("/managers/update")
     public String updateManager(Model model, @ModelAttribute DepartmentManager manager, @RequestParam("currentPage") String pageNumber){
-        System.out.println(manager);
         return super.updateEntity(model, manager, pageNumber);
     }
 }

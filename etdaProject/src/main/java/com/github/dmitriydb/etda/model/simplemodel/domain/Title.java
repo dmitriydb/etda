@@ -46,7 +46,13 @@ public class Title implements EtdaEntity {
 
     @Override
     public String toString() {
-        return String.format("%20d %25s %20s %20s", titleOrder.getEmployeeNumber(), titleOrder.getTitle(), titleOrder.getFromDate(), toDate);
+        try{
+            return String.format("%20d %25s %20s %20s", titleOrder.getEmployeeNumber(), titleOrder.getTitle(), titleOrder.getFromDate(), toDate);
+        }
+        catch (Exception ex){
+            return "NOT SET";
+        }
+
     }
 
     public String format(Locale locale){

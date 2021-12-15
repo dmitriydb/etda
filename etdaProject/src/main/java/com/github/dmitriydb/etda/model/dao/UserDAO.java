@@ -1,6 +1,7 @@
-package com.github.dmitriydb.etda.security;
+package com.github.dmitriydb.etda.model.dao;
 
 import com.github.dmitriydb.etda.model.dao.AbstractDAO;
+import com.github.dmitriydb.etda.security.User;
 import org.hibernate.query.Query;
 
 import java.util.List;
@@ -40,5 +41,11 @@ public class UserDAO extends AbstractDAO {
         query.setParameter("name", name);
         List<User> result = query.getResultList();
         return result.get(0);
+    }
+
+    public void createUser(User u) {
+        startOperation();
+        session.save(u);
+        endOperation();
     }
 }

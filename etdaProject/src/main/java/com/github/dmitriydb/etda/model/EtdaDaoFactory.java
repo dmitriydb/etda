@@ -2,7 +2,7 @@ package com.github.dmitriydb.etda.model;
 
 import com.github.dmitriydb.etda.model.dao.*;
 import com.github.dmitriydb.etda.model.simplemodel.dao.SimpleTitleDAO;
-import com.github.dmitriydb.etda.security.UserDAO;
+import com.github.dmitriydb.etda.model.dao.UserDAO;
 
 /**
  * Абстрактная фабрика DAO

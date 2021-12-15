@@ -3,8 +3,11 @@ package com.github.dmitriydb.etda.controller.console;
 import com.github.dmitriydb.etda.dbutils.DbManager;
 import com.github.dmitriydb.etda.model.EtdaModel;
 import com.github.dmitriydb.etda.model.SimpleModel;
+import com.github.dmitriydb.etda.model.dao.UserDAO;
+import com.github.dmitriydb.etda.security.SecurityRole;
 import com.github.dmitriydb.etda.security.User;
 import com.github.dmitriydb.etda.view.console.*;
+import com.sun.org.apache.xpath.internal.Arg;
 import junitparams.JUnitParamsRunner;
 import junitparams.Parameters;
 import org.junit.Before;
@@ -19,6 +22,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 import java.util.ResourceBundle;
+import java.util.stream.Collectors;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
@@ -62,6 +66,72 @@ public class ConsoleControllerTest {
 
     @Test
     @Parameters(method = "createOptions")
+    public void passingCorrectValuesToModelWhenCreatingObject(ConsoleViewOptions option){
+        SimpleConsoleView view = mock(SimpleConsoleView.class);
+        SimpleModel model = mock(SimpleModel.class);
+        ConsoleController controller = Mockito.spy(new ConsoleController(model, view));
+        ConsoleViewRequest request = new ConsoleViewRequest(option);
+        try {
+            Object entity = option.getEntityClass().newInstance();
+            request.setBean(entity);
+
+            controller.processUserAction(request);
+
+            verify(model).createEntity(option.getEntityClass(), entity);
+        } catch (InstantiationException e) {
+            e.printStackTrace();
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        }
+
+    }
+
+    @Test
+    @Parameters(method = "updateOptions")
+    public void passingCorrectValuesToModelWhenUpdatingObject(ConsoleViewOptions option){
+        SimpleConsoleView view = mock(SimpleConsoleView.class);
+        SimpleModel model = mock(SimpleModel.class);
+        ConsoleController controller = Mockito.spy(new ConsoleController(model, view));
+        ConsoleViewRequest request = new ConsoleViewRequest(option);
+        try {
+            Object entity = option.getEntityClass().newInstance();
+            request.setBean(entity);
+
+            controller.processUserAction(request);
+
+            verify(model).updateEntity(option.getEntityClass(), entity);
+        } catch (InstantiationException e) {
+            e.printStackTrace();
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        }
+
+    }
+
+    @Test
+    @Parameters(method = "deleteOptions")
+    public void passingCorrectValuesToModelWhenDeletingObject(ConsoleViewOptions option){
+        SimpleConsoleView view = mock(SimpleConsoleView.class);
+        SimpleModel model = mock(SimpleModel.class);
+        ConsoleController controller = Mockito.spy(new ConsoleController(model, view));
+        ConsoleViewRequest request = new ConsoleViewRequest(option);
+        try {
+            Object entity = option.getEntityClass().newInstance();
+            request.setBean(entity);
+
+            controller.processUserAction(request);
+
+            verify(model).deleteEntity(option.getEntityClass(), null);
+        } catch (InstantiationException e) {
+            e.printStackTrace();
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        }
+
+    }
+
+    @Test
+    @Parameters(method = "createOptions")
     public void createOperationsWithNullBeanShowsCreateError(ConsoleViewOptions option){
         SimpleConsoleView view = mock(SimpleConsoleView.class);
         ConsoleController controller = Mockito.spy(new ConsoleController(new SimpleModel(), view));
@@ -96,7 +166,7 @@ public class ConsoleControllerTest {
         SimpleConsoleView view = mock(SimpleConsoleView.class);
         ConsoleController controller = Mockito.spy(new ConsoleController(new SimpleModel(), view));
         ConsoleViewRequest request = new ConsoleViewRequest(option);
-        request.setId(-1L);
+        request.setId(null);
         ArgumentCaptor<ConsoleViewUpdate> argument = ArgumentCaptor.forClass(ConsoleViewUpdate.class);
         controller.processUserAction(request);
         verify(view).processConsoleViewUpdate(argument.capture());
@@ -248,5 +318,163 @@ public class ConsoleControllerTest {
         assertThat(update.getMessages()).contains("UserNotExists");
         }
 
+    @Test
+    public void whenOperationShowThenStateWaitingUserKey(){
+        SimpleConsoleView view = mock(SimpleConsoleView.class);
+        ConsoleController controller = Mockito.spy(new ConsoleController(new SimpleModel(), view));
+        ConsoleViewOptions option = ConsoleViewOptions.DEPARTMENTS_LIST;
+        ConsoleViewRequest request = new ConsoleViewRequest(option);
+        controller.processUserAction(request);
+        verify(view).changeState(ViewState.WAITING_USER_KEY);
+    }
 
+    @Test
+    public void whenRegisterUserDaoIsCreatingUserAndStateMenu(){
+        SimpleConsoleView view = mock(SimpleConsoleView.class);
+        ConsoleController controller = Mockito.spy(new ConsoleController(new SimpleModel(), view));
+        UserDAO dao = mock(UserDAO.class);
+        controller.setUserDAO(dao);
+        User u = new User();
+        String username = "test";
+        u.setName(username);
+        when(dao.isUserExists(username)).thenReturn(false);
+        u.setSecurityRole(SecurityRole.EMPLOYEE_ROLE());
+        ConsoleViewOptions option = ConsoleViewOptions.REGISTER;
+        ConsoleViewRequest request = new ConsoleViewRequest(option);
+        request.setBean(u);
+        controller.processUserAction(request);
+        verify(dao).createUser(u);
+        verify(view).changeState(ViewState.MENU);
+        verify(view).setUser(u);
+    }
+
+    @Test
+    public void whenLoginUserDaoIsCheckingIfUserExists(){
+        SimpleConsoleView view = mock(SimpleConsoleView.class);
+        ConsoleController controller = Mockito.spy(new ConsoleController(new SimpleModel(), view));
+        UserDAO dao = mock(UserDAO.class);
+        controller.setUserDAO(dao);
+        User u = new User();
+        String username = "test";
+        u.setName(username);
+        when(dao.isUserExists(username)).thenReturn(false);
+        u.setSecurityRole(SecurityRole.EMPLOYEE_ROLE());
+        ConsoleViewOptions option = ConsoleViewOptions.LOGIN;
+        ConsoleViewRequest request = new ConsoleViewRequest(option);
+        request.setBean(u);
+
+        controller.processUserAction(request);
+
+        verify(dao).getUserByName(username);
+        verify(view).changeState(ViewState.MENU);
+
+    }
+
+
+    @Test
+    public void whenRegisterAndLoginExistsErrorLoginExists(){
+        SimpleConsoleView view = mock(SimpleConsoleView.class);
+        ConsoleController controller = Mockito.spy(new ConsoleController(new SimpleModel(), view));
+        UserDAO dao = mock(UserDAO.class);
+        controller.setUserDAO(dao);
+        User u = new User();
+        String username = "test";
+        u.setName(username);
+        when(dao.isUserExists(username)).thenReturn(true);
+        u.setSecurityRole(SecurityRole.EMPLOYEE_ROLE());
+        ConsoleViewOptions option = ConsoleViewOptions.REGISTER;
+        ConsoleViewRequest request = new ConsoleViewRequest(option);
+        request.setBean(u);
+        ArgumentCaptor<ConsoleViewUpdate> argumentCaptor = ArgumentCaptor.forClass(ConsoleViewUpdate.class);
+
+        controller.processUserAction(request);
+
+        verify(view).processConsoleViewUpdate(argumentCaptor.capture());
+        ConsoleViewUpdate consoleViewUpdate = argumentCaptor.getValue();
+        
+        verifyUpdateContains(consoleViewUpdate, "LoginExists");
+        verify(dao, never()).createUser(u);
+        verify(view).changeState(ViewState.MENU);
+        verify(view, never()).setUser(u);
+    }
+
+    public void verifyUpdateContains(ConsoleViewUpdate consoleViewUpdate, String loginExists) {
+        List<String> s = consoleViewUpdate.getMessages().stream().map(x -> x.toString()).collect(Collectors.toList());
+        assertThat(s).contains(loginExists);
+    }
+
+    @Test
+    public void whenRegisterSuccessfullyShowsMenuAndMessageSucRegister(){
+        SimpleConsoleView view = mock(SimpleConsoleView.class);
+        ConsoleController controller = Mockito.spy(new ConsoleController(new SimpleModel(), view));
+        UserDAO dao = mock(UserDAO.class);
+        controller.setUserDAO(dao);
+        User u = new User();
+        String username = "test";
+        u.setName(username);
+        when(dao.isUserExists(username)).thenReturn(false);
+        u.setSecurityRole(SecurityRole.EMPLOYEE_ROLE());
+        ConsoleViewOptions option = ConsoleViewOptions.REGISTER;
+        ConsoleViewRequest request = new ConsoleViewRequest(option);
+        request.setBean(u);
+        ArgumentCaptor<ConsoleViewUpdate> argumentCaptor = ArgumentCaptor.forClass(ConsoleViewUpdate.class);
+
+        controller.processUserAction(request);
+
+        verify(view).processConsoleViewUpdate(argumentCaptor.capture());
+        ConsoleViewUpdate consoleViewUpdate = argumentCaptor.getValue();
+
+        verifyUpdateContains(consoleViewUpdate, "SucRegister");
+    }
+
+    @Test
+    public void whenRegisterAsAdminSetsAdminRole(){
+        SimpleConsoleView view = mock(SimpleConsoleView.class);
+        ConsoleController controller = Mockito.spy(new ConsoleController(new SimpleModel(), view));
+        UserDAO dao = mock(UserDAO.class);
+        controller.setUserDAO(dao);
+        User u = new User();
+        String username = "admin";
+        u.setName(username);
+        when(dao.isUserExists(username)).thenReturn(false);
+
+        ConsoleViewOptions option = ConsoleViewOptions.REGISTER;
+        ConsoleViewRequest request = new ConsoleViewRequest(option);
+        request.setBean(u);
+        ArgumentCaptor<User> argumentCaptor = ArgumentCaptor.forClass(User.class);
+
+        controller.processUserAction(request);
+
+        verify(view).setUser(argumentCaptor.capture());
+        User uTest = argumentCaptor.getValue();
+
+        assertThat(u).isEqualTo(uTest);
+        assertThat(u.getSecurityRole()).isEqualTo(SecurityRole.ADMIN_ROLE());
+
+    }
+
+    @Test
+    public void whenRegisterFailsShowErrorRegisterMessage(){
+        SimpleConsoleView view = mock(SimpleConsoleView.class);
+        ConsoleController controller = Mockito.spy(new ConsoleController(new SimpleModel(), view));
+        UserDAO dao = mock(UserDAO.class);
+        controller.setUserDAO(dao);
+        User u = new User();
+        String username = null;
+        u.setName(username);
+        when(dao.isUserExists(username)).thenReturn(false);
+
+        ConsoleViewOptions option = ConsoleViewOptions.REGISTER;
+        ConsoleViewRequest request = new ConsoleViewRequest(option);
+        request.setBean(u);
+        ArgumentCaptor<ConsoleViewUpdate> argumentCaptor = ArgumentCaptor.forClass(ConsoleViewUpdate.class);
+
+        controller.processUserAction(request);
+
+        verify(view).processConsoleViewUpdate(argumentCaptor.capture());
+        ConsoleViewUpdate update = argumentCaptor.getValue();
+
+        verifyUpdateContains(update, "ErrorRegister");
+
+    }
 }

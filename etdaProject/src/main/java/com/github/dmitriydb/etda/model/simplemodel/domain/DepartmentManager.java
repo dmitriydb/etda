@@ -71,7 +71,13 @@ public class DepartmentManager implements EtdaEntity {
 
     @Override
     public String toString() {
-        return String.format("%20d %20s %20s %20s", departmentManagerSuite.getEmployeeNumber(), departmentManagerSuite.getDepartmentId(), fromDate, toDate);
+        try{
+            return String.format("%20d %20s %20s %20s", departmentManagerSuite.getEmployeeNumber(), departmentManagerSuite.getDepartmentId(), fromDate, toDate);
+        }
+        catch (Exception ex){
+            return "NOT SET";
+        }
+
     }
 
     public String format(Locale locale){

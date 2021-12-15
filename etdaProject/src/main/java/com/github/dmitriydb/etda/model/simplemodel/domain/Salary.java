@@ -73,7 +73,12 @@ public class Salary implements EtdaEntity {
 
     @Override
     public String toString() {
-        return String.format("%20d %20d %20s %20s", salaryOrder.getEmployeeNumber(), salary, salaryOrder.getFromDate(), toDate);
+        try{
+            return String.format("%20d %20d %20s %20s", salaryOrder.getEmployeeNumber(), salary, salaryOrder.getFromDate(), toDate);
+        }
+        catch (Exception ex){
+            return "NOT SET";
+        }
     }
 
     public String format(Locale locale){

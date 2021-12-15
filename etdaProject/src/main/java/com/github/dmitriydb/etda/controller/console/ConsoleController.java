@@ -2,26 +2,22 @@ package com.github.dmitriydb.etda.controller.console;
 
 import com.github.dmitriydb.etda.controller.EtdaController;
 import com.github.dmitriydb.etda.model.EtdaModel;
-import com.github.dmitriydb.etda.model.dao.SimpleDAO;
-import com.github.dmitriydb.etda.model.simplemodel.domain.*;
-import com.github.dmitriydb.etda.resources.ResourceBundleManager;
 import com.github.dmitriydb.etda.security.SecurityManager;
 import com.github.dmitriydb.etda.security.SecurityRole;
 import com.github.dmitriydb.etda.security.User;
-import com.github.dmitriydb.etda.security.UserDAO;
+import com.github.dmitriydb.etda.model.dao.UserDAO;
 import com.github.dmitriydb.etda.view.EtdaView;
 import com.github.dmitriydb.etda.view.console.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.swing.text.View;
 import java.io.Serializable;
 import java.util.*;
 
 /**
  * Контроллер для консольного представления
  *
- * @version 0.1.1
+ * @version 0.2
  * @since 0.1
  */
 public class ConsoleController extends EtdaController {
@@ -32,6 +28,8 @@ public class ConsoleController extends EtdaController {
     private ConsoleViewRequest lastListRequest;
 
     private final static Logger logger = LoggerFactory.getLogger(ConsoleController.class);
+
+    private UserDAO userDAO = new UserDAO();
 
     /**
      * В данный момент по умолчанию контроллер работает с простым консольным представлением
@@ -166,8 +164,8 @@ public class ConsoleController extends EtdaController {
                 break;
             case USER_OPERATION:{
                 switch (option){
-                    case REGISTER: registerUser(request);
-                    case LOGIN: authorizeUser(request);
+                    case REGISTER: registerUser(request); break;
+                    case LOGIN: authorizeUser(request); break;
                 }
                 break;
             }
@@ -186,7 +184,7 @@ public class ConsoleController extends EtdaController {
         logger.debug("authorizeUser");
         logger.debug("request = {}", request);
         User u = (User)request.getBean();
-        User u2 = new UserDAO().getUserByName(u.getName());
+        User u2 = userDAO.getUserByName(u.getName());
         //Нет такого пользователя
         if (u2 == null){
             ConsoleViewUpdate consoleViewUpdate = new ConsoleViewUpdate();
@@ -229,7 +227,7 @@ public class ConsoleController extends EtdaController {
         logger.debug("request = {}", request);
         User u = (User)request.getBean();
         logger.debug("User = {}", u.toString());
-        if (new UserDAO().isUserExists(u.getName())){
+        if (userDAO.isUserExists(u.getName())){
             ConsoleViewUpdate consoleViewUpdate = new ConsoleViewUpdate();
             consoleViewUpdate.addMessage("LoginExists");
             view.changeState(ViewState.MENU);
@@ -239,7 +237,7 @@ public class ConsoleController extends EtdaController {
         try{
             if (u.getName().equals("admin"))
                 u.setSecurityRole(SecurityRole.ADMIN_ROLE());
-            new SimpleDAO(User.class).create(u);
+           userDAO.createUser(u);
             ConsoleViewUpdate consoleViewUpdate = new ConsoleViewUpdate();
             consoleViewUpdate.addMessage("SucRegister");
             OptionsSet options = new OptionsSet();
@@ -257,7 +255,6 @@ public class ConsoleController extends EtdaController {
             consoleViewUpdate.addMessage("ErrorRegister");
             view.changeState(ViewState.MENU);
             ((ConsoleView) this.view).processConsoleViewUpdate(consoleViewUpdate);
-            logger.error("Error", ex);
         }
     }
 
@@ -334,4 +331,10 @@ public class ConsoleController extends EtdaController {
         }
         return null;
     }
+
+    public void setUserDAO(UserDAO userDAO) {
+        this.userDAO = userDAO;
+    }
+
+
 }
