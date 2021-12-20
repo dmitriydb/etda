@@ -18,5 +18,4 @@ public class LocaleConfig {
         return slr;
     }
 
-
 }
