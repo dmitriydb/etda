@@ -4,6 +4,7 @@ import com.github.dmitriydb.etda.model.EtdaModel;
 import com.github.dmitriydb.etda.model.simplemodel.dao.SimpleDaoFactory;
 import com.github.dmitriydb.etda.security.SecurityRole;
 import com.github.dmitriydb.etda.security.User;
+import com.github.dmitriydb.etda.security.UserDTO;
 import com.github.dmitriydb.etda.webapp.security.CustomPasswordEncoder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -39,4 +40,6 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         UserDetails result = new org.springframework.security.core.userdetails.User( u.getName(), u.getPassword(), true, true, true, true, grantedAuthorities);
         return result;
     }
+
+
 }
