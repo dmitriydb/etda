@@ -16,7 +16,7 @@ import java.util.Set;
  * Класс, который представляет собой роль пользователя в системе
  * Объединяет все доступные пользователю роли во всех видах приложения
  *
- * @version 0.1.1
+ * @version 0.2.1
  * @since 0.1.1
  */
 @Entity
@@ -56,11 +56,51 @@ public class SecurityRole {
             securityRole.grant(ConsoleViewOptions.EXIT);
             new SimpleDAO(SecurityRole.class).create(securityRole);
         }
+
+        Object roleManager = new SimpleDAO(SecurityRole.class).read((long) EXISTING_ROLES_IDS.MANAGER.ordinal());
+        if (roleManager == null)
+        {
+            SecurityRole securityRole = new SecurityRole();
+            securityRole.setId((long) EXISTING_ROLES_IDS.MANAGER.ordinal());
+            securityRole.grant(ConsoleViewOptions.EMPLOYEES_LIST);
+            securityRole.grant(ConsoleViewOptions.MANAGERS_LIST);
+            securityRole.grant(ConsoleViewOptions.TITLES_LIST);
+            securityRole.grant(ConsoleViewOptions.DEPARTMENTS_LIST);
+            securityRole.grant(ConsoleViewOptions.DEPARTMENT_EMPLOYEES_LIST);
+            securityRole.grant(ConsoleViewOptions.DEPARTMENT_EMPLOYEES_LATEST_DATE);
+            securityRole.grant(ConsoleViewOptions.SALARIES_LIST);
+            securityRole.grant(ConsoleViewOptions.EXIT);
+            new SimpleDAO(SecurityRole.class).create(securityRole);
+        }
+
+        Object roleHR = new SimpleDAO(SecurityRole.class).read((long) EXISTING_ROLES_IDS.HR.ordinal());
+        if (roleHR == null)
+        {
+            SecurityRole securityRole = new SecurityRole();
+            securityRole.setId((long) EXISTING_ROLES_IDS.HR.ordinal());
+            securityRole.grant(ConsoleViewOptions.EMPLOYEES_LIST);
+            securityRole.grant(ConsoleViewOptions.MANAGERS_LIST);
+            securityRole.grant(ConsoleViewOptions.TITLES_LIST);
+            securityRole.grant(ConsoleViewOptions.DEPARTMENTS_LIST);
+            securityRole.grant(ConsoleViewOptions.DEPARTMENT_EMPLOYEES_LIST);
+            securityRole.grant(ConsoleViewOptions.DEPARTMENT_EMPLOYEES_LATEST_DATE);
+            securityRole.grant(ConsoleViewOptions.SALARIES_LIST);
+            securityRole.grant(ConsoleViewOptions.CREATE_EMPLOYEE);
+            securityRole.grant(ConsoleViewOptions.CREATE_SALARY);
+            securityRole.grant(ConsoleViewOptions.CREATE_DEPT_MANAGER);
+            securityRole.grant(ConsoleViewOptions.CREATE_DEPT_EMP);
+            securityRole.grant(ConsoleViewOptions.CREATE_TITLE);
+            securityRole.grant(ConsoleViewOptions.DELETE_EMPLOYEE);
+            securityRole.grant(ConsoleViewOptions.DELETE_DEPT_EMP);
+            securityRole.grant(ConsoleViewOptions.DELETE_DEPT_MANAGER);
+            securityRole.grant(ConsoleViewOptions.EXIT);
+            new SimpleDAO(SecurityRole.class).create(securityRole);
+        }
     }
 
     private static final Logger logger = LoggerFactory.getLogger(SecurityRole.class);
 
-    public enum EXISTING_ROLES_IDS {ADMIN, EMPLOYEE};
+    public enum EXISTING_ROLES_IDS {ADMIN, EMPLOYEE, MANAGER, HR};
 
     @Id
     private Long id;
@@ -78,6 +118,15 @@ public class SecurityRole {
         return (SecurityRole) role;
     }
 
+    public static final SecurityRole HR_ROLE() {
+        Object role = new SimpleDAO(SecurityRole.class).read((long) EXISTING_ROLES_IDS.HR.ordinal());
+        return (SecurityRole) role;
+    }
+
+    public static final SecurityRole MANAGER_ROLE() {
+        Object role = new SimpleDAO(SecurityRole.class).read((long) EXISTING_ROLES_IDS.MANAGER.ordinal());
+        return (SecurityRole) role;
+    }
 
     public SecurityRole grant(ConsoleViewOptions option) {
         grantedConsoleOptions.add(option);
