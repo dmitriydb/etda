@@ -12,6 +12,7 @@
 
     <!-- Переменные для интернационализации приложения -->
     <input type="hidden" name="areYouSureToDelete" id="areYouSureToDelete" th:value="${areYouSureToDelete}">
+    <input type="hidden" id="huser" name="huser" th:value="${#authentication.getPrincipal().authorities}">
 
     <th:block th:include="_header"></th:block>
     <!-- Панель выбора страницы -->
@@ -80,7 +81,7 @@
   </form>
 
   <!-- кнопки с действиями на странице -->
-  <div class="action-buttons">
+  <div sec:authorize="hasAnyAuthority('HR', 'ADMIN')"  class="action-buttons">
     <span class="action-button"><a href="#openModal">Назначить зарплату</a></span>
   </div>
 
@@ -113,7 +114,7 @@
         <td class="td-content" th:utext="${salary.salary}"></td>
         <td class="td-content-uneditable" th:utext="${salary.salaryOrder.fromDate}"></td>
         <td class="td-content" th:utext="${salary.toDate}"></td>
-        <td class="last-cell" ><span class="delete fa fa-window-close"></span></td>
+        <td sec:authorize="hasAnyAuthority('ADMIN', 'HR')" class="last-cell" ><span class="delete fa fa-window-close"></span></td>
       </tr>
   </table>
     </div>

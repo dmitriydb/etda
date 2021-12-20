@@ -1,18 +1,18 @@
 <header>
   <div class="main-menu-buttons">
-    <span sec:authorize="isAuthenticated()" class="main-menu-button"><a th:href="@{/employees}">Employees</a></span>
-    <span sec:authorize="isAuthenticated()" class="main-menu-button"><a th:href="@{/departments}">Departments</a></span>
-    <span sec:authorize="isAuthenticated()" class="main-menu-button"><a th:href="@{/managers}">Managers</a></span>
-    <span sec:authorize="hasAnyAuthority('ADMIN', 'HR')" class="main-menu-button"><a th:href="@{/salaries}">Salaries</a></span>
-    <span sec:authorize="isAuthenticated()" class="main-menu-button"><a th:href="@{/titles}">Titles</a></span>
+    <span sec:authorize="isAuthenticated()" class="main-menu-button"><a th:href="@{/employees}">Сотрудники</a></span>
+    <span sec:authorize="isAuthenticated()" class="main-menu-button"><a th:href="@{/departments}">Отделы</a></span>
+    <span sec:authorize="isAuthenticated()" class="main-menu-button"><a th:href="@{/managers}">Менеджеры</a></span>
+    <span sec:authorize="hasAnyAuthority('ADMIN', 'HR', 'MANAGER')" class="main-menu-button"><a th:href="@{/salaries}">Зарплаты</a></span>
+    <span sec:authorize="isAuthenticated()" class="main-menu-button"><a th:href="@{/titles}">Должности</a></span>
   </div>
   <div class="main-menu-icons">
     <th:block sec:authorize="!isAuthenticated()">
-      <span class="main-menu-icon"><a th:href="@{/register}">Register</a></span>
-      <span class="main-menu-icon"><a th:href="@{/login}">Login</a></span>
+      <span class="main-menu-icon"><a th:href="@{/register}">Регистрация</a></span>
+      <span class="main-menu-icon"><a th:href="@{/login}">Вход</a></span>
     </th:block>
     <th:block sec:authorize="isAuthenticated()">
-      <span class="main-menu-icon"><a th:href="@{/logout}">Sign off</a></span>
+      <span class="main-menu-icon"><a th:href="@{/logout}">Выйти</a></span>
     </th:block>
   </div>
 </header>

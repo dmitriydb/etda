@@ -6,6 +6,8 @@ import com.github.dmitriydb.etda.model.SimpleModel;
 import com.github.dmitriydb.etda.model.simplemodel.domain.Employee;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.access.annotation.Secured;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -29,17 +31,19 @@ public class EmployeeController extends WebController{
         super("employees", Employee.class);
     }
 
+    @PreAuthorize("isAuthenticated()")
     @GetMapping("/employees")
     public String showEmployees(Model model, @RequestParam(defaultValue = "") String filter) {
        return super.showList(model, filter);
     }
 
+    @PreAuthorize("isAuthenticated()")
     @GetMapping("/employees/{pageNumber}")
     public String showEmployeesPage(Model model, @PathVariable String pageNumber, @RequestParam(defaultValue = "") String filter) {
         return super.showPage(model, pageNumber, filter);
     }
 
-
+    @PreAuthorize("hasAnyAuthority('ADMIN', 'HR')")
     @GetMapping("/employees/delete/{pageNumber}/{empNumber}")
     public String deleteEmployee(Model model, @PathVariable String empNumber, @PathVariable String pageNumber){
         int page = Integer.valueOf(pageNumber).intValue();
@@ -47,6 +51,7 @@ public class EmployeeController extends WebController{
         return super.deleteEntity(model, employeeNumber, pageNumber);
     }
 
+    @PreAuthorize("hasAnyAuthority('ADMIN', 'HR')")
     @PostMapping("/employees/add")
     public String addEmployee(Model model, @ModelAttribute @Valid Employee employee, BindingResult result){
         if (result.hasErrors()){
@@ -56,6 +61,7 @@ public class EmployeeController extends WebController{
         return super.addEntity(model, employee);
     }
 
+    @PreAuthorize("hasAnyAuthority('ADMIN', 'HR')")
     @PostMapping("/employees/update")
     public String updateEmployee(Model model, @ModelAttribute Employee employee, @RequestParam("currentPage") String pageNumber){
         return super.updateEntity(model, employee, pageNumber);

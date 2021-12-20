@@ -30,9 +30,7 @@ public class DepartmentEmployeeDAOTest {
                     list.add(e);
                     when(query.getResultList()).thenReturn(list);
                     when(testsession.createQuery((String) any())).thenReturn(query);
-
                     this.session = testsession;
-
                 }
 
                 @Override

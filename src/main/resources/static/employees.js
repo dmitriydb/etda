@@ -88,6 +88,10 @@ document.addEventListener("DOMContentLoaded", function(){
 
   //обработка нажатия на ячейки таблицы
   $(".td-content").click(function(){
+    let huser = document.getElementById("huser").value;
+    if (!huser.includes('ADMIN') && !huser.includes('HR')){
+      return;
+    }
     //если в активном поле уже есть инпут, значит повторно нажали на то же самое поле - ничего не делаем
     if ($(this).html().includes("input")) return;
 

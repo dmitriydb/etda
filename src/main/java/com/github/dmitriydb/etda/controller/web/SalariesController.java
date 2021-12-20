@@ -4,6 +4,7 @@ import com.github.dmitriydb.etda.model.simplemodel.domain.Salary;
 import com.github.dmitriydb.etda.model.simplemodel.domain.SalaryOrder;
 import com.github.dmitriydb.etda.model.simplemodel.domain.Title;
 import com.github.dmitriydb.etda.model.simplemodel.domain.TitleOrder;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -18,16 +19,19 @@ public class SalariesController extends WebController{
         super("salaries", Salary.class);
     }
 
+    @PreAuthorize("isAuthenticated()")
     @GetMapping("/salaries")
     public String showSalaries(Model model, @RequestParam(defaultValue = "") String filter) {
         return super.showList(model, filter);
     }
 
+    @PreAuthorize("isAuthenticated()")
     @GetMapping("/salaries/{pageNumber}")
     public String showSalariesPage(Model model, @PathVariable String pageNumber, @RequestParam(defaultValue = "") String filter) {
         return super.showPage(model, pageNumber, filter);
     }
 
+    @PreAuthorize("hasAnyAuthority('ADMIN', 'HR')")
     @GetMapping("/salaries/delete/{pageNumber}/{salaryInfo}")
     public String deleteSalary(Model model, @PathVariable String salaryInfo, @PathVariable String pageNumber){
         int page = Integer.valueOf(pageNumber).intValue();
@@ -40,6 +44,7 @@ public class SalariesController extends WebController{
         return super.deleteEntity(model, order, pageNumber);
     }
 
+    @PreAuthorize("hasAnyAuthority('ADMIN', 'HR')")
     @PostMapping("/salaries/add")
     public String addSalary(Model model, @ModelAttribute @Valid Salary salary, BindingResult result){
         if (result.hasErrors()){
@@ -49,6 +54,7 @@ public class SalariesController extends WebController{
         return super.addEntity(model, salary);
     }
 
+    @PreAuthorize("hasAnyAuthority('ADMIN', 'HR')")
     @PostMapping("/salaries/update")
     public String updateSalary(Model model, @ModelAttribute Salary salary, @RequestParam("currentPage") String pageNumber){
         return super.updateEntity(model, salary, pageNumber);

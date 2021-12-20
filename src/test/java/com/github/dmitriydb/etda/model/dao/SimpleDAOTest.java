@@ -27,7 +27,6 @@ public class SimpleDAOTest {
         DbManager.init();
     }
 
-
     @Test
     public void creatingAndDeletingSomeEntities(){
         Employee e = new Employee();

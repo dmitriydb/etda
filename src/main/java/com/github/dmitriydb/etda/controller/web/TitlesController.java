@@ -4,6 +4,7 @@ import com.github.dmitriydb.etda.model.simplemodel.domain.DepartmentEmployeeSuit
 import com.github.dmitriydb.etda.model.simplemodel.domain.DepartmentManager;
 import com.github.dmitriydb.etda.model.simplemodel.domain.Title;
 import com.github.dmitriydb.etda.model.simplemodel.domain.TitleOrder;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -18,16 +19,19 @@ public class TitlesController extends WebController{
         super("titles", Title.class);
     }
 
+    @PreAuthorize("isAuthenticated()")
     @GetMapping("/titles")
     public String showTitles(Model model, @RequestParam(defaultValue = "") String filter) {
         return super.showList(model, filter);
     }
 
+    @PreAuthorize("isAuthenticated()")
     @GetMapping("/titles/{pageNumber}")
     public String showTitlesPage(Model model, @PathVariable String pageNumber, @RequestParam(defaultValue = "") String filter) {
         return super.showPage(model, pageNumber, filter);
     }
 
+    @PreAuthorize("hasAnyAuthority('ADMIN', 'HR')")
     @GetMapping("/titles/delete/{pageNumber}/{titleInfo}")
     public String deleteTitle(Model model, @PathVariable String titleInfo, @PathVariable String pageNumber){
         int page = Integer.valueOf(pageNumber).intValue();
@@ -42,6 +46,7 @@ public class TitlesController extends WebController{
         return super.deleteEntity(model, order, pageNumber);
     }
 
+    @PreAuthorize("hasAnyAuthority('ADMIN', 'HR')")
     @PostMapping("/titles/add")
     public String addTitle(Model model, @ModelAttribute @Valid Title title, BindingResult result){
         if (result.hasErrors()){
@@ -51,6 +56,7 @@ public class TitlesController extends WebController{
         return super.addEntity(model, title);
     }
 
+    @PreAuthorize("hasAnyAuthority('ADMIN', 'HR')")
     @PostMapping("/titles/update")
     public String updateTitle(Model model, @ModelAttribute Title title, @RequestParam("currentPage") String pageNumber){
         return super.updateEntity(model, title, pageNumber);

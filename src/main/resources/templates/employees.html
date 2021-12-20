@@ -10,8 +10,10 @@
   </head>
   <body>
 
+
     <!-- Переменные для интернационализации приложения -->
     <input type="hidden" name="areYouSureToDelete" id="areYouSureToDelete" th:value="${areYouSureToDelete}">
+    <input type="hidden" id="huser" name="huser" th:value="${#authentication.getPrincipal().authorities}">
 
     <th:block th:include="_header"></th:block>
     <!-- Панель выбора страницы -->
@@ -91,8 +93,9 @@
     <input type="hidden" id="newCurrentPage" name="currentPage" value=""/>
   </form>
 
+
   <!-- кнопки с действиями на странице -->
-  <div class="action-buttons">
+  <div sec:authorize="hasAnyAuthority('ADMIN', 'HR')" class="action-buttons">
     <span class="action-button"><a href="#openModal">Добавить сотрудника</a></span>
   </div>
 
@@ -129,7 +132,7 @@
         <td class="td-content" th:utext="${employee.gender}"></td>
         <td class="td-content" th:utext="${employee.birth_date}"></td>
         <td class="td-content" name="hireDate" th:utext="${employee.hireDate}"></td>
-        <td class="last-cell" ><span class="delete fa fa-window-close"></span></td>
+        <td sec:authorize="hasAnyAuthority('ADMIN')" class="last-cell" ><span class="delete fa fa-window-close"></span></td>
       </tr>
   </table>
     </div>
