@@ -8,6 +8,6 @@ else {
 }
 
   $(".language-sel").change(function(){
-      window.location.href = window.location.href + "language?lang=" + $(this).val();
+      window.location.href = location.protocol + '//' + window.location.host + "/language?lang=" + $(this).val();
   });
 });

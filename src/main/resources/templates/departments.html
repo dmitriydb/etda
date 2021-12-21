@@ -7,11 +7,12 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script type="text/javascript" th:src="@{/departments.js}"></script>
+    <script th:src="@{/main.js}"></script>
   </head>
   <body>
 
     <!-- Переменные для интернационализации приложения -->
-    <input type="hidden" name="areYouSureToDelete" id="areYouSureToDelete" th:value="${areYouSureToDelete}">
+    <input type="hidden" name="areYouSureToDelete" id="areYouSureToDelete" th:value="#{web.areYouSureToDelete}">
     <input type="hidden" id="huser" name="huser" th:value="${#authentication.getPrincipal().authorities}">
 
     <th:block th:include="_header"></th:block>
