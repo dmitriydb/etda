@@ -2,7 +2,7 @@
 <html lang="ru" dir="ltr">
   <head>
     <meta charset="utf-8">
-    <title>Список сотрудников</title>
+    <title th:text="#{web.employees}"></title>
     <link rel="stylesheet" th:href="@{/main.css}">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
@@ -22,30 +22,28 @@
       <div class="modal-dialog">
         <div class="modal-content">
           <div class="modal-header">
-            <h3 class="modal-title">Добавление департамента</h3>
+            <h3 class="modal-title" th:text="#{web.add}"></h3>
             <a href="#close" title="Close" class="close">×</a>
           </div>
           <div class="modal-body">
             <form action="#" th:action="@{/departments/add}" th:object="${department}" method="post">
               <table>
                 <tr>
-                  <td>
-                    Код отдела
+                  <td th:text="#{web.deptnumber}">
                   </td>
                     <td>
                     <input type="text" name="departmentId" value="" th:field="*{departmentId}" placeholder="d000">
                     </td>
                 </tr>
                 <tr>
-                  <td>
-                    Название отдела
+                  <td th:text="#{web.name}">
                   </td>
                     <td>
                     <input type="text" name="name" value="" th:field="*{name}" placeholder="">
                     </td>
                 </tr>
               </table>
-              <input type="submit" name="addDepartment" value="Добавить">
+              <input type="submit" name="addDepartment" th:value="#{web.add}">
             </form>
           </div>
         </div>
@@ -64,14 +62,14 @@
   </form>
 
   <div sec:authorize="hasAnyAuthority('ADMIN')" class="action-buttons">
-    <span class="action-button"><a href="#openModal">Добавить отдел</a></span>
+    <span class="action-button"><a href="#openModal" th:text="#{web.add}"></a></span>
   </div>
 
   <input type="hidden" id="currentFilterString" val="" name="currentFilterString" th:value="${filter}"/>
   <input type="hidden" name="maxPages" id="maxPages" th:value="${maxPages}"/>
 
   <div class="filter">
-      <input type="text" name="filter-input" id="filterInput" class="filter-input" value="" placeholder="Введите текст для поиска"/>
+      <input type="text" name="filter-input" id="filterInput" class="filter-input" value="" th:placeholder="#{web.search}"/>
   </div>
 
       <div class="messages">
@@ -82,8 +80,8 @@
 
     <table class="content-table">
       <tr class="tr-header">
-        <td class="f">Код отдела</td>
-        <td class="f">Название отдела</td>
+        <td class="f" th:text="#{web.deptnumber}"></td>
+        <td class="f" th:text="#{web.name}"></td>
       </tr>
       <tr class="tr-header" th:each="department : ${departments}">
         <td class="td-content-uneditable" th:utext="${department.departmentId}"></td>

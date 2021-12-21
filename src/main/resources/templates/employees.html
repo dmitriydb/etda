@@ -2,7 +2,7 @@
 <html lang="ru" dir="ltr">
   <head>
     <meta charset="utf-8">
-    <title>Список сотрудников</title>
+    <title th:text="#{web.employees}"></title>
     <link rel="stylesheet" th:href="@{/main.css}">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
@@ -12,7 +12,7 @@
 
 
     <!-- Переменные для интернационализации приложения -->
-    <input type="hidden" name="areYouSureToDelete" id="areYouSureToDelete" th:value="${areYouSureToDelete}">
+    <input type="hidden" name="areYouSureToDelete" id="areYouSureToDelete" th:value="#{web.areYouSureToDelete}">
     <input type="hidden" id="huser" name="huser" th:value="${#authentication.getPrincipal().authorities}">
 
     <th:block th:include="_header"></th:block>
@@ -24,57 +24,52 @@
       <div class="modal-dialog">
         <div class="modal-content">
           <div class="modal-header">
-            <h3 class="modal-title">Добавление сотрудника</h3>
+            <h3 class="modal-title" th:text="#{web.add}"></h3>
             <a href="#close" title="Close" class="close">×</a>
           </div>
           <div class="modal-body">
             <form action="#" th:action="@{/employees/add}" th:object="${employee}" method="post">
               <table>
                 <tr>
-                  <td>
-                    Имя
+                  <td th:text="#{web.ename}">
                   </td>
                     <td>
                     <input type="text" name="name" value="" th:field="*{firstName}" placeholder="Иван">
                     </td>
                 </tr>
                 <tr>
-                  <td>
-                    Фамилия
+                  <td th:text="#{web.surname}">
                   </td>
                     <td>
                     <input type="text" name="surname" value="" th:field="*{lastName}" placeholder="Иванов">
                     </td>
                 </tr>
                 <tr>
-                  <td>
-                    Дата рождения
+                  <td th:text="#{web.birthday}">
                   </td>
                     <td>
                     <input type="date" name="birthday" th:field="*{birth_date}" value="">
                     </td>
                 </tr>
                 <tr>
-                  <td>
-                    Пол
+                  <td th:text="#{web.gender}">
                   </td>
                     <td>
                       <select class="gender" name="gender" th:field="*{gender}" >
-                          <option value="M" selected>М</option>
-                          <option value="F">Ж</option>
+                          <option value="M" selected th:text="#{web.m}"></option>
+                          <option value="F" th:text=#{web.f}></option>
                       </select>
                     </td>
                 </tr>
                 <tr>
-                  <td>
-                    Дата принятия на работу
+                  <td th:text="#{web.hiredate}">
                   </td>
                     <td>
                     <input type="date" name="hireDate" value="" th:field="*{hireDate}" >
                     </td>
                 </tr>
               </table>
-              <input type="submit" name="addEmployee" value="Добавить">
+              <input type="submit" name="addEmployee" th:value="#{web.add}">
             </form>
           </div>
         </div>
@@ -96,7 +91,7 @@
 
   <!-- кнопки с действиями на странице -->
   <div sec:authorize="hasAnyAuthority('ADMIN', 'HR')" class="action-buttons">
-    <span class="action-button"><a href="#openModal">Добавить сотрудника</a></span>
+    <span class="action-button"><a href="#openModal" th:text="#{web.add}"></a></span>
   </div>
 
   <!-- переменные конфигурации, приходят с сервера -->
@@ -105,7 +100,7 @@
 
   <!-- поле поиска -->
   <div class="filter">
-      <input type="text" name="filter-input" id="filterInput" class="filter-input" value="" placeholder="Введите текст для поиска"/>
+      <input type="text" name="filter-input" id="filterInput" class="filter-input" value="" th:placeholder="#{web.search}"/>
   </div>
 
   <!-- сообщения -->
@@ -118,12 +113,12 @@
     <!-- главная таблица с контентом -->
     <table class="content-table">
       <tr class="tr-header">
-        <td class="f">Номер</td>
-        <td class="f">Фамилия</td>
-        <td class="f">Имя</td>
-        <td class="f">Пол</td>
-        <td class="f">Дата рождения</td>
-        <td class="f">Дата принятия на работу</td>
+        <td class="f" th:text="#{web.ecode}"></td>
+        <td class="f" th:text="#{web.surname}"></td>
+        <td class="f" th:text="#{web.ename}"></td>
+        <td class="f" th:text="#{web.gender}"></td>
+        <td class="f" th:text="#{web.birthday}"></td>
+        <td class="f" th:text="#{web.hiredate}"></td>
       </tr>
       <tr class="tr-header" th:each="employee : ${employees}">
         <td class="td-content-uneditable" th:utext="${employee.employeeNumber}"></td>

@@ -2,7 +2,7 @@
 <html lang="ru" dir="ltr">
   <head>
     <meta charset="utf-8">
-    <title>Список менеджеров</title>
+    <title th:text="#{web.managers}"></title>
     <link rel="stylesheet" th:href="@{/main.css}">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
@@ -11,7 +11,7 @@
   <body>
 
     <!-- Переменные для интернационализации приложения -->
-    <input type="hidden" name="areYouSureToDelete" id="areYouSureToDelete" th:value="${areYouSureToDelete}">
+    <input type="hidden" name="areYouSureToDelete" id="areYouSureToDelete" th:value="#{web.areYouSureToDelete}">
     <input type="hidden" id="huser" name="huser" th:value="${#authentication.getPrincipal().authorities}">
 
     <th:block th:include="_header"></th:block>
@@ -23,46 +23,42 @@
       <div class="modal-dialog">
         <div class="modal-content">
           <div class="modal-header">
-            <h3 class="modal-title">Назначить менеджера</h3>
+            <h3 class="modal-title" th:text="#{web.add}"></h3>
             <a href="#close" title="Close" class="close">×</a>
           </div>
           <div class="modal-body">
             <form action="#" th:action="@{/managers/add}" th:object="${manager}" method="post">
               <table>
                 <tr>
-                  <td>
-                    Номер сотрудника
+                  <td th:text="#{web.ecode}">
                   </td>
                     <td>
                     <input type="text" name="employeeNumber" value="" th:field="*{departmentManagerSuite.employeeNumber}">
                     </td>
                 </tr>
                 <tr>
-                  <td>
-                    В отдел:
+                  <td th:text="#{web.todept}">
                   </td>
                     <td>
                     <input type="text" name="departmentId" value="" th:field="*{departmentManagerSuite.departmentId}">
                     </td>
                 </tr>
                 <tr>
-                  <td>
-                    Начиная с:
+                  <td th:text="#{web.from}">
                   </td>
                     <td>
                     <input type="date" name="fromDate" value="" th:field="*{fromDate}" >
                     </td>
                 </tr>
                 <tr>
-                  <td>
-                    По:
+                  <td th:text="#{web.to}">
                   </td>
                     <td>
                     <input type="date" name="toDate" value="" th:field="*{toDate}" >
                     </td>
                 </tr>
               </table>
-              <input type="submit" name="addManager" value="Добавить">
+              <input type="submit" name="addManager" th:value="#{web.add}">
             </form>
           </div>
         </div>
@@ -82,7 +78,7 @@
 
   <!-- кнопки с действиями на странице -->
   <div sec:authorize="hasAnyAuthority('ADMIN', 'HR')" class="action-buttons">
-    <span class="action-button"><a href="#openModal">Назначить менеджера</a></span>
+    <span class="action-button"><a href="#openModal" th:text="#{web.add}"></a></span>
   </div>
 
   <!-- переменные конфигурации, приходят с сервера -->
@@ -91,7 +87,7 @@
 
   <!-- поле поиска -->
   <div class="filter">
-      <input type="text" name="filter-input" id="filterInput" class="filter-input" value="" placeholder="Введите текст для поиска"/>
+      <input type="text" name="filter-input" id="filterInput" class="filter-input" value="" th:placeholder="#{web.search}"/>
   </div>
 
   <!-- сообщения -->
@@ -104,10 +100,10 @@
     <!-- главная таблица с контентом -->
     <table class="content-table">
       <tr class="tr-header">
-        <td class="f">Код сотрудника</td>
-        <td class="f">Назначен в отдел</td>
-        <td class="f">Начиная с:</td>
-        <td class="f">По:</td>
+        <td class="f" th:text="#{web.ecode}"></td>
+        <td class="f" th:text="#{web.todept}"></td>
+        <td class="f" th:text="#{web.from}"></td>
+        <td class="f" th:text="#{web.to}"></td>
       </tr>
       <tr class="tr-header" th:each="manager : ${managers}">
         <td class="td-content-uneditable" th:utext="${manager.departmentManagerSuite.employeeNumber}"></td>

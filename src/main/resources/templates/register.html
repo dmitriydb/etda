@@ -2,19 +2,17 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="https://www.thymeleaf.org"
       xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
 <head>
-    <title>Spring Security Example </title>
+    <title th:text="#{web.registertitle}"></title>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
 </head>
 <body>
   <div class="container">
          <div class="row">
              <div class="col-md-12">
-
-              <h3>Регистрация</h3><hr/>
+              <h3 th:text="#{web.register}"></h3><hr/>
               <form class="form-horizontal" role="form" action="#" th:action="@{/register}" method="POST" th:object="${user}">
-
                  <div class="form-group">
-                   <label for="username" class="col-sm-2 control-label">Имя</label>
+                   <label for="username" class="col-sm-2 control-label" th:text="#{web.ename}"></label>
                      <div class="col-sm-4">
                      <input type="text" placeholder="" class="form-control" th:field="*{username}"/>
                      <div th:if="${#fields.hasErrors('username')}">
@@ -22,9 +20,8 @@
                      </div>
                      </div>
                  </div>
-
                  <div class="form-group">
-                   <label for="email" class="col-sm-2 control-label">Пароль</label>
+                   <label for="email" class="col-sm-2 control-label" th:text="#{web.password}"></label>
                      <div class="col-sm-4">
                      <input type="password" placeholder="" class="form-control" th:field="*{password}"/>
                      <div th:if="${#fields.hasErrors('password')}">
@@ -34,7 +31,7 @@
                  </div>
 
                  <div class="form-group">
-                   <label for="email" class="col-sm-2 control-label">Пароль еще раз</label>
+                   <label for="email" class="col-sm-2 control-label" th:text="#{web.passwordagain}"></label>
                      <div class="col-sm-4">
                      <input type="password" placeholder="" class="form-control" th:field="*{matchingPassword}"/>
                      <div th:if="${#fields.hasErrors('matchingPassword')}">
@@ -42,20 +39,18 @@
                      </div>
                      </div>
                  </div>
-
                  <div class="form-group">
-                   <label for="text" class="col-sm-2 control-label">E-mail</label>
+                   <label for="text" class="col-sm-2 control-label" th:text="#{web.email}"></label>
                      <div class="col-sm-4">
                      <input type="email" placeholder="" class="form-control" th:field="*{email}"/>
+                     <small th:text="#{web.notrequired}"></small>
                      <div th:if="${#fields.hasErrors('email')}">
                        <small id="emailHelp" th:errors="*{email}"></small>
                      </div>
                      </div>
                  </div>
-
-                  <button type="submit" name="button">Зарегистрироваться</button>
+                  <button type="submit" name="button" th:text="#{web.register}"></button>
               </form>
-
             </div>
           </div>
        </div>

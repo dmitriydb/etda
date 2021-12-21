@@ -3,9 +3,12 @@
  xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
   <head>
     <meta charset="utf-8">
-    <title>ETDA Web App</title>
+    <title th:text="#{web.title}"></title>
     <link rel="stylesheet" th:href="@{/main.css}">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script th:src="@{/main.js}"></script>
   </head>
   <body>
     <th:block th:include="_header">
