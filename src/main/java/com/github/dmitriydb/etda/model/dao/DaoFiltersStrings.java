@@ -16,7 +16,7 @@ import java.util.Map;
  *
  * Возможно в будущем понадобится фильтровать сущности по дате, но лучше прибегнуть к специфическим классам для отдельных фильтров
  *
- * @version 0.1
+ * @version 0.2.2
  * @since 0.1
  */
 public class DaoFiltersStrings {
@@ -30,6 +30,7 @@ public class DaoFiltersStrings {
         DAO_FILTERS.put(Employee.class, "WHERE (lastName LIKE :filter OR firstName LIKE :filter) OR (employeeNumber = :number)");
         DAO_FILTERS.put(Salary.class, "WHERE (salaryOrder.employeeNumber = :number) ");
         DAO_FILTERS.put(Title.class, "WHERE (titleOrder.employeeNumber = :number) OR (titleOrder.title LIKE :filter) ");
+        DAO_FILTERS.put(Department.class, "WHERE (departmentId LIKE :filter) OR (name LIKE :filter) ");
         DAO_FILTERS.put(CurrentDepartmentEmployee.class, "WHERE (departmentEmployeeSuite.employeeNumber = :number) ");
         DAO_FILTERS.put(DepartmentEmployee.class, "WHERE (departmentEmployeeSuite.employeeNumber = :number) ");
         DAO_FILTERS.put(DepartmentManager.class, "WHERE (departmentManagerSuite.employeeNumber = :number) ");

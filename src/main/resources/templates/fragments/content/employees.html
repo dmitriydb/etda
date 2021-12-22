@@ -16,7 +16,7 @@
     <td class="td-content" th:utext="${employee.gender}"></td>
     <td class="td-content" th:utext="${employee.birth_date}"></td>
     <td class="td-content" name="hireDate" th:utext="${employee.hireDate}"></td>
-    <td sec:authorize="hasAnyAuthority('ADMIN')" class="last-cell" ><span class="delete fa fa-window-close"></span></td>
+    <td sec:authorize="hasAnyAuthority('ADMIN', 'HR')" class="last-cell" ><span class="delete fa fa-window-close"></span></td>
   </tr>
 </table>
 </th:block>

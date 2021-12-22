@@ -1,3 +1,62 @@
 <!DOCTYPE html>
-<html th:replace="fragments/common.html :: common(#{web.registertitle}, ~{fragments/content/register :: content})">
+<html th:fragment="common (pagetitle, content)" lang="ru" dir="ltr"  xmlns:th="http://www.thymeleaf.org"
+ xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
+  <head>
+    <meta charset="utf-8">
+    <title th:text="${pagetitle}"></title>
+    <link rel="stylesheet" th:href="@{/main.css}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script th:src="@{/main.js}"></script>
+  </head>
+  <body>
+    <div class="container">
+           <div class="row">
+               <div class="col-md-12">
+                <h3 th:text="#{web.register}"></h3><hr/>
+                <form class="form-horizontal" role="form" action="#" th:action="@{/register}" method="POST" th:object="${user}">
+                   <div class="form-group">
+                     <label for="username" class="col-sm-2 control-label" th:text="#{web.ename}"></label>
+                       <div class="col-sm-4">
+                       <input type="text" placeholder="" class="form-control" th:field="*{username}"/>
+                       <div th:if="${#fields.hasErrors('username')}">
+                         <small id="usernameHelp" class="form-text text-muted" th:errors="*{username}"></small>
+                       </div>
+                       </div>
+                   </div>
+                   <div class="form-group">
+                     <label for="email" class="col-sm-2 control-label" th:text="#{web.password}"></label>
+                       <div class="col-sm-4">
+                       <input type="password" placeholder="" class="form-control" th:field="*{password}"/>
+                       <div th:if="${#fields.hasErrors('password')}">
+                         <small id="passwordHelp" class="form-text text-muted" th:errors="*{password}"></small>
+                       </div>
+                       </div>
+                   </div>
+
+                   <div class="form-group">
+                     <label for="email" class="col-sm-2 control-label" th:text="#{web.passwordagain}"></label>
+                       <div class="col-sm-4">
+                       <input type="password" placeholder="" class="form-control" th:field="*{matchingPassword}"/>
+                       <div th:if="${#fields.hasErrors('matchingPassword')}">
+                         <small id="matchingPasswordHelp" th:errors="*{matchingPassword}"></small>
+                       </div>
+                       </div>
+                   </div>
+                   <div class="form-group">
+                     <label for="text" class="col-sm-2 control-label" th:text="#{web.email}"></label>
+                       <div class="col-sm-4">
+                       <input type="email" placeholder="" class="form-control" th:field="*{email}"/>
+                       <small th:text="#{web.notrequired}"></small>
+                       <div th:if="${#fields.hasErrors('email')}">
+                         <small id="emailHelp" th:errors="*{email}"></small>
+                       </div>
+                       </div>
+                   </div>
+                    <button type="submit" name="button" th:text="#{web.register}"></button>
+                </form>
+              </div>
+            </div>
+  </body>
 </html>

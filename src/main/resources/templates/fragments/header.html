@@ -1,4 +1,4 @@
-<header>
+<header th:fragment="header">
   <div class="main-menu-buttons">
     <span sec:authorize="isAuthenticated()" class="main-menu-button"><a th:href="@{/employees}" th:text="#{web.employees}"></a></span>
     <span sec:authorize="isAuthenticated()" class="main-menu-button"><a th:href="@{/departments}" th:text="#{web.departments}"></a></span>
@@ -13,8 +13,8 @@
     </th:block>
 
     <select class="selectpicker language-sel" data-width="fit">
-      <option data-content='<span class="flag-icon flag-icon-us"></span> English' th:text="#{web.russian}" value="ru"></option>
-      <option  data-content='<span class="flag-icon flag-icon-mx"></span> Español' th:text="#{web.english}" value="en"></option>
+      <option data-content='<span class="flag-icon flag-icon-us"></span>' th:text="#{web.russian}" value="ru"></option>
+      <option  data-content='<span class="flag-icon flag-icon-mx"></span>' th:text="#{web.english}" value="en"></option>
     </select>
 
     <th:block sec:authorize="isAuthenticated()">
