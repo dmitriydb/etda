@@ -115,7 +115,8 @@ public class TestDataGenerator {
         Title t = new Title();
         TitleOrder to = new TitleOrder();
         to.setTitle(title);
-        to.setFromDate(generateToDate());
+        to.setFromDate(generateDate());
+        t.setToDate(generateToDate());
         t.setTitleOrder(to);
         return t;
     }
