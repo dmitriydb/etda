@@ -1,0 +1,59 @@
+<th:block th:fragment="maintable">
+<table class="content-table">
+  <tr class="tr-header">
+    <td class="f" th:text="#{web.deptnumber}"></td>
+    <td class="f" th:text="#{web.name}"></td>
+  </tr>
+  <tr class="tr-header" th:each="department : ${departments}">
+    <td class="td-content-uneditable" th:utext="${department.departmentId}"></td>
+    <td class="td-content" th:utext="${department.name}"></td>
+    <td sec:authorize="hasAnyAuthority('ADMIN')" class="last-cell" ><span class="delete fa fa-window-close"></span></td>
+  </tr>
+</table>
+</th:block>
+
+
+<th:block th:fragment="maincontent">
+<script th:src="@{/departments.js}"></script>
+<div id="openModal" class="modal">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3 class="modal-title" th:text="#{web.add}"></h3>
+        <a href="#close" title="Close" class="close">×</a>
+      </div>
+      <div class="modal-body">
+        <form action="#" th:action="@{/departments/add}" th:object="${department}" method="post">
+          <table>
+            <tr>
+              <td th:text="#{web.deptnumber}">
+              </td>
+                <td>
+                <input type="text" name="departmentId" value="" th:field="*{departmentId}" placeholder="d000">
+                </td>
+            </tr>
+            <tr>
+              <td th:text="#{web.name}">
+              </td>
+                <td>
+                <input type="text" name="name" value="" th:field="*{name}" placeholder="">
+                </td>
+            </tr>
+          </table>
+          <input type="submit" name="addDepartment" th:value="#{web.add}">
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<form action="#" name="editForm" th:action="@{/departments/update}" th:object="${department}" method="post">
+<input type="hidden" id="newDepartmentId" name="departmentId" value="" th:field="*{departmentId}"/>
+<input type="hidden" id="newName" name="name" value="" th:field="*{name}"/>
+<input type="hidden" id="newCurrentPage" name="currentPage" value=""/>
+</form>
+
+<div sec:authorize="hasAnyAuthority('ADMIN')" class="action-buttons">
+<span class="action-button"><a href="#openModal" th:text="#{web.add}"></a></span>
+</div>
+</th:block>

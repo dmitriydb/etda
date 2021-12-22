@@ -4,6 +4,8 @@ package com.github.dmitriydb.etda.controller.web;
 import com.github.dmitriydb.etda.consoleapp.WindowsCmdUtil;
 import com.github.dmitriydb.etda.model.SimpleModel;
 import com.github.dmitriydb.etda.model.simplemodel.domain.Employee;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.access.annotation.Secured;
@@ -15,6 +17,7 @@ import org.springframework.validation.FieldError;
 import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.annotation.*;
 
+import javax.annotation.PostConstruct;
 import javax.validation.Valid;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
@@ -26,6 +29,13 @@ import java.util.ResourceBundle;
 
 @Controller
 public class EmployeeController extends WebController{
+
+    private static final Logger logger = LoggerFactory.getLogger(EmployeeController.class);
+
+    @PostConstruct
+    public void post(){
+        logger.info("Employee Controller's bean post construct call");
+    }
 
     public EmployeeController() {
         super("employees", Employee.class);

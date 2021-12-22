@@ -2,35 +2,32 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="https://www.thymeleaf.org"
       xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
 <head>
-    <title>Spring Security Example </title>
+    <title th:text="#{web.logintitle}"></title>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
 </head>
 <body>
   <div class="container">
          <div class="row">
              <div class="col-md-12">
-              <h3>Вход</h3><hr/>
+              <h3 th:text="#{web.loginheader}"></h3><hr/>
               <form class="form-horizontal" role="form" action="#" th:action="@{/login}" method="POST">
                  <div class="form-group">
-                   <label for="username" class="col-sm-2 control-label">Имя</label>
+                   <label for="username" class="col-sm-2 control-label" th:text="#{web.ename}"></label>
                      <div class="col-sm-4">
                      <input type="text" name="username" placeholder="" class="form-control"/>
                      <div th:if="${param.error}">
-                       <small id="usernameHelp" class="form-text text-muted">Неверный логин или пароль</small>
+                       <small id="usernameHelp" class="form-text text-muted" th:text="#{web.invalidlogin}"></small>
                      </div>
                      </div>
                  </div>
-
                  <div class="form-group">
-                   <label for="email" class="col-sm-2 control-label">Пароль</label>
+                   <label for="email" class="col-sm-2 control-label" th:text="#{web.password}"></label>
                      <div class="col-sm-4">
                      <input type="password" name="password" placeholder="" class="form-control"/>
                      </div>
                  </div>
-
-                  <button type="submit" name="button">Вход</button>
+                  <button type="submit" name="button" th:text="#{web.login}"></button>
               </form>
-
             </div>
           </div>
        </div>

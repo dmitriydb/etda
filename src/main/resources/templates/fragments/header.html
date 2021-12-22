@@ -1,0 +1,26 @@
+<header th:fragment="header">
+  <div class="main-menu-buttons">
+    <span sec:authorize="isAuthenticated()" class="main-menu-button"><a th:href="@{/employees}" th:text="#{web.employees}"></a></span>
+    <span sec:authorize="isAuthenticated()" class="main-menu-button"><a th:href="@{/departments}" th:text="#{web.departments}"></a></span>
+    <span sec:authorize="isAuthenticated()" class="main-menu-button"><a th:href="@{/managers}" th:text=#{web.managers}></a></span>
+    <span sec:authorize="hasAnyAuthority('ADMIN', 'HR', 'MANAGER')" class="main-menu-button"><a th:href="@{/salaries}" th:text="#{web.salaries}"></a></span>
+    <span sec:authorize="isAuthenticated()" class="main-menu-button"><a th:href="@{/titles}" th:text="#{web.titles}"></a></span>
+  </div>
+  <div class="main-menu-icons">
+    <th:block sec:authorize="!isAuthenticated()">
+      <span class="main-menu-icon"><a th:href="@{/register}" th:text="#{web.register}"></a></span>
+      <span class="main-menu-icon"><a th:href="@{/login}" th:text="#{web.login}"></a></span>
+    </th:block>
+
+    <select class="selectpicker language-sel" data-width="fit">
+      <option data-content='<span class="flag-icon flag-icon-us"></span>' th:text="#{web.russian}" value="ru"></option>
+      <option  data-content='<span class="flag-icon flag-icon-mx"></span>' th:text="#{web.english}" value="en"></option>
+    </select>
+
+    <th:block sec:authorize="isAuthenticated()">
+      <span class="main-menu-icon"><a th:href="@{/logout}" th:text="#{web.logout}"></a></span>
+    </th:block>
+
+    <input type="hidden" name="lang" id="lang" th:value="${#locale}">
+  </div>
+</header>

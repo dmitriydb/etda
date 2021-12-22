@@ -30,13 +30,11 @@ public class Employee implements EtdaEntity {
     @Column(name="birth_date", nullable = false)
     private Date birth_date;
 
-    @Size(min = 2, max=10)
-    @Pattern(regexp = "^[a-zA-Zа-яА-Я\\-]+$")
+    @Size(min = 1, max=50)
     @Column(name="first_name", nullable = false)
     private String firstName;
 
-    @Size(min = 2, max=10)
-    @Pattern(regexp = "^[a-zA-Zа-яА-Я\\-]+$")
+    @Size(min = 1, max=50)
     @NotNull
     @Column(name="last_name", nullable = false)
     private String lastName;
