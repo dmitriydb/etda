@@ -1,0 +1,99 @@
+<th:block th:fragment="maintable">
+<!-- главная таблица с контентом -->
+<table class="content-table">
+  <tr class="tr-header">
+    <td class="f" th:text="#{web.ecode}"></td>
+    <td class="f" th:text="#{web.surname}"></td>
+    <td class="f" th:text="#{web.ename}"></td>
+    <td class="f" th:text="#{web.gender}"></td>
+    <td class="f" th:text="#{web.birthday}"></td>
+    <td class="f" th:text="#{web.hiredate}"></td>
+  </tr>
+  <tr class="tr-header" th:each="employee : ${employees}">
+    <td class="td-content-uneditable" th:utext="${employee.employeeNumber}"></td>
+    <td class="td-content" th:utext="${employee.lastName}"></td>
+    <td class="td-content" th:utext="${employee.firstName}"></td>
+    <td class="td-content" th:utext="${employee.gender}"></td>
+    <td class="td-content" th:utext="${employee.birth_date}"></td>
+    <td class="td-content" name="hireDate" th:utext="${employee.hireDate}"></td>
+    <td sec:authorize="hasAnyAuthority('ADMIN')" class="last-cell" ><span class="delete fa fa-window-close"></span></td>
+  </tr>
+</table>
+</th:block>
+
+
+<th:block th:fragment="maincontent">
+<script th:src="@{/employees.js}"></script>
+<!-- Модальное окно добавления сотрудника -->
+<div id="openModal" class="modal">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3 class="modal-title" th:text="#{web.add}"></h3>
+        <a href="#close" title="Close" class="close">×</a>
+      </div>
+      <div class="modal-body">
+        <form action="#" th:action="@{/employees/add}" th:object="${employee}" method="post">
+          <table>
+            <tr>
+              <td th:text="#{web.ename}">
+              </td>
+                <td>
+                <input type="text" name="name" value="" th:field="*{firstName}" placeholder="Иван">
+                </td>
+            </tr>
+            <tr>
+              <td th:text="#{web.surname}">
+              </td>
+                <td>
+                <input type="text" name="surname" value="" th:field="*{lastName}" placeholder="Иванов">
+                </td>
+            </tr>
+            <tr>
+              <td th:text="#{web.birthday}">
+              </td>
+                <td>
+                <input type="date" name="birthday" th:field="*{birth_date}" value="">
+                </td>
+            </tr>
+            <tr>
+              <td th:text="#{web.gender}">
+              </td>
+                <td>
+                  <select class="gender" name="gender" th:field="*{gender}" >
+                      <option value="M" selected th:text="#{web.m}"></option>
+                      <option value="F" th:text=#{web.f}></option>
+                  </select>
+                </td>
+            </tr>
+            <tr>
+              <td th:text="#{web.hiredate}">
+              </td>
+                <td>
+                <input type="date" name="hireDate" value="" th:field="*{hireDate}" >
+                </td>
+            </tr>
+          </table>
+          <input type="submit" name="addEmployee" th:value="#{web.add}">
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- форма для редактирования данных сотрудника -->
+<form action="#" name="editForm" th:action="@{/employees/update}" th:object="${employee}" method="post">
+<input type="hidden" id="newEmpNo" name="empNumber" value="" th:field="*{employeeNumber}"/>
+<input type="hidden" id="newName" name="name" value="" th:field="*{firstName}"/>
+<input type="hidden" id="newSurname" name="surname" value="" th:field="*{lastName}"/>
+<input type="hidden" id="newBirthday" name="birthday" th:field="*{birth_date}" value=""/>
+<input type="hidden" id="newGender" name="gender" th:field="*{gender}" value=""/>
+<input type="hidden" id="newHiredate" name="hireDate" value="" th:field="*{hireDate}"/>
+<input type="hidden" id="newCurrentPage" name="currentPage" value=""/>
+</form>
+
+<!-- кнопки с действиями на странице -->
+<div sec:authorize="hasAnyAuthority('ADMIN', 'HR')" class="action-buttons">
+<span class="action-button"><a href="#openModal" th:text="#{web.add}"></a></span>
+</div>
+</th:block>

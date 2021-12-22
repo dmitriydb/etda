@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html th:fragment="common (pagetitle, content)" lang="ru" dir="ltr"  xmlns:th="http://www.thymeleaf.org"
+ xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
+  <head>
+    <meta charset="utf-8">
+    <title th:text="${pagetitle}"></title>
+    <link rel="stylesheet" th:href="@{/main.css}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script th:src="@{/main.js}"></script>
+  </head>
+  <body>
+    <header th:replace="fragments/header.html :: header"></header>
+    <div class="content" th:insert="${content}">
+    </div>
+    <header th:replace="fragments/footer.html :: footer"></header>
+  </body>
+</html>
