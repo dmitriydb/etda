@@ -143,12 +143,19 @@ public class WebController {
     }
 
     public String showPage(Model model, String pageNumber, String filter) {
-        int page = Integer.valueOf(pageNumber).intValue();
-        List<Object> list = getObjectListOnPage(model, page, filter);
-        model.addAttribute(mapping, list);
-        model.addAttribute("currentPage", page);
-        addMessages(model);
-        return mapping;
+        try{
+            int page = Integer.valueOf(pageNumber).intValue();
+            List<Object> list = getObjectListOnPage(model, page, filter);
+            model.addAttribute(mapping, list);
+            model.addAttribute("currentPage", page);
+            addMessages(model);
+            return mapping;
+        }
+        catch (NumberFormatException ex){
+            messages.add(resourceBundle.getString("InvalidPageNumber"));
+            return "redirect:/" + mapping + "/1";
+        }
+
     }
 
     public String showPage(List<Object> list, Model model, String pageNumber, String filter) {
