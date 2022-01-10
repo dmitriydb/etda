@@ -4,6 +4,7 @@ import com.github.dmitriydb.etda.model.EtdaEntity;
 import com.github.dmitriydb.etda.model.LocaleManager;
 
 import javax.persistence.*;
+import javax.validation.Valid;
 import java.sql.Date;
 import java.util.Locale;
 
@@ -20,6 +21,7 @@ import java.util.Locale;
 public class Title implements EtdaEntity {
     @Id
     @Embedded
+    @Valid
     private TitleOrder titleOrder;
 
     @Column(name="to_date", nullable = true)

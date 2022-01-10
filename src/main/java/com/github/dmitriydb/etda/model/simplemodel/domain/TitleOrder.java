@@ -2,6 +2,7 @@ package com.github.dmitriydb.etda.model.simplemodel.domain;
 
 import javax.persistence.Column;
 import javax.persistence.Embeddable;
+import javax.validation.constraints.Size;
 import java.io.Serializable;
 import java.sql.Date;
 import java.util.Objects;
@@ -19,6 +20,7 @@ public class TitleOrder implements Serializable {
     @Column(name="emp_no", nullable = false)
     private Long employeeNumber;
 
+    @Size(min = 2, max = 50)
     @Column(name="title", nullable = false)
     private String title;
 
