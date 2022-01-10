@@ -16,6 +16,7 @@ import org.springframework.web.servlet.i18n.SessionLocaleResolver;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.io.Serializable;
+import java.sql.SQLIntegrityConstraintViolationException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
@@ -167,7 +168,16 @@ public class WebController {
     }
 
     public String addEntity(Model model, Object entity){
-        new SimpleModel().createEntity(clazz, entity);
+        try{
+            new SimpleModel().createEntity(clazz, entity);
+        }
+        catch (Exception ex){
+            if (entity instanceof Salary){
+                messages.add(resourceBundle.getString("SalaryAddError"));
+            }
+            return "redirect:/" + mapping + "/1";
+
+        }
         messages.add(resourceBundle.getString("SucAdded"));
         return "redirect:/" + mapping + "/1";
     }
