@@ -1,6 +1,8 @@
 package com.github.dmitriydb.etda.model.simplemodel.domain;
 
 import javax.persistence.*;
+import javax.validation.constraints.Pattern;
+import javax.validation.constraints.Size;
 import java.util.Locale;
 import java.util.Objects;
 
@@ -16,9 +18,12 @@ import java.util.Objects;
 @Table(name="departments")
 public class Department {
     @Id
+    @Size(min=4, max=4)
     @Column(name="dept_no", nullable = false)
+    @Pattern(regexp = "^d[\\d]{3}$")
     private String departmentId;
 
+    @Size(min=2, max=50)
     @Column(name="dept_name", nullable = false, unique = true)
     private String name;
 
