@@ -36,16 +36,31 @@ public class UserDAO extends AbstractDAO {
      * @return
      */
     public User getUserByName(String name){
-        if (!isUserExists(name)) return null;
-        Query query = session.createQuery("FROM User WHERE name = :name");
-        query.setParameter("name", name);
-        List<User> result = query.getResultList();
-        return result.get(0);
+        startOperation();
+        try{
+            if (!isUserExists(name)) return null;
+            Query query = session.createQuery("FROM User WHERE name = :name");
+            query.setParameter("name", name);
+            List<User> result = query.getResultList();
+            return result.get(0);
+        }
+        catch (Exception ex){
+            return null;
+        }
+        finally {
+            endOperation();
+        }
     }
 
     public void createUser(User u) {
         startOperation();
         session.save(u);
+        endOperation();
+    }
+
+    public void updateUser(User u) {
+        startOperation();
+        session.update(u);
         endOperation();
     }
 }
