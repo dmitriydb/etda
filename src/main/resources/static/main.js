@@ -310,10 +310,14 @@ document.addEventListener("DOMContentLoaded", function(){
    $(".page-button").click(function(){
      let pageNumber = Number(this.textContent);
      if (isNaN(pageNumber)) return;
+     if (!Number.isInteger(pageNumber)) {
+       alert("Номер страницы должен быть целым числом");
+       return;
+     }
      let newLocation = getNewPageLocation(pageNumber);
      let filterString = document.getElementById("currentFilterString").value;
      if (filterString && filterString.trim() != "")
-     newLocation = addFilterParamToPage(newLocation, filterString);
+        newLocation = addFilterParamToPage(newLocation, filterString);
      window.location.href = newLocation;
    });
 
