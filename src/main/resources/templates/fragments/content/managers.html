@@ -2,12 +2,14 @@
 <table class="content-table">
   <tr class="tr-header">
     <td class="f" th:text="#{web.ecode}"></td>
-    <td class="f" th:text="#{web.todept}"></td>
+    <td class="f" th:text="#{web.emp}"></td>
+    <td class="f" th:text="#{web.todeptassign}"></td>
     <td class="f" th:text="#{web.from}"></td>
     <td class="f" th:text="#{web.to}"></td>
   </tr>
   <tr class="tr-header" th:each="manager : ${managers}">
     <td class="td-content-uneditable" th:utext="${manager.departmentManagerSuite.employeeNumber}"></td>
+    <td class="td-content-uneditable" th:utext="${manager.name}"></td>
     <td class="td-content-uneditable" th:utext="${manager.departmentManagerSuite.departmentId}"></td>
     <td class="td-content" th:utext="${manager.fromDate}"></td>
     <td class="td-content" th:utext="${manager.toDate}"></td>

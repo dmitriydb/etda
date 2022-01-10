@@ -103,9 +103,9 @@ document.addEventListener("DOMContentLoaded", function(){
         }
         else if (entityName == "managers"){
           let newEmpNo = getTdContent($(tds[0]).html());
-          let newDepartmentId = getTdContent($(tds[1]).html());
-          let newFromDate = getTdContent($(tds[2]).html());
-          let newToDate = getTdContent($(tds[3]).html());
+          let newDepartmentId = getTdContent($(tds[2]).html());
+          let newFromDate = getTdContent($(tds[3]).html());
+          let newToDate = getTdContent($(tds[4]).html());
 
           document.getElementById("newEmpNo").value = newEmpNo;
           document.getElementById("newDepartmentId").value = newDepartmentId;
@@ -124,9 +124,9 @@ document.addEventListener("DOMContentLoaded", function(){
         }
         else if (entityName == "salaries"){
           let newEmpNo = getTdContent($(tds[0]).html());
-          let newSalary = getTdContent($(tds[1]).html());
-          let newFromDate = getTdContent($(tds[2]).html());
-          let newToDate = getTdContent($(tds[3]).html());
+          let newSalary = getTdContent($(tds[2]).html());
+          let newFromDate = getTdContent($(tds[3]).html());
+          let newToDate = getTdContent($(tds[4]).html());
 
           document.getElementById("newEmpNo").value = newEmpNo;
           document.getElementById("newSalary").value = newSalary;
@@ -136,9 +136,9 @@ document.addEventListener("DOMContentLoaded", function(){
         }
         else if (entityName == "titles"){
           let newEmpNo = getTdContent($(tds[0]).html());
-          let newTitle = getTdContent($(tds[1]).html());
-          let newFromDate = getTdContent($(tds[2]).html());
-          let newToDate = getTdContent($(tds[3]).html());
+          let newTitle = getTdContent($(tds[2]).html());
+          let newFromDate = getTdContent($(tds[3]).html());
+          let newToDate = getTdContent($(tds[4]).html());
 
           document.getElementById("newEmpNo").value = newEmpNo;
           document.getElementById("newTitle").value = newTitle;
@@ -219,7 +219,7 @@ document.addEventListener("DOMContentLoaded", function(){
       }
       else if (entityName == "managers"){
         let empNo = Number($tds[0].textContent);
-        let deptNo = $tds[1].textContent;
+        let deptNo = $tds[2].textContent;
         if (!isNaN(empNo)){
           let newLocation = getDeletePageLocation() + "delete/" + x + "/" + empNo + ":" + deptNo;
           window.location.href = newLocation;
@@ -227,7 +227,7 @@ document.addEventListener("DOMContentLoaded", function(){
       }
       else if (entityName == "salaries"){
         let empNo = Number($tds[0].textContent);
-        let fromDate = $tds[2].textContent;
+        let fromDate = $tds[3].textContent;
         if (!isNaN(empNo)){
           let newLocation = getDeletePageLocation() + "delete/" + x + "/" + empNo + ":" + fromDate;
           window.location.href = newLocation;
@@ -235,8 +235,8 @@ document.addEventListener("DOMContentLoaded", function(){
       }
       else if (entityName == "titles"){
         let empNo = Number($tds[0].textContent);
-        let title = $tds[1].textContent;
-        let fromDate = $tds[2].textContent;
+        let title = $tds[2].textContent;
+        let fromDate = $tds[3].textContent;
 
         if (!isNaN(empNo)){
           let newLocation = getDeletePageLocation() + "delete/" + x + "/" + empNo + ":" + title + ":" + fromDate;

@@ -1,7 +1,9 @@
 package com.github.dmitriydb.etda.controller.web;
 
+import com.github.dmitriydb.etda.model.dao.SimpleDAO;
 import com.github.dmitriydb.etda.model.simplemodel.domain.DepartmentEmployeeSuite;
 import com.github.dmitriydb.etda.model.simplemodel.domain.DepartmentManager;
+import com.github.dmitriydb.etda.model.simplemodel.domain.DepartmentManagerDTO;
 import com.github.dmitriydb.etda.model.simplemodel.domain.Employee;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
@@ -10,6 +12,8 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.ArrayList;
+import java.util.List;
 
 @Controller
 public class ManagersController extends WebController{
@@ -20,13 +24,33 @@ public class ManagersController extends WebController{
     @PreAuthorize("isAuthenticated()")
     @GetMapping("/managers")
     public String showManagers(Model model, @RequestParam(defaultValue = "") String filter) {
-        return super.showList(model, filter);
+        List<Object> list = super.getObjectList(model, filter);
+        return super.showList(transmuteListToDtoList(list), model, filter);
+    }
+
+    private List<Object> transmuteListToDtoList(List<Object> list){
+        SimpleDAO employeeDao = new SimpleDAO(Employee.class);
+        List<Object> dtoList = new ArrayList<Object>();
+        for (Object mo : list){
+            DepartmentManager m = (DepartmentManager)mo;
+            DepartmentManagerDTO dto = new DepartmentManagerDTO();
+            dto.setDepartmentManagerSuite(m.getDepartmentManagerSuite());
+            dto.setFromDate(m.getFromDate());
+            dto.setToDate(m.getToDate());
+            Employee e = (Employee) employeeDao.read(dto.getDepartmentManagerSuite().getEmployeeNumber());
+            String name = e.getLastName() + " " + e.getFirstName();
+            dto.setName(name);
+            dtoList.add(dto);
+        }
+        return dtoList;
     }
 
     @PreAuthorize("isAuthenticated()")
     @GetMapping("/managers/{pageNumber}")
     public String showManagersPage(Model model, @PathVariable String pageNumber, @RequestParam(defaultValue = "") String filter) {
-        return super.showPage(model, pageNumber, filter);
+        int page = Integer.valueOf(pageNumber).intValue();
+        List<Object> list = super.getObjectListOnPage(model, page, filter);
+        return super.showPage(transmuteListToDtoList(list), model, pageNumber, filter);
     }
 
     @PreAuthorize("hasAnyAuthority('ADMIN', 'HR')")

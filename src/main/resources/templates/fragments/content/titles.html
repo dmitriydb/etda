@@ -3,12 +3,14 @@
 <table class="content-table">
   <tr class="tr-header">
     <td class="f" th:text="#{web.ecode}"></td>
+    <td class="f" th:text="#{web.emp}"></td>
     <td class="f" th:text="#{web.etitle}"></td>
     <td class="f" th:text="#{web.from}"></td>
     <td class="f" th:text="#{web.to}"></td>
   </tr>
   <tr class="tr-header" th:each="title : ${titles}">
     <td class="td-content-uneditable" th:utext="${title.titleOrder.employeeNumber}"></td>
+    <td class="td-content-uneditable" th:utext="${title.name}"></td>
     <td class="td-content-uneditable" th:utext="${title.titleOrder.title}"></td>
     <td class="td-content-uneditable" th:utext="${title.titleOrder.fromDate}"></td>
     <td class="td-content" th:utext="${title.toDate}"></td>

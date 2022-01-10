@@ -95,7 +95,7 @@ public class WebController {
         return maxPageSize * (page - 1);
     }
 
-    protected String showList(Model model, String filter) {
+    protected List<Object> getObjectList(Model model, String filter){
         List<Object> list;
         if (filter == null || filter.trim().equals("")){
             list = new SimpleModel().findEntities(clazz, maxPageSize, 0);
@@ -107,6 +107,11 @@ public class WebController {
             model.addAttribute("filter", filter);
             model.addAttribute("maxPages", new SimpleModel().countEntitiesFiltered(clazz, filter) / maxPageSize);
         }
+        return list;
+    }
+
+    protected String showList(Model model, String filter) {
+        List<Object> list = getObjectList(model, filter);
         model.addAttribute(mapping, list);
         model.addAttribute("currentPage", 1);
 
@@ -114,9 +119,14 @@ public class WebController {
         return mapping;
     }
 
-    public String showPage(Model model, String pageNumber, String filter) {
-        int page = Integer.valueOf(pageNumber).intValue();
+    protected String showList(List<Object> list, Model model, String filter) {
+        model.addAttribute(mapping, list);
+        model.addAttribute("currentPage", 1);
+        addMessages(model);
+        return mapping;
+    }
 
+    protected List<Object> getObjectListOnPage(Model model, int page, String filter){
         List<Object> list;
         if (filter == null || filter.trim().equals("")){
             list = new SimpleModel().findEntities(clazz, maxPageSize, getOffsetByPage(page));
@@ -128,6 +138,20 @@ public class WebController {
             model.addAttribute("filter", filter);
             model.addAttribute("maxPages", new SimpleModel().countEntitiesFiltered(clazz, filter) / maxPageSize);
         }
+        return list;
+    }
+
+    public String showPage(Model model, String pageNumber, String filter) {
+        int page = Integer.valueOf(pageNumber).intValue();
+        List<Object> list = getObjectListOnPage(model, page, filter);
+        model.addAttribute(mapping, list);
+        model.addAttribute("currentPage", page);
+        addMessages(model);
+        return mapping;
+    }
+
+    public String showPage(List<Object> list, Model model, String pageNumber, String filter) {
+        int page = Integer.valueOf(pageNumber).intValue();
         model.addAttribute(mapping, list);
         model.addAttribute("currentPage", page);
         addMessages(model);
