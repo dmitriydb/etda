@@ -175,6 +175,14 @@ public class WebController {
             if (entity instanceof Salary){
                 messages.add(resourceBundle.getString("SalaryAddError"));
             }
+            else
+            if (entity instanceof DepartmentManager){
+                messages.add(resourceBundle.getString("ManagerAddError"));
+            }
+            else
+            {
+                messages.add(resourceBundle.getString("AddError"));
+            }
             return "redirect:/" + mapping + "/1";
 
         }
