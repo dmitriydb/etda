@@ -20,34 +20,34 @@ import java.util.Objects;
  * @since 0.1
  */
 @Entity
-@Table(name="employees")
+@Table(name = "employees")
 public class Employee implements EtdaEntity {
 
-    @Column(name="emp_no", nullable = false)
+    @Column(name = "emp_no", nullable = false)
     @Id
     @GeneratedValue
     private Long employeeNumber;
 
-    @Column(name="birth_date", nullable = false)
+    @Column(name = "birth_date", nullable = false)
     private Date birth_date;
 
-    @Size(min = 1, max=50)
-    @Pattern(regexp =  "^[а-яА-Яa-zA-Z'\\s-]{1,30}$")
+    @Size(min = 1, max = 50)
+    @Pattern(regexp = "^[а-яА-Яa-zA-Z'\\s-]{1,30}$")
     @NotNull
-    @Column(name="first_name", nullable = false)
+    @Column(name = "first_name", nullable = false)
     private String firstName;
 
-    @Size(min = 1, max=50)
-    @Pattern(regexp =  "^[а-яА-Яa-zA-Z'\\s-]{1,30}$")
+    @Size(min = 1, max = 50)
+    @Pattern(regexp = "^[а-яА-Яa-zA-Z'\\s-]{1,30}$")
     @NotNull
-    @Column(name="last_name", nullable = false)
+    @Column(name = "last_name", nullable = false)
     private String lastName;
 
     @Sex
-    @Column(name="gender", nullable = false)
+    @Column(name = "gender", nullable = false)
     private Character gender;
 
-    @Column(name="hire_date", nullable = false)
+    @Column(name = "hire_date", nullable = false)
     private Date hireDate;
 
     public Employee() {
@@ -90,6 +90,12 @@ public class Employee implements EtdaEntity {
     }
 
     public void setGender(Character gender) {
+        if ("mMмМ".indexOf(gender) != -1)
+            this.gender = 'M';
+        else
+        if ("fFжЖ".indexOf(gender) != -1)
+            this.gender = 'F';
+        else
         this.gender = gender;
     }
 
