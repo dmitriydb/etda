@@ -80,7 +80,11 @@ public class SalariesController extends WebController{
 
     @PreAuthorize("hasAnyAuthority('ADMIN', 'HR')")
     @PostMapping("/salaries/update")
-    public String updateSalary(Model model, @ModelAttribute Salary salary, @RequestParam("currentPage") String pageNumber){
+    public String updateSalary(Model model, @ModelAttribute @Valid Salary salary, BindingResult result, @RequestParam("currentPage") String pageNumber){
+        if (result.hasErrors()){
+            messages.add(resourceBundle.getString("UpdateError"));
+            return "redirect:/" + mapping + "/1";
+        }
         return super.updateEntity(model, salary, pageNumber);
     }
 

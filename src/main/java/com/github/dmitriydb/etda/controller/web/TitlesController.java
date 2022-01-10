@@ -81,7 +81,11 @@ public class TitlesController extends WebController{
 
     @PreAuthorize("hasAnyAuthority('ADMIN', 'HR')")
     @PostMapping("/titles/update")
-    public String updateTitle(Model model, @ModelAttribute Title title, @RequestParam("currentPage") String pageNumber){
+    public String updateTitle(Model model, @ModelAttribute Title title, BindingResult result, @RequestParam("currentPage") String pageNumber){
+        if (result.hasErrors()){
+            messages.add(resourceBundle.getString("UpdateError"));
+            return "redirect:/" + mapping + "/1";
+        }
         return super.updateEntity(model, title, pageNumber);
     }
 

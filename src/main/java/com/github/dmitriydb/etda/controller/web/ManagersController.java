@@ -82,7 +82,11 @@ public class ManagersController extends WebController{
 
     @PreAuthorize("hasAnyAuthority('ADMIN', 'HR')")
     @PostMapping("/managers/update")
-    public String updateManager(Model model, @ModelAttribute DepartmentManager manager, @RequestParam("currentPage") String pageNumber){
+    public String updateManager(Model model, @ModelAttribute @Valid DepartmentManager manager, BindingResult result, @RequestParam("currentPage") String pageNumber){
+        if (result.hasErrors()){
+            messages.add(resourceBundle.getString("UpdateError"));
+            return "redirect:/" + mapping + "/1";
+        }
         return super.updateEntity(model, manager, pageNumber);
     }
 }
