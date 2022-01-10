@@ -29,9 +29,6 @@ public class LanguageController {
     @GetMapping("/language")
     public String changeLanguage(@AuthenticationPrincipal UserDetails userDetails, @RequestParam String lang, Model model, SessionLocaleResolver resolver, HttpServletRequest request, HttpServletResponse response
     ){
-
-
-
         User u = new UserDAO().getUserByName(userDetails.getUsername());
 
         if (lang == null) return "redirect:/";
