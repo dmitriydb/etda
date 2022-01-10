@@ -2,6 +2,7 @@ package com.github.dmitriydb.etda.model.simplemodel.domain;
 
 import com.github.dmitriydb.etda.model.EtdaEntity;
 import com.github.dmitriydb.etda.model.LocaleManager;
+import com.github.dmitriydb.etda.webapp.validation.Sex;
 
 import javax.persistence.*;
 import javax.validation.constraints.*;
@@ -31,14 +32,18 @@ public class Employee implements EtdaEntity {
     private Date birth_date;
 
     @Size(min = 1, max=50)
+    @Pattern(regexp =  "^[а-яА-Яa-zA-Z'\\s-]{1,30}$")
+    @NotNull
     @Column(name="first_name", nullable = false)
     private String firstName;
 
     @Size(min = 1, max=50)
+    @Pattern(regexp =  "^[а-яА-Яa-zA-Z'\\s-]{1,30}$")
     @NotNull
     @Column(name="last_name", nullable = false)
     private String lastName;
 
+    @Sex
     @Column(name="gender", nullable = false)
     private Character gender;
 
