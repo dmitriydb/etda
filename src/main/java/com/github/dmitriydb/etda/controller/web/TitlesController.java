@@ -72,6 +72,10 @@ public class TitlesController extends WebController{
             messages.add(resourceBundle.getString("InputError"));
             return "redirect:/" + mapping + "/1";
         }
+        if (title.getTitleOrder().getFromDate().after(title.getToDate())){
+            messages.add(resourceBundle.getString("DateFromToError"));
+            return "redirect:/" + mapping + "/1";
+        }
         return super.addEntity(model, title);
     }
 

@@ -71,6 +71,10 @@ public class SalariesController extends WebController{
             messages.add(resourceBundle.getString("InputError"));
             return "redirect:/" + mapping + "/1";
         }
+        if (salary.getSalaryOrder().getFromDate().after(salary.getToDate())){
+            messages.add(resourceBundle.getString("DateFromToError"));
+            return "redirect:/" + mapping + "/1";
+        }
         return super.addEntity(model, salary);
     }
 

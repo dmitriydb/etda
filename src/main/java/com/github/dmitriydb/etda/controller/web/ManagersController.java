@@ -73,6 +73,10 @@ public class ManagersController extends WebController{
             messages.add(resourceBundle.getString("InputError"));
             return "redirect:/" + mapping + "/1";
         }
+        if (manager.getFromDate().after(manager.getToDate())){
+            messages.add(resourceBundle.getString("DateFromToError"));
+            return "redirect:/" + mapping + "/1";
+        }
         return super.addEntity(model, manager);
     }
 
