@@ -13,14 +13,12 @@ public class CustomPasswordEncoder implements PasswordEncoder {
     @Override
     public String encode(CharSequence rawPassword) {
         String result = BCrypt.hashpw(rawPassword.toString(), BCrypt.gensalt());
-        logger.debug("Encoding {} to {}", rawPassword.toString(), result);
         return result;
     }
 
     @Override
     public boolean matches(CharSequence rawPassword, String encodedPassword) {
         boolean result = BCrypt.checkpw(rawPassword.toString(), encodedPassword);
-        logger.debug("Matching {} with {} = {}", rawPassword.toString(), encodedPassword, result);
         return result;
     }
 }
