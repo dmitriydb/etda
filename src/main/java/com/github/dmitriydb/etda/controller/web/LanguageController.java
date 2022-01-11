@@ -29,20 +29,26 @@ public class LanguageController {
     @GetMapping("/language")
     public String changeLanguage(@AuthenticationPrincipal UserDetails userDetails, @RequestParam String lang, Model model, SessionLocaleResolver resolver, HttpServletRequest request, HttpServletResponse response
     ){
-        User u = new UserDAO().getUserByName(userDetails.getUsername());
 
+        boolean ruSelected = false;
         if (lang == null) return "redirect:/";
         if (lang.equals("ru"))
         {
             resolver.setLocale(request, response, Locale.forLanguageTag("ru-RU"));
-            u.setLocale(Locale.forLanguageTag("ru-RU"));
-            new UserDAO().updateUser(u);
+            ruSelected = true;
         }
         else
         if (lang.equals("en"))
         {
             resolver.setLocale(request, response, Locale.ENGLISH);
-            u.setLocale(Locale.ENGLISH);
+        }
+
+        if (userDetails != null){
+            User u = new UserDAO().getUserByName(userDetails.getUsername());
+            if (ruSelected)
+                u.setLocale(Locale.forLanguageTag("ru-RU"));
+            else
+                u.setLocale(Locale.ENGLISH);
             new UserDAO().updateUser(u);
         }
         return "redirect:/";
