@@ -40,7 +40,7 @@ public class User {
     private String password;
 
     @NotNull
-    private Locale locale = Locale.forLanguageTag("ru-RU");
+    private Locale locale = Locale.ENGLISH;
 
     private String email;
 
