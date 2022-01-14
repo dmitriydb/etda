@@ -16,6 +16,7 @@ import org.springframework.web.servlet.i18n.SessionLocaleResolver;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.io.Serializable;
+import java.sql.SQLIntegrityConstraintViolationException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
@@ -95,7 +96,7 @@ public class WebController {
         return maxPageSize * (page - 1);
     }
 
-    protected String showList(Model model, String filter) {
+    protected List<Object> getObjectList(Model model, String filter){
         List<Object> list;
         if (filter == null || filter.trim().equals("")){
             list = new SimpleModel().findEntities(clazz, maxPageSize, 0);
@@ -107,6 +108,11 @@ public class WebController {
             model.addAttribute("filter", filter);
             model.addAttribute("maxPages", new SimpleModel().countEntitiesFiltered(clazz, filter) / maxPageSize);
         }
+        return list;
+    }
+
+    protected String showList(Model model, String filter) {
+        List<Object> list = getObjectList(model, filter);
         model.addAttribute(mapping, list);
         model.addAttribute("currentPage", 1);
 
@@ -114,9 +120,14 @@ public class WebController {
         return mapping;
     }
 
-    public String showPage(Model model, String pageNumber, String filter) {
-        int page = Integer.valueOf(pageNumber).intValue();
+    protected String showList(List<Object> list, Model model, String filter) {
+        model.addAttribute(mapping, list);
+        model.addAttribute("currentPage", 1);
+        addMessages(model);
+        return mapping;
+    }
 
+    protected List<Object> getObjectListOnPage(Model model, int page, String filter){
         List<Object> list;
         if (filter == null || filter.trim().equals("")){
             list = new SimpleModel().findEntities(clazz, maxPageSize, getOffsetByPage(page));
@@ -128,6 +139,27 @@ public class WebController {
             model.addAttribute("filter", filter);
             model.addAttribute("maxPages", new SimpleModel().countEntitiesFiltered(clazz, filter) / maxPageSize);
         }
+        return list;
+    }
+
+    public String showPage(Model model, String pageNumber, String filter) {
+        try{
+            int page = Integer.valueOf(pageNumber).intValue();
+            List<Object> list = getObjectListOnPage(model, page, filter);
+            model.addAttribute(mapping, list);
+            model.addAttribute("currentPage", page);
+            addMessages(model);
+            return mapping;
+        }
+        catch (NumberFormatException ex){
+            messages.add(resourceBundle.getString("InvalidPageNumber"));
+            return "redirect:/" + mapping + "/1";
+        }
+
+    }
+
+    public String showPage(List<Object> list, Model model, String pageNumber, String filter) {
+        int page = Integer.valueOf(pageNumber).intValue();
         model.addAttribute(mapping, list);
         model.addAttribute("currentPage", page);
         addMessages(model);
@@ -143,7 +175,24 @@ public class WebController {
     }
 
     public String addEntity(Model model, Object entity){
-        new SimpleModel().createEntity(clazz, entity);
+        try{
+            new SimpleModel().createEntity(clazz, entity);
+        }
+        catch (Exception ex){
+            if (entity instanceof Salary){
+                messages.add(resourceBundle.getString("SalaryAddError"));
+            }
+            else
+            if (entity instanceof DepartmentManager){
+                messages.add(resourceBundle.getString("ManagerAddError"));
+            }
+            else
+            {
+                messages.add(resourceBundle.getString("AddError"));
+            }
+            return "redirect:/" + mapping + "/1";
+
+        }
         messages.add(resourceBundle.getString("SucAdded"));
         return "redirect:/" + mapping + "/1";
     }

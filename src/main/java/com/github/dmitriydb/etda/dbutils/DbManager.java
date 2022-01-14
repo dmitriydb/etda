@@ -71,7 +71,6 @@ public class DbManager {
         SecurityRole.init();
 
         //инициализация тестовых пользователей
-
         createTestUser("admin", SecurityRole.ADMIN_ROLE());
         createTestUser("manager", SecurityRole.MANAGER_ROLE());
         createTestUser("employee", SecurityRole.EMPLOYEE_ROLE());
@@ -128,6 +127,7 @@ public class DbManager {
             }
 
         }
+
 
 
     }

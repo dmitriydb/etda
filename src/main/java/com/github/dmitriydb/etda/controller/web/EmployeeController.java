@@ -73,7 +73,12 @@ public class EmployeeController extends WebController{
 
     @PreAuthorize("hasAnyAuthority('ADMIN', 'HR')")
     @PostMapping("/employees/update")
-    public String updateEmployee(Model model, @ModelAttribute Employee employee, @RequestParam("currentPage") String pageNumber){
+    public String updateEmployee(Model model, @ModelAttribute  @Valid Employee employee, BindingResult result, @RequestParam("currentPage") String pageNumber){
+        System.out.println(employee);
+        if (result.hasErrors()) {
+            messages.add(resourceBundle.getString("UpdateError"));
+            return "redirect:/" + mapping + "/1";
+        }
         return super.updateEntity(model, employee, pageNumber);
     }
 }

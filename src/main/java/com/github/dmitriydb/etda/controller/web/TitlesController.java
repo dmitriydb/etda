@@ -1,9 +1,7 @@
 package com.github.dmitriydb.etda.controller.web;
 
-import com.github.dmitriydb.etda.model.simplemodel.domain.DepartmentEmployeeSuite;
-import com.github.dmitriydb.etda.model.simplemodel.domain.DepartmentManager;
-import com.github.dmitriydb.etda.model.simplemodel.domain.Title;
-import com.github.dmitriydb.etda.model.simplemodel.domain.TitleOrder;
+import com.github.dmitriydb.etda.model.dao.SimpleDAO;
+import com.github.dmitriydb.etda.model.simplemodel.domain.*;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -12,6 +10,8 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.sql.Date;
+import java.util.ArrayList;
+import java.util.List;
 
 @Controller
 public class TitlesController extends WebController{
@@ -19,16 +19,35 @@ public class TitlesController extends WebController{
         super("titles", Title.class);
     }
 
+    private List<Object> transmuteListToDtoList(List<Object> list){
+        SimpleDAO employeeDao = new SimpleDAO(Employee.class);
+        List<Object> dtoList = new ArrayList<Object>();
+        for (Object mo : list){
+            Title t = (Title)mo;
+            TitleDTO dto = new TitleDTO();
+            dto.setTitleOrder(t.getTitleOrder());
+            dto.setToDate(t.getToDate());
+            Employee e = (Employee) employeeDao.read(t.getTitleOrder().getEmployeeNumber());
+            String name = e.getLastName() + " " + e.getFirstName();
+            dto.setName(name);
+            dtoList.add(dto);
+        }
+        return dtoList;
+    }
+
     @PreAuthorize("isAuthenticated()")
     @GetMapping("/titles")
     public String showTitles(Model model, @RequestParam(defaultValue = "") String filter) {
-        return super.showList(model, filter);
+        List<Object> list = super.getObjectList(model, filter);
+        return super.showList(transmuteListToDtoList(list), model, filter);
     }
 
     @PreAuthorize("isAuthenticated()")
     @GetMapping("/titles/{pageNumber}")
     public String showTitlesPage(Model model, @PathVariable String pageNumber, @RequestParam(defaultValue = "") String filter) {
-        return super.showPage(model, pageNumber, filter);
+        int page = Integer.valueOf(pageNumber).intValue();
+        List<Object> list = super.getObjectListOnPage(model, page, filter);
+        return super.showPage(transmuteListToDtoList(list), model, pageNumber, filter);
     }
 
     @PreAuthorize("hasAnyAuthority('ADMIN', 'HR')")
@@ -53,12 +72,20 @@ public class TitlesController extends WebController{
             messages.add(resourceBundle.getString("InputError"));
             return "redirect:/" + mapping + "/1";
         }
+        if (title.getTitleOrder().getFromDate().after(title.getToDate())){
+            messages.add(resourceBundle.getString("DateFromToError"));
+            return "redirect:/" + mapping + "/1";
+        }
         return super.addEntity(model, title);
     }
 
     @PreAuthorize("hasAnyAuthority('ADMIN', 'HR')")
     @PostMapping("/titles/update")
-    public String updateTitle(Model model, @ModelAttribute Title title, @RequestParam("currentPage") String pageNumber){
+    public String updateTitle(Model model, @ModelAttribute Title title, BindingResult result, @RequestParam("currentPage") String pageNumber){
+        if (result.hasErrors()){
+            messages.add(resourceBundle.getString("UpdateError"));
+            return "redirect:/" + mapping + "/1";
+        }
         return super.updateEntity(model, title, pageNumber);
     }
 

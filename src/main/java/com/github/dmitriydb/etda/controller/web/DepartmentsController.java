@@ -1,5 +1,6 @@
 package com.github.dmitriydb.etda.controller.web;
 
+import com.github.dmitriydb.etda.model.dao.SimpleDAO;
 import com.github.dmitriydb.etda.model.simplemodel.domain.Department;
 import com.github.dmitriydb.etda.model.simplemodel.domain.Employee;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -41,6 +42,20 @@ public class DepartmentsController extends WebController{
             messages.add(resourceBundle.getString("InputError"));
             return "redirect:/" + mapping + "/1";
         }
+
+        try{
+            SimpleDAO departmentDAO = new SimpleDAO(Department.class);
+            Object d = departmentDAO.read(dept.getDepartmentId());
+            if (d != null){
+                messages.add(resourceBundle.getString("DepartmentAlreadyExists"));
+                return "redirect:/" + mapping + "/1";
+            }
+        }
+        catch (Exception ex){
+            messages.add(resourceBundle.getString("UnknownError"));
+            return "redirect:/" + mapping + "/1";
+        }
+
         return super.addEntity(model, dept);
     }
 

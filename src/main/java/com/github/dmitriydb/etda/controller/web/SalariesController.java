@@ -1,9 +1,7 @@
 package com.github.dmitriydb.etda.controller.web;
 
-import com.github.dmitriydb.etda.model.simplemodel.domain.Salary;
-import com.github.dmitriydb.etda.model.simplemodel.domain.SalaryOrder;
-import com.github.dmitriydb.etda.model.simplemodel.domain.Title;
-import com.github.dmitriydb.etda.model.simplemodel.domain.TitleOrder;
+import com.github.dmitriydb.etda.model.dao.SimpleDAO;
+import com.github.dmitriydb.etda.model.simplemodel.domain.*;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -12,6 +10,8 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.sql.Date;
+import java.util.ArrayList;
+import java.util.List;
 
 @Controller
 public class SalariesController extends WebController{
@@ -19,16 +19,36 @@ public class SalariesController extends WebController{
         super("salaries", Salary.class);
     }
 
+    private List<Object> transmuteListToDtoList(List<Object> list){
+        SimpleDAO employeeDao = new SimpleDAO(Employee.class);
+        List<Object> dtoList = new ArrayList<Object>();
+        for (Object mo : list){
+            Salary s = (Salary)mo;
+            SalaryDTO dto = new SalaryDTO();
+            dto.setSalary(s.getSalary());
+            dto.setToDate(s.getToDate());
+            dto.setSalaryOrder(s.getSalaryOrder());
+            Employee e = (Employee) employeeDao.read(s.getSalaryOrder().getEmployeeNumber());
+            String name = e.getLastName() + " " + e.getFirstName();
+            dto.setName(name);
+            dtoList.add(dto);
+        }
+        return dtoList;
+    }
+
     @PreAuthorize("isAuthenticated()")
     @GetMapping("/salaries")
     public String showSalaries(Model model, @RequestParam(defaultValue = "") String filter) {
-        return super.showList(model, filter);
+        List<Object> list = super.getObjectList(model, filter);
+        return super.showList(transmuteListToDtoList(list), model, filter);
     }
 
     @PreAuthorize("isAuthenticated()")
     @GetMapping("/salaries/{pageNumber}")
     public String showSalariesPage(Model model, @PathVariable String pageNumber, @RequestParam(defaultValue = "") String filter) {
-        return super.showPage(model, pageNumber, filter);
+        int page = Integer.valueOf(pageNumber).intValue();
+        List<Object> list = super.getObjectListOnPage(model, page, filter);
+        return super.showPage(transmuteListToDtoList(list), model, pageNumber, filter);
     }
 
     @PreAuthorize("hasAnyAuthority('ADMIN', 'HR')")
@@ -51,12 +71,20 @@ public class SalariesController extends WebController{
             messages.add(resourceBundle.getString("InputError"));
             return "redirect:/" + mapping + "/1";
         }
+        if (salary.getSalaryOrder().getFromDate().after(salary.getToDate())){
+            messages.add(resourceBundle.getString("DateFromToError"));
+            return "redirect:/" + mapping + "/1";
+        }
         return super.addEntity(model, salary);
     }
 
     @PreAuthorize("hasAnyAuthority('ADMIN', 'HR')")
     @PostMapping("/salaries/update")
-    public String updateSalary(Model model, @ModelAttribute Salary salary, @RequestParam("currentPage") String pageNumber){
+    public String updateSalary(Model model, @ModelAttribute @Valid Salary salary, BindingResult result, @RequestParam("currentPage") String pageNumber){
+        if (result.hasErrors()){
+            messages.add(resourceBundle.getString("UpdateError"));
+            return "redirect:/" + mapping + "/1";
+        }
         return super.updateEntity(model, salary, pageNumber);
     }
 
