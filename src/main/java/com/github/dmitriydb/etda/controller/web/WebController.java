@@ -111,6 +111,13 @@ public class WebController {
         return list;
     }
 
+    /**
+     * Метод вызывается для добавления в модель отфильтрованного списка сущностей
+     * @param model
+     * @param filter
+     * @return
+     * @since 0.3
+     */
     protected String showList(Model model, String filter) {
         List<Object> list = getObjectList(model, filter);
         model.addAttribute(mapping, list);
@@ -120,6 +127,14 @@ public class WebController {
         return mapping;
     }
 
+    /**
+     * Метод, который добавляет в модель готовый список сущностей
+     * @param list
+     * @param model
+     * @param filter
+     * @return
+     * @since 0.3
+     */
     protected String showList(List<Object> list, Model model, String filter) {
         model.addAttribute(mapping, list);
         model.addAttribute("currentPage", 1);
@@ -127,6 +142,14 @@ public class WebController {
         return mapping;
     }
 
+    /**
+     * Возвращает список сущностей на странице N
+     * @param model
+     * @param page
+     * @param filter
+     * @return
+     * @since 0.3
+     */
     protected List<Object> getObjectListOnPage(Model model, int page, String filter){
         List<Object> list;
         if (filter == null || filter.trim().equals("")){
@@ -142,6 +165,14 @@ public class WebController {
         return list;
     }
 
+    /**
+     * Показывает страницу с запрошенным номером для сущности
+     * @param model
+     * @param pageNumber
+     * @param filter
+     * @return
+     * @since 0.3
+     */
     public String showPage(Model model, String pageNumber, String filter) {
         try{
             int page = Integer.valueOf(pageNumber).intValue();
@@ -158,6 +189,15 @@ public class WebController {
 
     }
 
+    /**
+     * Показывает страницу с запрошенным номером и добавляет в модель готовый список сущностей
+     * @param list
+     * @param model
+     * @param pageNumber
+     * @param filter
+     * @return
+     * @since 0.3
+     */
     public String showPage(List<Object> list, Model model, String pageNumber, String filter) {
         int page = Integer.valueOf(pageNumber).intValue();
         model.addAttribute(mapping, list);
@@ -166,6 +206,14 @@ public class WebController {
         return mapping;
     }
 
+    /**
+     *
+     * @param model
+     * @param id
+     * @param pageNumber
+     * @return
+     * @since 0.3
+     */
     public String deleteEntity(Model model, Serializable id, String pageNumber){
         int page = Integer.valueOf(pageNumber).intValue();
         new SimpleModel().deleteEntity(clazz, id);
@@ -174,6 +222,13 @@ public class WebController {
         return "redirect:/" + mapping + "/" + page;
     }
 
+    /**
+     *
+     * @param model
+     * @param entity
+     * @return
+     * @since 0.3
+     */
     public String addEntity(Model model, Object entity){
         try{
             new SimpleModel().createEntity(clazz, entity);
@@ -197,6 +252,14 @@ public class WebController {
         return "redirect:/" + mapping + "/1";
     }
 
+    /**
+     *
+     * @param model
+     * @param entity
+     * @param pageNumber
+     * @return
+     * @since 0.3
+     */
     public String updateEntity(Model model, Object entity, String pageNumber){
         int page = Integer.valueOf(pageNumber).intValue();
         new SimpleModel().updateEntity(clazz, entity);

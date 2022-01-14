@@ -23,6 +23,12 @@ import java.util.Set;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.regex.Pattern;
 
+/**
+ * Генерирует набор тестовых данных для облачной версии приложения
+ * @version 0.3
+ * @since 0.3
+ *
+ */
 @Service
 public class TestDataGenerator {
 

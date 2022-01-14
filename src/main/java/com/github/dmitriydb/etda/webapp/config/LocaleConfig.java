@@ -9,6 +9,11 @@ import org.springframework.web.servlet.i18n.SessionLocaleResolver;
 import java.util.Locale;
 
 @Configuration
+/**
+ * Конфигурация локали приложения
+ * @version 0.3
+ * @since 0.3
+ */
 public class LocaleConfig {
 
     @Bean

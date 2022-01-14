@@ -5,6 +5,11 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 
+/**
+ * DTO класс для регистрации пользователя
+ * @version 0.3
+ * @since 0.3
+ */
 public class UserDTO {
 
     @Size(min = 3, max = 10, message = "Длина имени должна быть от 3 до 10 символов")

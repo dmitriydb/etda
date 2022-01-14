@@ -3,6 +3,11 @@ package com.github.dmitriydb.etda.webapp.validation;
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
 
+/**
+ * Валидатор пола сотрудника
+ * @version 0.3
+ * @since 0.3
+ */
 public class SexValidator implements ConstraintValidator<Sex, Character> {
 
     public void initialize(Sex sex)
