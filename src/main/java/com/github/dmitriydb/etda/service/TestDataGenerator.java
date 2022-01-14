@@ -21,6 +21,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.concurrent.ThreadLocalRandom;
+import java.util.regex.Pattern;
 
 @Service
 public class TestDataGenerator {
@@ -38,12 +39,16 @@ public class TestDataGenerator {
         InputStream is2 = classloader.getResourceAsStream("russian_surnames.csv");
         BufferedReader in = new BufferedReader(new InputStreamReader(is));
         BufferedReader in2 = new BufferedReader(new InputStreamReader(is2));
+        Pattern pattern = Pattern.compile("^[а-яА-Яa-zA-Z'\\s-]{1,30}$");
+
         try {
             in.readLine();
             String line;
             while ((line = in.readLine()) != null){
                 String[] splits = line.split(";");
-                availableNames.add(splits[1]);
+                String name = splits[1];
+                if (pattern.matcher(name).matches())
+                    availableNames.add(name);
             }
         } catch (IOException e) {
             e.printStackTrace();
@@ -53,7 +58,9 @@ public class TestDataGenerator {
             String line;
             while ((line = in2.readLine()) != null){
                 String[] splits = line.split(";");
-                availableSurnames.add(splits[1]);
+                String surname = splits[1];
+                if (pattern.matcher(surname).matches())
+                    availableSurnames.add(surname);
             }
         } catch (IOException e) {
             e.printStackTrace();
@@ -92,7 +99,9 @@ public class TestDataGenerator {
         String[] suffix = new String[]{"PR", "Marketing", "Soft development", "Supply", "Helpdesk", "Q&A", "Testing", "R&D"};
         String dcode;
         do{
-            dcode = "d" + ThreadLocalRandom.current().nextInt(1000);
+            String s = String.valueOf(ThreadLocalRandom.current().nextInt(1000));
+            while (s.length() < 3) s = "0" + s;
+            dcode = "d" + s;
         }
         while (occipiedDepartmentCodes.contains(dcode));
         String dname;
