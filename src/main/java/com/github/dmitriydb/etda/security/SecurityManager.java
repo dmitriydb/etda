@@ -17,13 +17,11 @@ public class SecurityManager {
 
     public static String hashPassword(String plainTextPassword){
         String result = BCrypt.hashpw(plainTextPassword, BCrypt.gensalt());
-        logger.debug("Encoding {} to {}", plainTextPassword, result);
         return result;
     }
 
     public static boolean checkPass(String plainPassword, String hashedPassword) {
         boolean result = BCrypt.checkpw(plainPassword, hashedPassword);
-        logger.debug("Matching {} with {} = {}", plainPassword, hashedPassword, result);
         return result;
     }
 }

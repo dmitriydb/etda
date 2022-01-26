@@ -1,31 +1,24 @@
 package com.github.dmitriydb.etda.controller.console;
 
 import com.github.dmitriydb.etda.dbutils.DbManager;
-import com.github.dmitriydb.etda.model.EtdaModel;
 import com.github.dmitriydb.etda.model.SimpleModel;
 import com.github.dmitriydb.etda.model.dao.UserDAO;
 import com.github.dmitriydb.etda.security.SecurityRole;
 import com.github.dmitriydb.etda.security.User;
 import com.github.dmitriydb.etda.view.console.*;
-import com.sun.org.apache.xpath.internal.Arg;
 import junitparams.JUnitParamsRunner;
 import junitparams.Parameters;
 import org.junit.Before;
 import org.junit.Test;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.runner.RunWith;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mockito;
 
-import javax.swing.*;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
-import java.util.ResourceBundle;
 import java.util.stream.Collectors;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 @RunWith(JUnitParamsRunner.class)

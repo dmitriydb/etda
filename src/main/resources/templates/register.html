@@ -9,6 +9,7 @@
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script th:src="@{/main.js}"></script>
+     <script src='https://www.google.com/recaptcha/api.js'></script>
   </head>
   <body>
     <div class="container">
@@ -54,6 +55,11 @@
                        </div>
                        </div>
                    </div>
+                    <div class="g-recaptcha col-sm-5"
+                         th:attr="data-sitekey=${captchaSettings.site}"></div>
+                    <div th:if="${captchaerror}">
+                        <small id="captchaerrorhelp" class="bg-danger text-white" th:text="#{web.captchaerror}"></small>
+                    </div>
                     <button type="submit" name="button" th:text="#{web.register}"></button>
                 </form>
               </div>
